@@ -18,7 +18,10 @@ physical residual, terminal regularity, or smooth force extension.
 The research program and its Lean targets are developed in:
 
 - [`docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex`](docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex)
-- [`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note.tex`](docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note.tex)
+- [`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note.tex`](docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note.tex),
+  the downstream companion to the preceding primitive-liftability research note;
+  it sharpens that framework into a signed-mean program with concrete Lean
+  formalization targets
 - [`docs/Joseph_2026_Primitive_Compatibility_Counterproof_References_v1.bib`](docs/Joseph_2026_Primitive_Compatibility_Counterproof_References_v1.bib)
 
 The notes define a counter-proof program and explicit closure criteria; they do
