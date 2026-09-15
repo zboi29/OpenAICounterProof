@@ -43,6 +43,15 @@ theorem full_eq_target_add_defect
   rw [K.fullCompatibility_apply]
   simp only [B.reduced_eq, defect, K.hiddenResponse_apply]
 
+/-- The exact reduced-branch defect identity from the companion note, stated
+as a residual rather than as an affine decomposition. -/
+theorem exact_reduced_branch_defect
+    {K : CompatibilityBlocks Active Hidden Obs Constraint} {target : Obs}
+    (B : ReducedBranch K target) :
+    K.fullCompatibility B.active - target = B.defect := by
+  rw [B.full_eq_target_add_defect]
+  abel
+
 theorem fullCompatible_iff_defect_eq_zero
     {K : CompatibilityBlocks Active Hidden Obs Constraint} {target : Obs}
     (B : ReducedBranch K target) :

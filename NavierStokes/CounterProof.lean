@@ -1,6 +1,7 @@
 import NavierStokes.CounterProof.Compatibility
 import NavierStokes.CounterProof.BranchDefect
 import NavierStokes.CounterProof.DualCertificate
+import NavierStokes.CounterProof.QuantitativeObstruction
 import NavierStokes.CounterProof.TailCapacity
 import NavierStokes.CounterProof.ResidualExposure
 import NavierStokes.CounterProof.TerminalCertificate
