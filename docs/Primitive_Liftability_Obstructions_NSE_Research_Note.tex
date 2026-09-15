@@ -1,0 +1,1186 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{mathrsfs}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\graphicspath{{/mnt/data/primitive_liftability_note_v1/figures/}}
+\usepackage{caption}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{longtable}
+\usepackage{xcolor}
+
+\setstretch{1.08}
+\setlength{\parindent}{1.35em}
+\setlength{\parskip}{0.25em}
+\setlength{\headheight}{14.5pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Primitive Liftability Obstructions in Navier--Stokes Dynamics}
+\fancyhead[R]{Z. N. Joseph}
+\fancyfoot[C]{\thepage}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.55em}{}
+\titleformat{\subsubsection}{\normalsize\itshape}{\thesubsubsection.}{0.5em}{}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb R}
+\newcommand{\T}{\mathbb T}
+\newcommand{\A}{\mathcal A}
+\newcommand{\X}{\mathcal X}
+\newcommand{\Y}{\mathcal Y}
+\newcommand{\Zs}{\mathcal Z}
+\newcommand{\Rres}{\mathcal R}
+\newcommand{\D}{\mathrm D}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\Proj}{\operatorname{Proj}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\sym}{\operatorname{sym}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\Lie}{\mathcal L}
+\newcommand{\Hh}{\mathcal H}
+\newcommand{\Kt}{\mathcal K}
+\newcommand{\Vv}{\mathcal V}
+\newcommand{\Comp}{\mathscr A}
+\newcommand{\Fib}{\mathscr F}
+\newcommand{\Flat}{O(q^{\infty})}
+
+\begin{document}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+\vspace*{0.72in}
+{\LARGE\bfseries Primitive Liftability and Branch Extinction\\[0.15in]
+ in Observationally Reduced Navier--Stokes Dynamics\par}
+\vspace{0.22in}
+{\large A structural research note on admissible reconstruction in a claimed finite-time blowup construction\par}
+\vspace{0.48in}
+{\large Zachary Nathan Joseph\par}
+\vspace{0.07in}
+{\normalsize September 13, 2026\par}
+\vspace{0.08in}
+{\normalsize Version 1\par}
+\vspace{0.46in}
+\rule{0.82\textwidth}{0.4pt}
+\end{center}
+
+\vspace{0.30in}
+\begin{center}
+\begin{minipage}{0.88\textwidth}
+\begin{center}
+{\normalsize\bfseries Abstract}
+\end{center}
+\small
+This note develops a primitive liftability framework for observationally reduced three-dimensional incompressible Navier--Stokes dynamics, motivated by the supplied OpenAI manuscript \emph{Finite Time Blowup for Navier--Stokes}. A reduced branch may remain smooth and algebraically coherent while its admissible full-state realization becomes singular, path-dependent, or nonexistent. Using admissible-state manifolds, observation fibers, a constrained compatibility operator, and horizontal lift geometry, we prove an affine tangent-lift criterion, a dual certificate for range failure, singular-value branch extinction, hidden holonomy, endpoint exclusion, and a residual-leakage principle. The resulting manuscript-specific criterion is sharp: a decisive contradiction must produce a nonflat full-state compatibility defect that survives complete recomputation and conflicts with the claimed flat physical residual or smooth force extension.
+\end{minipage}
+\end{center}
+\vfill
+\end{titlepage}
+\setcounter{page}{2}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+The supplied OpenAI manuscript claims a finite-time breakdown construction for the three-dimensional incompressible Navier--Stokes equations. Its architecture is unusually elaborate: a concentrating physical background is corrected by oscillatory waves, averaged stresses, auxiliary-torus inverses, moment constraints, and a diagonal infinite-stage summation before the resulting physical residual is localized and extended to a smooth compactly supported force. The final theorem is therefore a statement about a physical velocity, pressure, and force, not merely about an auxiliary representation or an averaged stress \cite{OpenAI2026,Fefferman}. The central question of this note is whether the representation remains physically realizable throughout that construction.
+
+The analysis is not directed at a conventional bookkeeping defect. An omitted chain-rule term, an unretained covariance remainder, or an incorrect normalization would be an error within the displayed reduction itself. A primitive liftability failure is different: the reduced variables can remain finite and their equations can remain algebraically consistent while the admissible full-state tangent required to realize their evolution becomes unbounded, exits the constrained tangent image, or acquires path dependence under composition of local right inverses. The obstruction is therefore a failure of realization, not of formal manipulation within the reduced coordinates.
+
+A useful programming metaphor is the separation between a high-level program and the low-level state in which it must actually execute: a Python program may remain syntactically valid and its API-level operations may remain mutually consistent even though compilation or runtime translation can no longer produce a legal machine state because a lower-level invariant has failed. The high-level objects can therefore continue to evolve coherently as formal objects after the executable realization they are meant to represent has ceased to exist. In the present setting, the propagated reduced variables play the role of the high-level program, whereas an admissible Navier--Stokes state together with its constrained tangent dynamics forms the execution layer; the mathematical problem is precisely whether each reduced step continues to admit such a physical compilation, a question made intrinsic below through compatibility ranges, lift cost, curvature, and the physical residual.
+
+This distinction has close mathematical relatives but is not identical to them. Nonlinear observability theory studies what state information can be recovered from outputs \cite{HermannKrener}; projection-based model reduction makes explicit that unresolved variables can re-enter reduced dynamics through memory or closure terms \cite{ChorinHaldKupferman,GouasmiParishDuraisamy}. The present problem is sharper: given a particular branch actively propagated by a proof, does that branch remain in the image of admissible full-state dynamics? Smooth-manifold language provides the natural formulation of the question through tangent spaces, submersions, and fibers \cite{Lee}; singular-value and pseudoinverse theory quantify the cost of reconstruction \cite{BenIsraelGreville}; and Ehresmann-connection curvature provides the correct language for path dependence of local lifts \cite{KobayashiNomizu}.
+
+The manuscript itself makes a purely projection-level critique insufficient. Its physical phase evaluation carries explicit chain-rule operators; its leading covariance correction has a signed tangent right inverse; its zero-Haar-mean component is inverted rather than discarded; a five-dimensional moment system enforces remaining integral constraints; and the correction cycle repeatedly recomputes pressure and the residual from the updated complete state \cite[Secs. 6--9]{OpenAI2026}. The question is therefore not whether an average loses information in the abstract. It is whether the \emph{complete family of lifts} remains uniformly nonsingular, mutually integrable, and compatible with the physical residual and terminal regularity claims through the singular limit.
+
+The note develops that question in five layers. First, Section~\ref{sec:notationdefs} centralizes the state, observation, lift, curvature, and residual notation. Second, an affine tangent criterion and its dual cokernel certificate isolate the exact first-order obstruction to admissible realization. Third, singular-value collapse and horizontal curvature are shown to produce two distinct failures: unbounded or extinct lifts, and hidden holonomy despite pointwise right inverses. Fourth, the classical Navier--Stokes residual is used as the equation-level exposure channel. A residual-leakage proposition then proves that, under polynomially controlled observation sensitivity, a nonflat primitive mismatch forces a nonflat physical residual. Finally, the manuscript-specific analysis converts these results into a narrowed contradiction program directed at the full compatibility operator and the actual pointwise residual rather than a coarse surrogate.
+
+The conclusions are deliberately limited to what is proved. The note does not claim that the OpenAI construction has already been disproved. It identifies a structural obstruction and derives quantitative criteria that would convert that obstruction into a contradiction with a physical statement asserted by the manuscript.
+
+\section{Scope relative to the OpenAI construction}
+\subsection{The terminal theorem is a physical theorem}
+The manuscript's Theorem 1.1 asserts, for every positive viscosity, a smooth compactly supported force together with smooth velocity and pressure on $\R^3\times[0,1)$, zero initial velocity, uniformly bounded kinetic energy, and unbounded velocity as $t\uparrow1$ \cite[Theorem 1.1]{OpenAI2026}. Its local Theorem 3.1 and Proposition 9.9 likewise culminate in a physical velocity-pressure pair whose momentum residual is asserted to be flat to every order at the singular point and whose azimuthal velocity grows like $\tau^{-A}$ on a specified physical path \cite[Theorem 3.1 and Proposition 9.9]{OpenAI2026}. Accordingly, any decisive counterargument must eventually contradict a physical residual, a physical regularity statement, or the force extension; an objection that remains purely representational is not enough.
+
+\subsection{The manuscript already supplies visible lift mechanisms}
+Section 6 defines the physical phase map and includes its fast chain-rule derivatives in the normalized operators. Section 7 constructs a two-component covariance map and, near fixed positive primary amplitudes, a linear signed right inverse for prescribed covariance increments. Section 8 inverts the zero-Haar-mean auxiliary-time component by a Fourier multiplier and solves a finite-dimensional moment system. Section 9 then performs the four correction blocks in sequence while recomputing pressure and the residual from the updated complete fields \cite[Secs. 6.1, 7.3--7.4, 8.5--8.6, and 9.3]{OpenAI2026}.
+
+These mechanisms materially narrow the analysis. They show that the construction does not simply project to a scalar and discard the complement. What is not established merely by the existence of the blockwise inverses is that the \emph{full constrained compatibility operator} remains sufficiently nonsingular, that the selected local lifts integrate coherently under composition, and that every vertical displacement remains in remainder classes whose physical derivative losses are controlled uniformly through the infinite-stage limit.
+
+\subsection{Primitive obstruction and reduced-state validity}
+The term \emph{primitive} refers to the full admissible state geometry underlying a selected observation, before the state is reduced to the block currently being manipulated. A primitive obstruction is therefore not the mere passage from a spatial field to an averaged or scalar quantity. It is a failure of the inverse geometry required to realize the propagated reduced branch as an admissible physical state, even when the reduced equations themselves remain internally consistent.
+
+\section{Centralized notation and definitions}\label{sec:notationdefs}
+This section centralizes every definition used in the proofs below. The geometric conventions follow standard smooth-manifold and submersion terminology \cite{Lee}; the horizontal/vertical decomposition follows standard connection language \cite{KobayashiNomizu}; and the singular-value notation is consistent with generalized-inverse theory \cite{BenIsraelGreville}.
+
+\subsection{Notation table}
+\renewcommand{\arraystretch}{1.12}
+\begin{longtable}{p{0.19\textwidth}p{0.31\textwidth}p{0.40\textwidth}}
+\toprule
+Symbol & Definition & Role in the note \\
+\midrule
+\endhead
+$I\subset\R$ & Physical-time interval & Domain for $t$ in the abstract state model. \\
+$t$ & Physical time & Distinct from correction-stage or reconstruction parameters. \\
+$\rho\downarrow0$ & Generic degeneration parameter & Used in rank-collapse results; may later be instantiated by $q$ or $\tau$. \\
+$q$ & Singular scale in the supplied manuscript & Satisfies $q\to0$ at the singular point; ``flat'' means smaller than every power of $q$. \\
+$\tau=1-t$ & Terminal-time distance in the manuscript & Used only when discussing its physical blowup scaling. \\
+$\X,\Y,\Zs$ & Smooth state, observation, and constraint manifolds & Abstract spaces for physical states, active observables, and constraints. \\
+$C(t,X)$ & Constraint map $I\times\X\to\Zs$ & Defines the admissible state set. \\
+$\A_t$ & $\{X:C(t,X)=0\}$ & Admissible physical state manifold when $0$ is a regular value of $C_t$. \\
+$\Pi(t,X)$, $\Pi_t$ & Observation map $I\times\X\to\Y$ & Selects the branch actively propagated or corrected. \\
+$\Fib_{t,y}$ & $\{X\in\A_t:\Pi_t(X)=y\}$ & Observation fiber over $y$. \\
+$X_*(t)$ & Physical state curve & A candidate lift of an observational branch. \\
+$Y_*(t)$ & Observational branch & Satisfies $Y_*(t)=\Pi_t(X_*(t))$ when liftable. \\
+$b$ & Proposed observable velocity & Element of $T_y\Y$, usually $b=\dot Y_*$. \\
+$\Kt_{t,X}$ & $\ker D_XC(t,X)$ & Homogeneous tangent space to the constraint manifold. \\
+$V_0$ & Particular solution of $D_XC\,V_0=-\partial_tC$ & Fixes an affine origin for the homogeneous compatibility equation. \\
+$\beta$ & $b-\partial_t\Pi-D_X\Pi V_0$ & Homogeneous observable target. \\
+$\Comp_{t,X}$ & $D_X\Pi|_{\Kt_{t,X}}$ & Primitive compatibility operator. \\
+$\mathscr L_{t,X}(b)$ & Set of admissible first-order lift tangents realizing $b$ & Intrinsic affine solution set for the differentiated constraint and observation equations. \\
+$\lambda_{\rm lift}(t,X;b)$ & $\inf\{\|V\|:V\in\mathscr L_{t,X}(b)\}$ & Minimum physical tangent cost; $+\infty$ when no lift exists. \\
+$\delta_{\rm ran}$ & $\dist(\beta,\Ran\Comp_{t,X})$ & Quantitative first-order range defect. \\
+$\eta$ & Unit vector in $\Ker\Comp_{t,X}^*$ & Dual witness for a component of $\beta$ outside the compatibility range. \\
+$\sigma_{\min}(\Comp)$ & Smallest nonzero singular value when $\Comp$ is surjective & Measures worst-direction homogeneous lift conditioning. \\
+$\Comp^\dagger$ & Moore--Penrose pseudoinverse & Produces the minimum-norm homogeneous lift when the target is in the range. \\
+$M\xrightarrow{\Pi}B$ & Smooth submersion used in reconstruction geometry & Total and base spaces for horizontal lifts. \\
+$\Vv_x$ & $\ker D\Pi_x$ & Vertical/hidden tangent directions. \\
+$L_x$ & Right inverse of $D\Pi_x$ & Chooses a horizontal lift of a base tangent. \\
+$\Hh_x$ & $\Ran L_x$ & Horizontal distribution selected by the right inverse. \\
+$\widetilde a$ & Horizontal lift of a base vector field $a$ & Used to define curvature and holonomy. \\
+$\Omega_x(a,b)$ & $\Proj_{\Vv}[\widetilde a,\widetilde b]_x$ & Primitive lift curvature. \\
+$\Phi_V^s$ & Local flow of vector field $V$ & Used in the commutator-loop expansion. \\
+$u,p,f,\nu$ & Velocity, pressure, force, viscosity & Classical incompressible Navier--Stokes variables. \\
+$\Rres$ & $\partial_tu+(u\cdot\nabla)u-\nu\Delta u+\nabla p-f$ & Physical momentum residual. \\
+$\omega$ & $\nabla\times u$ & Vorticity. \\
+$A$ & $\nabla u$ with $A_{ij}=\partial_j u_i$ & Velocity-gradient tensor. \\
+$S$ & $(A+A^\top)/2$ & Strain tensor. \\
+$e$ & $|u|^2/2$ & Kinetic-energy density. \\
+$\mathcal F$ & Exact state drift & Right-hand side of a first-order evolution $\dot X=\mathcal F(t,X)$ when no residual is present. \\
+$\mathcal B$ & Residual-injection operator & Appears in $\dot X=\mathcal F(t,X)+\mathcal B r$. \\
+$\Delta_\Pi$ & Observable dynamical mismatch & $\dot Y-\partial_t\Pi-D_X\Pi\,\mathcal F$. \\
+$O(q^\infty)$ & $O(q^N)$ for every $N\ge0$ & ``Flat to all orders'' at $q=0$. \\
+$X_{j,q}$ & Complete stage-$j$ construction state at scale $q$ & Used in the manuscript-specific primitive audit. \\
+$\Pi_{j,q}$ & Active stage-$j$ observation/correction block & Must be distinguished from the full physical state. \\
+\bottomrule
+\end{longtable}
+\renewcommand{\arraystretch}{1}
+
+\subsection{Admissible states, observation fibers, and primitive compatibility}
+For every quantitative range, adjoint, or singular-value statement below, the relevant tangent spaces are equipped with fixed Hilbert inner products (automatically available after choosing local Riemannian metrics in finite dimensions). Thus $\dist$, adjoints, orthogonal projections, and Moore--Penrose inverses are unambiguous. Whenever $\delta_{\rm ran}=0$ is used as an existence criterion, $\Ran\Comp_{t,X}$ is assumed closed; this is automatic in finite dimensions. Replacing finite-dimensional inner products by equivalent ones changes constants but not the existence or nonexistence of a lift.
+
+\begin{definition}[Admissible state and observation fiber]\label{def:admissible-fiber}
+Let $C:I\times\X\to\Zs$ and $\Pi:I\times\X\to\Y$ be $C^1$. Assume $0$ is a regular value of $C_t$ on the region under consideration. The admissible state manifold is
+\[
+\A_t:=\{X\in\X:C(t,X)=0\},
+\]
+and the observation fiber over $y\in\Y$ is
+\[
+\Fib_{t,y}:=\{X\in\A_t:\Pi_t(X)=y\}.
+\]
+A $C^1$ curve $Y_*(t)$ is an \emph{admissibly liftable observational branch} if there exists a $C^1$ curve $X_*(t)\in\A_t$ such that $\Pi_t(X_*(t))=Y_*(t)$.
+\end{definition}
+
+\begin{definition}[Primitive compatibility data]\label{def:compatibility}
+Fix $(t,X)$ with $X\in\A_t$ and choose a particular vector $V_0$ satisfying
+\[
+D_XC(t,X)V_0=-\partial_tC(t,X).
+\]
+Define
+\[
+\Kt_{t,X}:=\ker D_XC(t,X),
+\qquad
+\Comp_{t,X}:=D_X\Pi(t,X)|_{\Kt_{t,X}},
+\]
+and for a proposed observable velocity $b\in T_{\Pi_t(X)}\Y$ define the affine target
+\[
+\beta:=b-\partial_t\Pi(t,X)-D_X\Pi(t,X)V_0.
+\]
+The \emph{range defect} is
+\[
+\delta_{\rm ran}(t,X,b):=\dist\!\left(\beta,\Ran\Comp_{t,X}\right).
+\]
+A first-order branch is called \emph{primitive-compatible} at $(t,X)$ when $\beta\in\Ran\Comp_{t,X}$. If $\Ran\Comp_{t,X}$ is closed, this is equivalent to $\delta_{\rm ran}=0$.
+\end{definition}
+
+\begin{definition}[Admissible first-order lift and lift cost]\label{def:first-order-lift}
+At $(t,X)$ with $X\in\A_t$ and proposed observable velocity $b\in T_{\Pi_t(X)}\Y$, define the affine lift set
+\[
+\mathscr L_{t,X}(b)
+:=\left\{V\in T_X\X:
+D_XC(t,X)V=-\partial_tC(t,X),\;
+D_X\Pi(t,X)V=b-\partial_t\Pi(t,X)
+\right\}.
+\]
+Its \emph{lift cost} is
+\[
+\lambda_{\rm lift}(t,X;b)
+:=\inf_{V\in\mathscr L_{t,X}(b)}\|V\|,
+\]
+with the convention $\inf\varnothing=+\infty$. This definition is independent of the auxiliary choice of $V_0$ used to form $\beta$.
+\end{definition}
+
+\begin{definition}[Primitive branch extinction]\label{def:branch-extinction}
+Along a degenerating family $(t_\rho,X_\rho,b_\rho)$ with bounded observable targets $b_\rho$, a \emph{primitive branch extinction} occurs in either of two cases:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em,itemsep=0pt,topsep=0.2em]
+\item $\lambda_{\rm lift}(t_\rho,X_\rho;b_\rho)\to\infty$ (singular liftability); or
+\item the limiting affine target has strictly positive range defect (terminal range loss).
+\end{enumerate}
+\end{definition}
+
+\subsection{Horizontal lift geometry and hidden holonomy}
+\begin{definition}[Horizontal right inverse and curvature]\label{def:connection}
+Let $\Pi:M\to B$ be a smooth submersion. A smooth right inverse
+\[
+L_x:T_{\Pi(x)}B\to T_xM,
+\qquad D\Pi_x\circ L_x=\Id,
+\]
+defines the vertical space $\Vv_x:=\ker D\Pi_x$ and horizontal space $\Hh_x:=\Ran L_x$. If $a,b$ are vector fields on $B$ with horizontal lifts $\widetilde a,
+\widetilde b$, define the vertical curvature
+\[
+\Omega_x(a,b):=\Proj_{\Vv_x}[\widetilde a,\widetilde b]_x.
+\]
+When $[a,b]=0$, the entire bracket is vertical. Nonzero $\Omega$ measures failure of the selected local lifts to form an integrable horizontal distribution, equivalently the presence of infinitesimal hidden holonomy \cite{KobayashiNomizu}.
+\end{definition}
+
+\subsection{Physical residual, flatness, and observable mismatch}
+\begin{definition}[Navier--Stokes residual and flatness]\label{def:residual-flatness}
+For smooth incompressible fields define
+\[
+\Rres(u,p,f)
+:=\partial_tu+(u\cdot\nabla)u-\nu\Delta u+\nabla p-f.
+\]
+A quantity $G(q)$ is \emph{flat at $q=0$} if for every $N\ge0$ there exists $C_N$ with $\|G(q)\|\le C_Nq^N$ for sufficiently small $q$; this is denoted $G=O(q^\infty)$. An observation family is \emph{polynomially sensitive} if its relevant linearization has norm at most $Cq^{-M}$ for some fixed $M$.
+\end{definition}
+
+\begin{definition}[Observable dynamical mismatch]\label{def:dyn-mismatch}
+Let $X(t)$ be a $C^1$ state curve satisfying, in a local Banach chart,
+\[
+\dot X=\mathcal F(t,X)+\mathcal B_{t,X}r(t),
+\]
+and let $Y(t)=\Pi(t,X(t))$. Define
+\[
+\Delta_\Pi(t)
+:=\dot Y(t)-\partial_t\Pi(t,X(t))-D_X\Pi(t,X(t))\,\mathcal F(t,X(t)).
+\]
+Thus $\Delta_\Pi$ is the observed evolution not generated by the residual-free drift $\mathcal F$. In the Navier--Stokes velocity equation, with $r=\Rres$, one may take $\mathcal B=\Id$ after writing $\partial_tu=-(u\cdot\nabla)u+\nu\Delta u-\nabla p+f+\Rres$.
+\end{definition}
+
+\section{Primitive tangent liftability}
+\subsection{Affine tangent-lift criterion}
+\begin{theorem}[Affine tangent-lift criterion]\label{thm:tangentlift}
+Use Definitions~\ref{def:admissible-fiber}--\ref{def:first-order-lift}. Fix $(t_0,X_0)$ with $X_0\in\A_{t_0}$, let $Y_0=\Pi_{t_0}(X_0)$, and let $b\in T_{Y_0}\Y$. An admissible first-order lift $V\in\mathscr L_{t_0,X_0}(b)$ exists if and only if
+\begin{align}
+D_XC(t_0,X_0)V&=-\partial_tC(t_0,X_0),\label{eq:constraint-tangent}\\
+D_X\Pi(t_0,X_0)V&=b-\partial_t\Pi(t_0,X_0).\label{eq:obs-tangent}
+\end{align}
+Equivalently, for any particular $V_0$ solving \eqref{eq:constraint-tangent},
+\[
+\boxed{\beta\in\Ran\Comp_{t_0,X_0}.}
+\]
+Equivalently, $\mathscr L_{t_0,X_0}(b)\neq\varnothing$ if and only if $\beta\in\Ran\Comp_{t_0,X_0}$; when that range is closed, this is further equivalent to $\delta_{\rm ran}(t_0,X_0,b)=0$. The truth of the range condition is independent of the chosen particular solution $V_0$.
+\end{theorem}
+
+\begin{proof}
+\textbf{Step 1: differentiate the physical constraint.}
+If $X(t)$ is a $C^1$ admissible lift through $X_0$, then $C(t,X(t))\equiv0$. Hence
+\[
+0=\frac{d}{dt}C(t,X(t))\big|_{t=t_0}
+=\partial_tC(t_0,X_0)+D_XC(t_0,X_0)\dot X(t_0).
+\]
+With $V:=\dot X(t_0)$ this is \eqref{eq:constraint-tangent}.
+
+\textbf{Step 2: differentiate the observation.}
+Since $Y(t)=\Pi(t,X(t))$,
+\[
+\dot Y(t_0)
+=\partial_t\Pi(t_0,X_0)+D_X\Pi(t_0,X_0)V.
+\]
+Setting $\dot Y(t_0)=b$ gives \eqref{eq:obs-tangent}.
+
+\textbf{Step 3: isolate the homogeneous admissible tangent.}
+Let $V_0$ solve \eqref{eq:constraint-tangent}. Every other solution is
+\[
+V=V_0+W,
+\qquad W\in\Kt_{t_0,X_0}=\ker D_XC(t_0,X_0).
+\]
+Substitution into \eqref{eq:obs-tangent} yields
+\[
+\Comp_{t_0,X_0}W
+=b-\partial_t\Pi-D_X\Pi V_0
+=\beta.
+\]
+Thus a first-order admissible lift exists exactly when $\beta\in\Ran\Comp_{t_0,X_0}$.
+
+\textbf{Step 4: prove independence of the affine origin.}
+Let $V_0'$ be another solution of \eqref{eq:constraint-tangent}. Then $V_0'-V_0=:W_0\in\Kt_{t_0,X_0}$. The corresponding target is
+\[
+\beta'
+=b-\partial_t\Pi-D_X\Pi V_0'
+=\beta-\Comp_{t_0,X_0}W_0.
+\]
+Therefore $\beta'\in\Ran\Comp$ if and only if $\beta\in\Ran\Comp$. The range test is intrinsic despite the auxiliary choice of $V_0$.
+
+\textbf{Step 5: state the exact logical scope.}
+If the equations admit a vector $V$, then $(X_0,V)$ is an admissible first-order jet reproducing the proposed observed velocity. This does not yet imply existence of a full curve: higher-order integrability and the actual governing dynamics can impose further conditions. That separation is the reason curvature is treated independently in Section~\ref{sec:curvature}.
+\end{proof}
+
+\paragraph{Concluding remarks.}
+The theorem turns primitive liftability into a concrete range test on the centralized operator $\Comp_{t,X}$. It also separates two logically distinct questions: whether an instantaneous affine lift exists, and whether a smoothly varying family of such lifts integrates coherently, the latter being addressed by curvature below.
+
+\subsection{Dual certificate for range failure}
+The range defect in Definition~\ref{def:compatibility} admits a useful dual characterization, standard in closed-range operator theory and generalized-inverse analysis \cite{BenIsraelGreville}. It replaces explicit parameterization of $\Ran\Comp_{t,X}$ by the search for a single adjoint-null direction.
+
+\begin{proposition}[Cokernel certificate for primitive incompatibility]\label{prop:cokernel}
+Fix $(t,X,b)$ as in Definition~\ref{def:first-order-lift}, abbreviate $\Comp=\Comp_{t,X}$, and assume $\Ran\Comp$ is closed. Let $P_{\Ker\Comp^*}$ denote orthogonal projection in $T_{\Pi_t(X)}\Y$ onto $\Ker\Comp^*$. Then
+\[
+\boxed{
+\delta_{\rm ran}(t,X,b)
+=\|P_{\Ker\Comp^*}\beta\|
+=\sup_{\substack{\eta\in\Ker\Comp^*\\ \|\eta\|=1}}
+|\langle\beta,\eta\rangle|.
+}
+\]
+Moreover, every homogeneous candidate $W\in\Kt_{t,X}$ satisfies
+\[
+\|\beta-\Comp W\|\ge \delta_{\rm ran}(t,X,b).
+\]
+Hence a unit vector $\eta\in\Ker\Comp^*$ with $|\langle\beta,\eta\rangle|\ge c>0$ is a quantitative certificate that no admissible first-order lift exists; more generally, a lower bound $|\langle\beta,\eta\rangle|\ge c q^\alpha$ yields the same lower bound on the best possible compatibility error.
+\end{proposition}
+
+\begin{proof}
+\textbf{Step 1: use the closed-range orthogonal decomposition.}
+For a bounded operator between Hilbert spaces with closed range,
+\[
+\Ran\Comp=(\Ker\Comp^*)^\perp.
+\]
+Therefore the observation tangent space decomposes orthogonally as
+\[
+T_{\Pi_t(X)}\Y
+=\Ran\Comp\oplus\Ker\Comp^*.
+\]
+Write
+\[
+\beta=\beta_{\parallel}+\beta_{\perp},
+\qquad
+\beta_{\parallel}\in\Ran\Comp,
+\quad
+\beta_{\perp}=P_{\Ker\Comp^*}\beta.
+\]
+
+\textbf{Step 2: compute the distance to the compatibility range.}
+For any $y\in\Ran\Comp$,
+\[
+\|\beta-y\|^2
+=\|\beta_{\parallel}-y\|^2+\|\beta_{\perp}\|^2
+\ge \|\beta_{\perp}\|^2.
+\]
+Equality is attained at $y=\beta_{\parallel}$. Hence
+\[
+\delta_{\rm ran}(t,X,b)=\|\beta_{\perp}\|
+=\|P_{\Ker\Comp^*}\beta\|.
+\]
+
+\textbf{Step 3: derive the dual formula.}
+For every unit $\eta\in\Ker\Comp^*$,
+\[
+\langle\beta,\eta\rangle
+=\langle\beta_{\perp},\eta\rangle,
+\]
+so Cauchy--Schwarz gives
+\[
+|\langle\beta,\eta\rangle|
+\le\|\beta_{\perp}\|.
+\]
+If $\beta_{\perp}\neq0$, equality is attained by $\eta=\beta_{\perp}/\|\beta_{\perp}\|$; if $\beta_{\perp}=0$, both sides vanish. This proves the supremum identity.
+
+\textbf{Step 4: bound every approximate homogeneous lift.}
+Since $\Comp W\in\Ran\Comp$ for every $W\in\Kt_{t,X}$, the definition of distance gives
+\[
+\|\beta-\Comp W\|
+\ge\dist(\beta,\Ran\Comp)
+=\delta_{\rm ran}(t,X,b).
+\]
+The final certificate statements follow immediately from the dual formula.
+\end{proof}
+
+\paragraph{Concluding remarks.}
+Proposition~\ref{prop:cokernel} gives a practical obstruction criterion that is intrinsic to the full constrained observation map. In the manuscript-specific audit, it permits a decisive range failure to be proved by constructing one adjoint-null witness $\eta$ with a nonflat pairing against $\beta$, rather than by explicitly describing the entire compatibility range.
+
+\section{Primitive rank collapse and branch extinction}
+\subsection{Stable observables can force singular or nonexistent physical lifts}
+The singular-value mechanism below is standard linear algebra applied to the compatibility operator, but its interpretation is the key structural point: the observable target can remain bounded while the minimum physical lift becomes unbounded. The Moore--Penrose language used in the proof is standard; see \cite{BenIsraelGreville}.
+
+\begin{theorem}[Singular-value branch-extinction theorem]\label{thm:rankcollapse}
+Let $H$ and $Y$ be finite-dimensional inner-product spaces and let
+\[
+\Comp_\rho:H\to Y,
+\qquad 0<\rho\le\rho_0,
+\]
+be a continuous family of surjective linear maps converging in operator norm to $\Comp_0$ as $\rho\downarrow0$. Let $\sigma_{\min}(\rho)$ be the smallest singular value of $\Comp_\rho$ and suppose
+\[
+\sigma_{\min}(\rho)\to0.
+\]
+Let $\beta_\rho\to\beta_0$ be bounded targets. Suppose that along a sequence $\rho_n\downarrow0$ there are unit left singular vectors $u_n\in Y$ satisfying
+\[
+\Comp_{\rho_n}\Comp_{\rho_n}^*u_n
+=\sigma_{\min}(\rho_n)^2u_n,
+\qquad
+|\langle\beta_{\rho_n},u_n\rangle|\ge c>0.
+\]
+Then every lift $W_n$ satisfying $\Comp_{\rho_n}W_n=\beta_{\rho_n}$ obeys
+\[
+\|W_n\|\ge \frac{c}{\sigma_{\min}(\rho_n)}\to\infty.
+\]
+Equivalently, the minimum-norm homogeneous lift $\Comp_{\rho_n}^\dagger\beta_{\rho_n}$ diverges. If these operators arise from Definition~\ref{def:compatibility} with particular constraint tangents $V_{0,\rho}$ satisfying $\sup_\rho\|V_{0,\rho}\|<\infty$, then the affine lift cost obeys
+\[
+\lambda_{\rm lift}(t_{\rho_n},X_{\rho_n};b_{\rho_n})
+\ge \frac{c}{\sigma_{\min}(\rho_n)}-\|V_{0,\rho_n}\|
+\longrightarrow\infty.
+\]
+If, after passing to a subsequence, $u_n\to u_0$ and $\langle\beta_0,u_0\rangle\neq0$, then
+\[
+\Comp_0^*u_0=0,
+\qquad
+\beta_0\notin\Ran\Comp_0;
+\]
+thus the limiting target has positive range defect and no lift.
+\end{theorem}
+
+\begin{proof}
+\textbf{Step 1: test the lift equation in the least-controlled observed direction.}
+Let $\Comp_{\rho_n}W_n=\beta_{\rho_n}$. Taking inner products with $u_n$ gives
+\[
+\langle\beta_{\rho_n},u_n\rangle
+=\langle W_n,\Comp_{\rho_n}^*u_n\rangle.
+\]
+
+\textbf{Step 2: compute the adjoint singular-vector norm.}
+Because $u_n$ is a unit left singular vector,
+\[
+\|\Comp_{\rho_n}^*u_n\|^2
+=\langle \Comp_{\rho_n}\Comp_{\rho_n}^*u_n,u_n\rangle
+=\sigma_{\min}(\rho_n)^2.
+\]
+Hence
+\[
+\|\Comp_{\rho_n}^*u_n\|=\sigma_{\min}(\rho_n).
+\]
+
+\textbf{Step 3: obtain the mandatory lift blowup.}
+Cauchy--Schwarz yields
+\[
+|\langle\beta_{\rho_n},u_n\rangle|
+\le \|W_n\|\,\sigma_{\min}(\rho_n).
+\]
+The persistent component assumption therefore gives
+\[
+\|W_n\|\ge \frac{c}{\sigma_{\min}(\rho_n)}.
+\]
+Since the denominator tends to zero, every lift diverges. The Moore--Penrose homogeneous lift minimizes norm among all homogeneous solutions, so it diverges as well. In the constrained setting, every affine lift has the form $V_{0,\rho_n}+W_n$; therefore
+\[
+\|V_{0,\rho_n}+W_n\|
+\ge \|W_n\|-\|V_{0,\rho_n}\|
+\ge \frac{c}{\sigma_{\min}(\rho_n)}-\|V_{0,\rho_n}\|.
+\]
+If the particular tangents are uniformly bounded, Definition~\ref{def:first-order-lift} gives $\lambda_{\rm lift}\to\infty$.
+
+\textbf{Step 4: identify the limiting cokernel.}
+We have
+\[
+\|\Comp_{\rho_n}^*u_n\|=\sigma_{\min}(\rho_n)\to0.
+\]
+Operator-norm convergence $\Comp_{\rho_n}\to\Comp_0$ and vector convergence $u_n\to u_0$ imply
+\[
+\Comp_0^*u_0=0.
+\]
+Thus $u_0\perp\Ran\Comp_0$.
+
+\textbf{Step 5: exclude the limiting target from the range.}
+If $\beta_0\in\Ran\Comp_0$, every vector in $\Ker\Comp_0^*$ would be orthogonal to $\beta_0$. But $u_0\in\Ker\Comp_0^*$ and $\langle\beta_0,u_0\rangle\neq0$. Therefore
+\[
+\beta_0\notin\Ran\Comp_0,
+\]
+which is terminal range loss in Definition~\ref{def:branch-extinction}.
+\end{proof}
+
+\paragraph{Concluding remarks.}
+The singularity need not appear in the observable itself; it can reside entirely in the inverse geometry of $\Comp_\rho$. The limiting vector $u_0\in\Ker\Comp_0^*$ is precisely the dual obstruction witness of Proposition~\ref{prop:cokernel}: a persistent target component in that direction forces unbounded homogeneous lifts before the limit and a positive range defect at the limit.
+
+\subsection{Canonical model and computational check}
+Take
+\[
+\Comp_\rho=
+\begin{pmatrix}1&0\\0&\rho\end{pmatrix},
+\qquad
+\beta=\begin{pmatrix}0\\1\end{pmatrix}.
+\]
+For every $\rho>0$ the unique lift is $(0,\rho^{-1})^\top$, while at $\rho=0$ the target is outside $\Ran\Comp_0=\operatorname{span}(e_1)$. The observable target is constant while the physical lift norm is exactly $1/\rho$.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\textwidth]{rank_collapse.png}
+\caption{Canonical primitive branch extinction. The target observable velocity is fixed while the minimum lift norm grows as $1/\sigma_{\min}$. At rank loss the target leaves the range.}
+\label{fig:rankcollapse}
+\end{figure}
+
+The executed sweep reached $\rho=10^{-6}$, where the minimum lift norm was $10^6$; the terminal distance of $\beta$ from $\Ran\Comp_0$ is exactly one. The computation illustrates the theorem but is not used in its proof.
+
+\section{Local right inverses and global lift curvature}\label{sec:curvature}
+\subsection{Blockwise solvability is not path-independent reconstruction}
+A smooth right inverse $L$ as in Definition~\ref{def:connection} supplies an instantaneous lift of every observed tangent, but it need not integrate to a local reconstruction map. This is the familiar distinction between a connection and a flat connection in differential geometry \cite{KobayashiNomizu}; here it is used as an obstruction to composing proof-stage lifts.
+
+\begin{theorem}[Primitive lift-curvature and hidden holonomy]\label{thm:curvature}
+Let $\Pi:M\to B$ be a smooth submersion equipped with the right inverse $L$ of Definition~\ref{def:connection}. Let $a,b$ be commuting smooth vector fields on $B$, and let
+\[
+\widetilde a(x)=L_xa(\Pi(x)),
+\qquad
+\widetilde b(x)=L_xb(\Pi(x))
+\]
+be their horizontal lifts. Then
+\[
+\Omega_x(a,b)=[\widetilde a,\widetilde b]_x\in\Vv_x.
+\]
+Moreover, for the commutator loop
+\[
+\Gamma_\eps
+:=\Phi^{-\eps}_{\widetilde b}
+\circ\Phi^{-\eps}_{\widetilde a}
+\circ\Phi^{\eps}_{\widetilde b}
+\circ\Phi^{\eps}_{\widetilde a},
+\]
+one has in local coordinates
+\[
+\Gamma_\eps(x)
+=x+\eps^2\Omega_x(a,b)+O(\eps^3).
+\]
+Consequently, if $\Omega_x(a,b)\neq0$, there is no local path-independent reconstruction $R:B\to M$ through $x$ satisfying
+\[
+\Pi\circ R=\Id,
+\qquad
+DR=L
+\]
+on a neighborhood of $\Pi(x)$.
+\end{theorem}
+
+\begin{proof}
+\textbf{Step 1: project the horizontal brackets.}
+The lifted fields are $\Pi$-related to $a$ and $b$, so naturality of the Lie bracket gives
+\[
+D\Pi_x[\widetilde a,\widetilde b]_x
+=[a,b]_{\Pi(x)}.
+\]
+Since $[a,b]=0$,
+\[
+D\Pi_x[\widetilde a,\widetilde b]_x=0.
+\]
+Therefore $[\widetilde a,\widetilde b]_x\in\ker D\Pi_x=\Vv_x$, so it equals the curvature defined in Section~\ref{sec:notationdefs}.
+
+\textbf{Step 2: expand the small lifted loop.}
+Taylor expansion of local flows, equivalently the standard flow-commutator expansion, gives
+\[
+\Phi^{-\eps}_{\widetilde b}
+\Phi^{-\eps}_{\widetilde a}
+\Phi^{\eps}_{\widetilde b}
+\Phi^{\eps}_{\widetilde a}(x)
+=x+\eps^2[\widetilde a,\widetilde b]_x+O(\eps^3).
+\]
+Because the bracket is vertical, the leading loop displacement is invisible under $\Pi$.
+
+\textbf{Step 3: assume a path-independent reconstruction.}
+Suppose $R$ exists with $DR=L$. Choose commuting local coordinate fields $a=\partial_s$ and $b=\partial_r$ on the base. Along the image of $R$,
+\[
+\partial_sR=\widetilde a\circ R,
+\qquad
+\partial_rR=\widetilde b\circ R.
+\]
+
+\textbf{Step 4: commute mixed derivatives.}
+Smoothness of $R$ gives
+\[
+\partial_r\partial_sR-\partial_s\partial_rR=0.
+\]
+Using the two differential equations for $R$, the left-hand side equals
+\[
+[\widetilde a,\widetilde b]\circ R.
+\]
+Thus the bracket, hence $\Omega$, must vanish along the reconstructed surface. A nonzero curvature at $x$ contradicts the existence of such an $R$.
+\end{proof}
+
+\paragraph{Concluding remarks.}
+The theorem proves that pointwise right inverses certify only instantaneous solvability, not global reconstruction. In a sequential correction proof, nonzero curvature is harmless only if the resulting vertical displacement is explicitly re-entered into the full residual and controlled at the required scale; otherwise the proof can close in observable space while drifting in an unobserved physical direction.
+
+\subsection{Exact holonomy model}
+Let $\Pi(x,y,z)=(x,y)$ on $\R^3$ and choose
+\[
+L(e_1)=\partial_x+y\partial_z,
+\qquad
+L(e_2)=\partial_y.
+\]
+Both are exact right inverses of $D\Pi$, but
+\[
+[L(e_1),L(e_2)]=-\partial_z\neq0.
+\]
+Starting at the origin and applying the four exact flows $+\eps L(e_1)$, $+\eps L(e_2)$, $-\eps L(e_1)$, $-\eps L(e_2)$ returns the observable $(x,y)$ exactly to $(0,0)$ while
+\[
+z_{\rm final}=-\eps^2.
+\]
+Thus the hidden holonomy is exact rather than a truncation artifact.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\textwidth]{holonomy.png}
+\caption{Exact hidden holonomy despite pointwise right inverses. The observable loop closes while the primitive state acquires a vertical displacement of magnitude $\eps^2$.}
+\label{fig:holonomy}
+\end{figure}
+
+\section{Endpoint exclusion of inadmissible observational continuation}
+\subsection{Terminal compatibility as a necessary condition for a regular lift}
+\begin{theorem}[Endpoint admissible-continuation criterion]\label{thm:endpoint}
+Let $C,\Pi,\A_t,\Kt_{t,X}$ be as in Section~\ref{sec:notationdefs}. Suppose $X:[0,T]\to\X$ is $C^1$ and
+\[
+C(t,X(t))=0,
+\qquad
+Y(t)=\Pi(t,X(t)).
+\]
+Set $X_*=X(T)$ and $b_*=\dot Y(T)$. Let $V_0$ be any vector satisfying
+\[
+D_XC(T,X_*)V_0=-\partial_tC(T,X_*).
+\]
+Then necessarily
+\[
+\boxed{
+ b_*-\partial_t\Pi(T,X_*)-D_X\Pi(T,X_*)V_0
+ \in
+ \Ran\Comp_{T,X_*}.
+}
+\]
+If the displayed vector lies outside $\Ran\Comp_{T,X_*}$, no $C^1$ admissible physical continuation through $T$ can realize the observational branch. If, along $t\uparrow T$, the minimum norm of every tangent lift tends to infinity while a realizing state is assumed $C^1$ up to $T$, such a continuation is likewise impossible.
+\end{theorem}
+
+\begin{proof}
+\textbf{Step 1: use the terminal physical tangent.}
+Since $X$ is $C^1$ on the closed interval, $V_*:=\dot X(T)$ exists and is finite.
+
+\textbf{Step 2: differentiate the constraint at the endpoint.}
+From $C(t,X(t))\equiv0$,
+\[
+D_XC(T,X_*)V_*=-\partial_tC(T,X_*).
+\]
+Hence $V_*-V_0\in\Kt_{T,X_*}$.
+
+\textbf{Step 3: differentiate the observation at the endpoint.}
+The chain rule gives
+\[
+b_*=\partial_t\Pi(T,X_*)+D_X\Pi(T,X_*)V_*.
+\]
+Subtracting the contribution of $V_0$ yields
+\[
+ b_*-\partial_t\Pi-D_X\Pi V_0
+ =D_X\Pi(V_*-V_0)
+ =\Comp_{T,X_*}(V_*-V_0),
+\]
+which lies in $\Ran\Comp_{T,X_*}$.
+
+\textbf{Step 4: take the contrapositive.}
+If the affine target is outside the range, no finite terminal vector $V_*$ can satisfy both differentiated equations. Hence no $C^1$ admissible lift through $T$ exists.
+
+\textbf{Step 5: incorporate mandatory preterminal lift blowup.}
+If every tangent lift of the branch has norm tending to infinity, then the actual tangent $\dot X(t)$ of any realizing lift must diverge as $t\uparrow T$. That contradicts continuity and boundedness of $\dot X$ required by a $C^1$ extension to $T$.
+\end{proof}
+
+\paragraph{Concluding remarks.}
+The theorem is an endpoint criterion only for state components whose regular continuation is actually claimed. In the supplied blowup manuscript, the singular velocity at the origin is not asserted to extend $C^1$ through $t=1$, so this theorem cannot be applied there naively; its manuscript-level force is instead at a preterminal no-lift interface or at quantities for which one-sided regularity and terminal force compatibility are explicitly claimed.
+\section{Residual exposure in the classical Navier--Stokes equations}
+\subsection{The physical residual is the final equation-level invariant}
+Use the centralized definitions $\Rres$, $\omega$, $e$, and $A$ from Section~\ref{sec:notationdefs}. The identities below are standard consequences of the classical incompressible equations; they are included explicitly because they provide the physical exposure channel needed by the primitive argument \cite{Temam,ConstantinFoias,MajdaBertozzi,RobinsonRodrigoSadowski}.
+
+\begin{theorem}[Residual-exposure identities]\label{thm:residualexposure}
+For every such smooth field,
+\begin{align}
+\partial_t\omega+(u\cdot\nabla)\omega-(\omega\cdot\nabla)u
+-\nu\Delta\omega-\nabla\times f
+&=\nabla\times\Rres,\label{eq:vort-defect}\\
+\partial_te+\nabla\cdot\bigl[(e+p)u-\nu\nabla e\bigr]
++\nu|\nabla u|^2-f\cdot u
+&=u\cdot\Rres,\label{eq:energy-defect}\\
+D_tA+A^2-\nu\Delta A+\nabla^2p-\nabla f
+&=\nabla\Rres,\label{eq:grad-defect}
+\end{align}
+where $D_t=\partial_t+u\cdot\nabla$. In particular, the strain-equation defect is $\sym\nabla\Rres$.
+\end{theorem}
+
+\begin{proof}
+\textbf{Part I: vorticity defect.}
+Take the curl of the definition of $\Rres$:
+\[
+\nabla\times\Rres
+=\partial_t\omega+\nabla\times((u\cdot\nabla)u)
+-\nu\Delta\omega-\nabla\times f,
+\]
+because $\nabla\times\nabla p=0$ and curl commutes with $\partial_t$ and $\Delta$ on smooth fields.
+
+For divergence-free $u$, the standard vector identity is
+\[
+\nabla\times((u\cdot\nabla)u)
+=(u\cdot\nabla)\omega-(\omega\cdot\nabla)u.
+\]
+Substitution gives \eqref{eq:vort-defect}.
+
+\textbf{Part II: local-energy defect.}
+Dot the residual equation with $u$:
+\[
+u\cdot\Rres
+=u\cdot\partial_tu
++u\cdot(u\cdot\nabla)u
+-\nu u\cdot\Delta u
++u\cdot\nabla p-u\cdot f.
+\]
+The individual terms satisfy
+\[
+u\cdot\partial_tu=\partial_te,
+\]
+\[
+u\cdot(u\cdot\nabla)u=(u\cdot\nabla)e=\nabla\cdot(eu),
+\]
+where the last equality uses $\nabla\cdot u=0$,
+\[
+u\cdot\nabla p=\nabla\cdot(pu),
+\]
+and
+\[
+\Delta e
+=\sum_{i,j}(\partial_j u_i)^2+u\cdot\Delta u
+=|\nabla u|^2+u\cdot\Delta u.
+\]
+Hence
+\[
+-\nu u\cdot\Delta u
+=-\nu\Delta e+\nu|\nabla u|^2.
+\]
+Combining the identities gives \eqref{eq:energy-defect}.
+
+\textbf{Part III: velocity-gradient defect.}
+Differentiate the residual with respect to space. With the convention $A_{ij}=\partial_j u_i$,
+\[
+\nabla\partial_tu=\partial_tA,
+\qquad
+\nabla(-\nu\Delta u)=-\nu\Delta A,
+\qquad
+\nabla\nabla p=\nabla^2p.
+\]
+For the transport term,
+\[
+\partial_j(u_k\partial_k u_i)
+=(\partial_j u_k)(\partial_k u_i)+u_k\partial_k\partial_j u_i.
+\]
+The first term is $(A^2)_{ij}$ and the second is $((u\cdot\nabla)A)_{ij}$. Therefore
+\[
+\nabla((u\cdot\nabla)u)=A^2+(u\cdot\nabla)A.
+\]
+It follows that
+\[
+\nabla\Rres
+=\partial_tA+(u\cdot\nabla)A+A^2-\nu\Delta A+\nabla^2p-\nabla f,
+\]
+which is exactly \eqref{eq:grad-defect}. Taking the symmetric part gives the strain statement.
+\end{proof}
+
+\paragraph{Concluding remarks.}
+These identities identify where a primitive incompatibility must ultimately appear if the final object is claimed to be a classical Navier--Stokes solution. A vorticity-branch, energy-branch, or strain-branch law derived from NSE cannot independently fail while $\Rres=0$, $\nabla\cdot u=0$, and the differentiations remain legitimate; the primitive contradiction must leak into the physical residual, the divergence constraint, the regularity class, or the force itself.
+
+
+\subsection{A nonflat primitive mismatch forces a nonflat residual}
+The preceding theorem shows that several familiar branch laws are differential consequences of $\Rres$. The next proposition is more abstract and is the key new reduction result for the counter-proof program: it quantifies how any observed dynamical mismatch must be paid for by a physical residual when observation sensitivity is only polynomially singular.
+
+\begin{proposition}[Primitive mismatch--residual leakage]\label{prop:residualleakage}
+Let $X:[0,T)\to\X$ be a $C^1$ state curve in a normed local chart and let $q:[0,T)\to(0,q_0]$ satisfy $q(t)\to0$ as $t\uparrow T$. Assume
+\[
+\dot X(t)=\mathcal F(t,X(t))+\mathcal B_{t,X(t)}r(t),
+\]
+where $\mathcal B_{t,X}$ is bounded between the residual and state tangent spaces, and let $Y(t)=\Pi(t,X(t))$ with $\Pi\in C^1$. Then the mismatch of Definition~\ref{def:dyn-mismatch} satisfies
+\[
+\boxed{
+\Delta_\Pi(t)=D_X\Pi(t,X(t))\,\mathcal B_{t,X(t)}r(t).
+}
+\]
+Consequently,
+\[
+\|\Delta_\Pi(t)\|
+\le
+\|D_X\Pi(t,X(t))\mathcal B_{t,X(t)}\|\,\|r(t)\|.
+\]
+If, for $t$ sufficiently close to $T$,
+\[
+\|D_X\Pi\mathcal B\|\le Cq(t)^{-M}
+\]
+for some fixed $M$, while along a sequence $t_n\uparrow T$ with $q_n:=q(t_n)$ one has
+\[
+\|\Delta_\Pi(t_n)\|\ge c q_n^{\alpha}
+\]
+for $c>0$, then
+\[
+\boxed{
+\|r(t_n)\|\ge \frac{c}{C}q_n^{\alpha+M}.
+}
+\]
+In particular, if $r=O(q^\infty)$ and the observation sensitivity is polynomially controlled, then $\Delta_\Pi=O(q^\infty)$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Step 1: differentiate the observation along the candidate state.}
+By the chain rule,
+\[
+\dot Y
+=\partial_t\Pi(t,X)+D_X\Pi(t,X)\dot X.
+\]
+
+\textbf{Step 2: substitute the residual-perturbed state equation.}
+Using $\dot X=\mathcal F+\mathcal B r$ gives
+\[
+\dot Y
+=\partial_t\Pi
++D_X\Pi\,\mathcal F
++D_X\Pi\,\mathcal B r.
+\]
+Subtracting the residual-free observed drift in Definition~\ref{def:dyn-mismatch} yields the exact identity
+\[
+\Delta_\Pi=D_X\Pi\,\mathcal B r.
+\]
+
+\textbf{Step 3: take norms.}
+The operator norm inequality gives
+\[
+\|\Delta_\Pi\|
+\le \|D_X\Pi\mathcal B\|\,\|r\|.
+\]
+If $\|D_X\Pi\mathcal B\|\le Cq^{-M}$ and $\|\Delta_\Pi\|\ge cq^\alpha$, then
+\[
+cq^\alpha
+\le Cq^{-M}\|r\|,
+\]
+so
+\[
+\|r\|\ge(c/C)q^{\alpha+M}.
+\]
+
+\textbf{Step 4: prove the flatness corollary.}
+Assume $r=O(q^\infty)$ along $t\uparrow T$. For any desired $N$, choose the residual estimate at order $N+M+1$:
+\[
+\|r(t)\|\le C_{N+M+1}q(t)^{N+M+1}.
+\]
+Then
+\[
+\|\Delta_\Pi(t)\|
+\le Cq(t)^{-M}C_{N+M+1}q(t)^{N+M+1}
+=O(q^{N+1}),
+\]
+which is $O(q^N)$. Since $N$ is arbitrary, $\Delta_\Pi=O(q^\infty)$.
+\end{proof}
+
+\paragraph{Concluding remarks.}
+This proposition provides the quantitative link from primitive incompatibility to the manuscript's claimed physical residual flatness. It also narrows the target sharply: a useful counter-proof must produce a \emph{nonflat} compatibility or holonomy defect whose observation sensitivity is at most polynomial in $q$; once that is done, flatness of the actual physical residual is impossible.
+
+\begin{corollary}[Finite-jet Navier--Stokes form]\label{cor:jetleakage}
+Let $J^s\Rres:=(\partial^\gamma\Rres)_{|\gamma|\le s}$ be the residual jet required by a finite-order differential observation $\Pi_q$ of the physical velocity and pressure. Assume that, after physical phase evaluation, the induced linear map from $J^s\Rres$ to the observed mismatch has operator norm at most $Cq^{-M}$ in the chosen finite-jet norms. If
+\[
+\partial^\gamma\Rres=O(q^\infty)
+\qquad(|\gamma|\le s),
+\]
+then the associated observed dynamical mismatch satisfies $\Delta_{\Pi_q}=O(q^\infty)$. Consequently, any algebraic lower bound $\|\Delta_{\Pi_q}\|\ge cq^\alpha$ along a sequence $q\downarrow0$ contradicts flatness of the required residual jet.
+\end{corollary}
+
+\begin{proof}
+Collect the finitely many residual derivatives into the normed vector $r^{(s)}:=J^s\Rres$. The differentiated observation law is a finite sum of coefficient-weighted components of $r^{(s)}$, so by hypothesis its residual-injection operator satisfies
+\[
+\|D\Pi_q\,\mathcal B^{(s)}_q\|\le Cq^{-M}.
+\]
+Because there are finitely many multi-indices with $|\gamma|\le s$, componentwise flatness implies $\|r^{(s)}\|=O(q^\infty)$. Proposition~\ref{prop:residualleakage} applied to this finite-jet system yields $\Delta_{\Pi_q}=O(q^\infty)$, and the final contradiction follows immediately.
+\end{proof}
+
+\paragraph{Concluding remarks.}
+The corollary is tailored to the manuscript's Lemma 9.8/Proposition 9.9 regime, where physical derivative conversion is asserted to cost only fixed powers of $q$ at every fixed derivative order. A primitive defect that survives at any algebraic order can therefore be used directly against the claimed $O(q^\infty)$ pointwise residual, rather than remaining an interpretive objection.
+
+\subsection{Computational verification}
+
+The residual identities were independently checked by symbolic algebra on a nontrivial divergence-free polynomial test field in the accompanying code. The checks returned exact zero for the vorticity, local-energy, and velocity-gradient defect differences, and the strain defect reduced to $\sym\nabla\Rres$. This computation is a verification of the symbolic implementation; the proof above is analytic and self-contained.
+
+
+\section{Consequences for the claimed blowup construction}
+\subsection{What the visible right inverses do establish}
+The manuscript's explicit lift maps are meaningful evidence against a purely projection-level branch-loss critique. Its covariance map has a tangent right inverse near the fixed positive primary pulses and retains the quadratic covariance remainder in the subsequent residual \cite[pp. 82--87]{OpenAI2026}. Its zero-Haar-mean residual is inverted by $N^{-1}$ and reinserted as a divergence-free physical correction, with the slow-time contribution and reconstruction remainder retained \cite[pp. 95--96]{OpenAI2026}. The four-step correction cycle then recomputes pressure and all residuals from the complete updated fields \cite[pp. 106--111]{OpenAI2026}.
+
+These statements prove local blockwise liftability at the level of the displayed subproblems. They do not, by logic alone, identify the singular values or curvature of the \emph{full constrained} compatibility map, nor do they prove that those properties remain uniform under the singular scale and diagonal infinite-stage limit. This is exactly the distinction formalized by Theorems~\ref{thm:rankcollapse} and \ref{thm:curvature}.
+
+\subsection{The manuscript-specific primitive compatibility operator}
+At correction stage $j$ and scale $q$, let $X_{j,q}$ denote the complete state required to evaluate the actual physical residual: physical velocity and pressure, the finite jets needed by the residual, and the auxiliary representatives together with their prescribed phase evaluation. Let $\A_{j,q}$ denote the constraint set determined by everything claimed to be preserved at that stage: incompressibility, support and moment conditions, chart compatibility, smooth extension conditions, and the phase-evaluation relations. Let $\Pi_{j,q}$ denote the block currently corrected.
+
+Let $C_{j,q}$ denote a local constraint map for $\A_{j,q}$ and define, in the notation of Section~\ref{sec:notationdefs},
+\[
+\Kt_{j,q}:=\Ker D C_{j,q}(X_{j,q}),
+\qquad
+\boxed{
+\Comp_{j,q}
+:=D\Pi_{j,q}(X_{j,q})|_{\Kt_{j,q}}.
+}
+\]
+This is the primitive operator to audit, not merely the displayed $2\times2$ covariance matrix, the Fourier divisor $v_t\cdot k$, or the $5\times5$ moment matrix. A decisive branch-extinction result requires either a nonzero range defect for the actual affine target $\beta_{j,q}$, a singular direction of $\Comp_{j,q}$ occupied by that target, or an obstruction generated by nonintegrable composition of the implemented lifts.
+
+\subsection{The highest-value remaining estimate is stage-uniform physical compatibility}
+Lemma 9.7 allows constants and derivative counts to depend on the correction stage, but Lemma 9.8 asserts that the \emph{loss in powers of $q$ under physical differentiation} can be bounded independently of stage \cite[Lemmas 9.7--9.8]{OpenAI2026}. That distinction is now central. Stage growth of harmless constants can be absorbed by the diagonal cutoff construction; stage growth of the physical exponent loss cannot, because the summation lemma requires a fixed loss at each derivative order.
+
+Accordingly, one of the strongest remaining targets is to show that the actual primitive lift requires an auxiliary derivative order, cover factor, or inverse amplification whose conversion to physical variables produces a loss $\ell_{m,j}$ with
+\[
+\sup_j\ell_{m,j}=\infty
+\]
+for some fixed physical derivative order $m$. Such a result would invalidate the uniform hypothesis feeding the final summation without identifying an error in any individual finite correction block.
+
+\subsection{Curvature must be tested after full-state recomputation}
+Suppose two correction blocks use local lifts $L^{(r)}$ and $L^{(s)}$. The relevant object is
+\[
+\Omega^{(r,s)}
+=\Proj_{\Vv}[\widetilde L^{(r)},\widetilde L^{(s)}],
+\]
+interpreted on the full constrained state rather than on the reduced target alone. Nonzero curvature is not automatically fatal: the manuscript claims to recompute the complete residual after each block, and a vertical displacement that re-enters a controlled residual class can be corrected later.
+
+The decisive curvature attack is therefore more specific. One must identify a component of $\Omega^{(r,s)}$ that either (i) lies outside the stated coefficient/remainder classes, (ii) requires stage-dependent physical losses to estimate, or (iii) yields a nonflat observed mismatch after the complete recomputation. Proposition~\ref{prop:residualleakage} then converts that surviving mismatch into a nonflat physical residual.
+
+\subsection{The endpoint theorem must be applied only where regularity is claimed}
+The source ultimately states that Proposition 9.9 estimates the \emph{actual pointwise physical residual after auxiliary evaluation} and obtains $O(q^\infty)$ flatness \cite[pp. 113--116]{OpenAI2026}. It then localizes in physical space, defines $f:=\partial_tu+(u\cdot\nabla)u-\Delta u+\nabla p$ for $t<1$, and proves compatible one-sided limits of all force derivatives before constructing a smooth compactly supported extension \cite[Sec. 10.2]{OpenAI2026}.
+
+The endpoint admissible-continuation criterion should therefore not be misapplied to the singular velocity at the origin, whose smooth continuation through $t=1$ is precisely what the manuscript denies. Its correct manuscript use is either (a) a no-lift event at some preterminal $q>0$, or (b) an endpoint incompatibility for a quantity the proof claims has a regular one-sided limit, especially the residual/force data or fields away from the singular point.
+
+\section{Strengthened structural counter-proof template}
+The results above reduce the contradiction strategy to a small number of verifiable full-state statements. The central task is to produce a nonflat primitive defect in the \emph{full constrained state} and then propagate that defect to a physical quantity the manuscript claims is flat or regular.
+
+\subsection{Step 1: define the full constrained state before choosing a target}
+Fix a correction stage $j$, scale $q$, and physical neighborhood. Specify $X_{j,q}$ large enough that the actual physical residual and every constraint used by the proof are functions of that state. The state must include all jets required by the chosen diagnostic and all auxiliary representatives before prescribed phase evaluation. Define $\A_{j,q}$ from the exact constraints, not merely from the block currently being corrected.
+
+The active observation $\Pi_{j,q}$ is then chosen only after the full state is fixed. This order prevents a false counterexample caused by omitting a variable that the manuscript actually carries in another block.
+
+\subsection{Step 2: compute the true compatibility defect}
+Use the centralized quantities
+\[
+\Comp_{j,q}=D\Pi_{j,q}(X_{j,q})|_{\Kt_{j,q}},
+\qquad
+\delta_{j,q}:=\dist(\beta_{j,q},\Ran\Comp_{j,q}).
+\]
+When $\delta_{j,q}=0$, also track the minimum homogeneous correction
+\[
+\lambda^{\rm hom}_{j,q}:=\|\Comp_{j,q}^{\dagger}\beta_{j,q}\|,
+\]
+and compare the corresponding affine lift with $\lambda_{\rm lift}$ from Definition~\ref{def:first-order-lift}. A coarse block inverse is not a substitute for these full-state quantities.
+
+Proposition~\ref{prop:cokernel} gives the most economical range test. Seek a unit dual witness
+\[
+\eta_{j,q}\in\Ker\Comp_{j,q}^*
+\]
+for which
+\[
+|\langle\beta_{j,q},\eta_{j,q}\rangle|
+\ge c q^\alpha.
+\]
+Such a witness proves $\delta_{j,q}\ge cq^\alpha$ without requiring an explicit description of $\Ran\Comp_{j,q}$. If instead $\delta_{j,q}=0$ but the relevant singular value collapses and $\lambda^{\rm hom}_{j,q}$ exceeds the physical size permitted by the stage-$j$ derivative bounds, Theorem~\ref{thm:rankcollapse} produces mandatory singular lift behavior.
+
+\subsection{Step 3: if pointwise lifts exist, compute their curvature rather than stopping}
+When $\delta_{j,q}=0$ and the minimum lift is bounded, choose the actual right inverses implemented by the correction architecture and compute the vertical commutators
+\[
+\Omega_{j,q}^{(r,s)}
+=\Proj_{\Vv}[\widetilde L_{j,q}^{(r)},\widetilde L_{j,q}^{(s)}].
+\]
+The proof target is not merely $\Omega\neq0$. One must identify a vertical diagnostic $\Lambda_{j,q}$ such that
+\[
+|\Lambda_{j,q}(\Omega_{j,q}^{(r,s)})|
+\ge c q^\alpha
+\]
+for some finite $\alpha$, while $\Lambda_{j,q}$ annihilates or sharply bounds the remainder classes the manuscript claims to retain. This separates genuine hidden holonomy from vertical drift that the next residual recomputation legitimately captures.
+
+\subsection{Step 4: test stage-uniformity of physical conversion}
+For each fixed physical derivative order $m$, track the exact auxiliary derivative order and cover factors needed to control the lift, its commutators, and the nonlinear recomputation. The manuscript needs a bound of the form
+\[
+\|D_{x,t}^m\Delta u_j\|
+\le C_{j,m}q^{g_j-\ell_m}(1+|\log q|)^{P_{j,m}}
+\]
+with $\ell_m$ independent of $j$ \cite[Lemma 9.8]{OpenAI2026}. A counter-proof may therefore succeed without range loss if it proves instead that the true primitive geometry forces
+\[
+\ell_{m,j}\to\infty
+\]
+for some fixed $m$. Such growth cannot be absorbed by choosing smaller summation cutoffs because it destroys the fixed-loss hypothesis used by Lemma 5.4.
+
+\subsection{Step 5: produce a nonflat primitive dynamical mismatch}
+The preceding mechanisms must be converted into an actual mismatch $\Delta_{\Pi,q}$ as in Definition~\ref{def:dyn-mismatch}. The strongest target is an algebraic lower bound
+\[
+\|\Delta_{\Pi,q_n}\|\ge c q_n^\alpha
+\]
+along some $q_n\downarrow0$, with finite $\alpha$. At this stage the primitive obstruction becomes an equation-level quantity: the propagated reduced branch has a derivative that differs, by a nonflat amount, from the derivative generated by the admissible full state.
+
+\subsection{Step 6: propagate the primitive defect to the actual residual}
+Establish that the chosen physical observation has only polynomial sensitivity,
+\[
+\|D\Pi_q\mathcal B_q\|\le Cq^{-M}.
+\]
+This is exactly the regime asserted by the manuscript's physical derivative-conversion estimates at each fixed order \cite[Lemma 9.8]{OpenAI2026}. Proposition~\ref{prop:residualleakage} then yields
+\[
+\|\Rres(q_n)\|
+\gtrsim q_n^{\alpha+M}
+\]
+in the relevant residual norm. Such a lower bound is incompatible with Proposition 9.9's claim that every fixed physical derivative of the actual residual is $O(q^N)$ for every $N$.
+
+\subsection{Step 7: use the endpoint only as a second line of attack}
+If no preterminal residual contradiction is obtained, pass to the terminal interface only for quantities the manuscript asserts have compatible one-sided limits. A nonzero limiting range defect for the force/residual data, or mandatory lift blowup incompatible with those asserted derivative limits, invokes Theorem~\ref{thm:endpoint} and breaks the smooth force-extension step. The singular velocity itself is not the correct endpoint target because no smooth continuation of that velocity is claimed.
+
+\subsection{The narrowed decisive criterion}
+The entire counter-proof program can now be summarized by the implication
+\[
+\boxed{\begin{gathered}
+\text{nonflat full-state primitive defect}\\
+\Longrightarrow\ \text{nonflat physical residual}\\
+\text{or failed terminal compatibility}
+\end{gathered}}
+\]
+The remaining research burden is therefore highly specific. One must find a primitive defect that survives the manuscript's full-state recomputation; proving only that a reduced observable is non-injective, that a scalar trace is singular, or that a displayed inverse has a large constant is no longer sufficient.
+
+\section{Interpretive structure}
+\subsection{Reduced-state correctness does not imply full-state liftability}
+A projected equation may be correct on its observation space, a block right inverse may be exact, and a residual component may be canceled in the coordinates in which it is represented, while the combined reconstruction nevertheless fails because the full compatibility map loses rank or the selected horizontal distribution is nonintegrable. Theorems~\ref{thm:rankcollapse} and \ref{thm:curvature} formalize these mechanisms without requiring an algebraic error in the reduced equations.
+
+This distinction parallels familiar lessons from nonlinear observability and reduced-order modeling: unresolved state directions can remain dynamically active even when they are not present in the current output, and eliminating them generally requires closure information rather than simple deletion \cite{HermannKrener,ChorinHaldKupferman}. The present note goes further by asking whether the propagated reduced branch remains liftable at all.
+
+\subsection{A stable observable is not a stable physical branch}
+The singular-value theorem gives the sharpest version of this statement. Boundedness of $\beta_\rho$ does not control the physical lift unless $\Comp_\rho$ has a uniform right-inverse bound. A proof can therefore continue to compute a finite target while the minimum admissible state correction diverges, and at rank loss the target can leave the image completely.
+
+The relevant quantity is not the conditioning of a convenient sub-block in isolation. It is the conditioning of the full compatibility operator after all exact constraints have been imposed. Accordingly, the manuscript-specific analysis must be applied to the full constrained compatibility operator rather than to the displayed $2\times2$, Fourier, or finite-dimensional inverses in isolation.
+
+\subsection{Right inverses are local; reconstruction is geometric}
+A pointwise right inverse answers an instantaneous question. Curvature asks whether those choices assemble into a coherent state under composition. The exact holonomy model shows that a closed loop of observables can generate a nonzero vertical state displacement even though every individual step is a valid lift.
+
+For an iterative proof, full residual recomputation is therefore not cosmetic: it is the mechanism by which hidden holonomy can be exposed and returned to later corrections. A decisive contradiction must therefore identify a vertical component that escapes that recomputation-and-remainder mechanism, rather than merely establishing the existence of vertical directions.
+
+\subsection{Residual flatness is a strong exposure condition}
+Proposition~\ref{prop:residualleakage} upgrades the discussion from geometry to PDE falsifiability. If every fixed physical derivative of the actual residual is flat and the relevant observation has only polynomial sensitivity, then every finite-jet primitive dynamical mismatch derived from that state must also be flat. Thus a power-law primitive defect cannot coexist with the manuscript's claimed residual flatness.
+
+This sharply narrows the target: the required contradiction is a quantitative lower bound on a primitive mismatch that propagates into an equation-level defect.
+
+\subsection{The primitive obstruction does not add a second fluid law}
+Classical incompressible Navier--Stokes already determines vorticity transport, local energy transport, and velocity-gradient evolution whenever the solution is smooth enough. The residual-exposure theorem therefore excludes an independent primitive law that contradicts an otherwise exact smooth NSE solution on the same interval. The full-state obstruction is a statement about the validity of the represented branch, not an extra constitutive principle imposed on the fluid.
+
+Accordingly, any successful branch-extinction argument must identify the precise point at which the proposed full-state realization ceases to satisfy the classical PDE or the regularity needed to justify the derived identities.
+
+\subsection{The manuscript's decisive verification burden}
+The construction has already provided formal right inverses for its visible projected blocks. The remaining burden is global and asymptotic: control the singular values of the full constrained compatibility map, control horizontal curvature after nonlinear recomputation, and preserve fixed physical derivative losses through the stage limit. Those are exactly the points at which a reduced construction can remain internally coherent while admissible full-state reconstruction fails.
+\section{Computational diagnostics}
+The computations accompanying this note are intentionally diagnostic rather than evidentiary substitutes for the proofs. They provide exact or high-precision checks of the canonical mechanisms and of the Navier--Stokes residual identities.
+
+\begin{table}[H]
+\centering
+\caption{Representative computational checks used in the note.}
+\begin{tabular}{p{0.31\textwidth}p{0.22\textwidth}p{0.34\textwidth}}
+\toprule
+Test & Result & Interpretation \\
+\midrule
+Rank-collapse model $\Comp_\rho=\mathrm{diag}(1,\rho)$ & $\|W_{\min}\|=1/\rho$ exactly & Bounded observable target, divergent physical lift; no lift at $\tau=0$ \\
+Horizontal holonomy model & $z_{\rm final}=-\eps^2$ exactly & Pointwise right inverses do not imply path-independent reconstruction \\
+Vorticity residual identity & Symbolic difference $=0$ & Primitive vorticity defect equals $\nabla\times\Rres$ \\
+Local-energy residual identity & Symbolic difference $=0$ & Energy defect equals $u\cdot\Rres$ \\
+Velocity-gradient identity & Symbolic difference $=0$ & Gradient/strain defects are derivatives of the physical residual \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The rank-collapse sweep used $61$ logarithmically spaced values down to $\rho=10^{-6}$ and attained a minimum-lift norm of $10^6$. The holonomy sweep used $45$ loop scales and reproduced the exact ratio $z_{\rm final}/\eps^2=-1$ with zero floating-point deviation in the closed-form update. The residual identities were checked using independent symbolic expressions rather than by substituting a zero residual by construction.
+
+
+\section{Conclusion}
+This note develops a primitive liftability framework for reduced constructions in which the displayed equations may remain algebraically consistent even when admissible full-state reconstruction becomes singular or impossible. The central object is the constrained compatibility operator $\Comp_{t,X}$, which maps homogeneous admissible state tangents $\Kt_{t,X}$ into the active observation tangent. Physical realization requires more than solvability of individual projected blocks: the affine target must lie in $\Ran\Comp_{t,X}$, the lift cost must remain compatible with the asserted regularity, and the selected family of local lifts must compose without an uncontrolled vertical defect.
+
+The results distinguish complementary failure mechanisms. The affine tangent-lift theorem gives the exact first-order range condition, while Proposition~\ref{prop:cokernel} supplies a dual certificate that can prove range failure through a single adjoint-null witness. The singular-value theorem quantifies mandatory lift growth as the compatibility map degenerates. The curvature theorem shows that pointwise right inverses need not integrate to a path-independent reconstruction, and the endpoint criterion excludes regular continuation when the terminal affine target is incompatible with the admissible tangent image.
+
+For Navier--Stokes, the geometric obstruction becomes testable through the physical residual. The residual-exposure identities show explicitly how vorticity, local energy, and velocity-gradient defects are generated by $\Rres$ and its derivatives. Proposition~\ref{prop:residualleakage} then proves that a nonflat observed mismatch cannot be hidden beneath an $O(q^\infty)$ physical residual when the observation sensitivity has only polynomial growth. Its finite-jet corollary is the operative form for constructions whose physical derivative conversion incurs fixed powers of the singular scale.
+
+Applied to the supplied OpenAI manuscript, the resulting target is substantially narrower than a generic projection objection. The visible covariance, auxiliary-time, harmonic, and moment inverses provide genuine local lift mechanisms, and the construction claims to recompute the complete residual after each update. A decisive contradiction must therefore arise from the full constrained operator: a nonzero dual range certificate, singular lift cost incompatible with the stated bounds, a holonomy component escaping the controlled remainder hierarchy, stage-dependent physical derivative loss, or an endpoint incompatibility for data whose regular continuation is asserted. Any such defect must then be propagated to the actual pointwise residual or the smooth force-extension statement.
+
+The framework therefore converts a qualitative concern about observational reduction into a precise verification problem. The decisive question is whether the propagated reduced branch remains in the image of admissible Navier--Stokes dynamics under the full set of constraints and through the singular limit. The range-defect, lift-cost, curvature, and residual-leakage criteria developed here provide complementary means of resolving that question.
+\appendix
+\section{Reproducibility notes}
+The accompanying computational package contains the following artifacts:
+\begin{itemize}
+\item \texttt{primitive\_branch\_note\_checks.py}: rank-collapse, exact holonomy, and summary generation;
+\item \texttt{results/rank\_collapse.csv}: singular-value and minimum-lift sweep;
+\item \texttt{results/holonomy.csv}: exact loop-holonomy sweep;
+\item \texttt{figures/rank\_collapse.png} and \texttt{holonomy.png}: figures used in the note;
+\item the prior symbolic verification of the vorticity, local-energy, and velocity-gradient residual identities.
+\end{itemize}
+All numerical plots are illustrative; every theorem stated in the main text has an analytic proof independent of floating-point computation.
+
+\section{Manuscript interface map}
+\begin{longtable}{p{0.20\textwidth}p{0.28\textwidth}p{0.40\textwidth}}
+\toprule
+Interface & Manuscript mechanism & Primitive question isolated by this note \\
+\midrule
+\endhead
+Physical phase evaluation & Chain-rule graph derivatives in Section 6 & Does the chosen topology/control survive physical evaluation uniformly through the singular limit? \\
+Covariance stress correction & $2\times2$ covariance matrix and signed tangent right inverse in Section 7 & Does the full admissible compatibility map remain uniformly right-invertible for the actual recursive source? \\
+Auxiliary zero-mean residual & Fourier inverse $N^{-1}$ in Section 8 & Does inverse amplification remain compatible with all physical derivative and support constraints generated later? \\
+Moment correction & Five-dimensional linear system in Section 8 & Do the local moment lifts integrate with the other block lifts without uncontrolled vertical holonomy? \\
+Full correction cycle & Sequential block updates and residual recomputation in Section 9 & Are all hidden commutator/remainder directions re-entered into controlled classes with stage-independent losses? \\
+Infinite summation & Diagonal cutoffs and physical residual flatness in Proposition 9.9 & Does primitive compatibility survive the stage limit strongly enough for the claimed pointwise residual and terminal force extension? \\
+\bottomrule
+\end{longtable}
+
+
+\begin{thebibliography}{99}
+\bibitem{OpenAI2026}
+OpenAI, \emph{Finite Time Blowup for Navier--Stokes}, supplied manuscript, 166 pp., 2026.
+
+\bibitem{Fefferman}
+C. L. Fefferman, ``Existence and Smoothness of the Navier--Stokes Equation,'' in \emph{The Millennium Prize Problems}, Clay Mathematics Institute/American Mathematical Society, 2006.
+
+\bibitem{HermannKrener}
+R. Hermann and A. J. Krener, ``Nonlinear controllability and observability,'' \emph{IEEE Transactions on Automatic Control} \textbf{22} (1977), 728--740. DOI: 10.1109/TAC.1977.1101601.
+
+\bibitem{Lee}
+J. M. Lee, \emph{Introduction to Smooth Manifolds}, 2nd ed., Graduate Texts in Mathematics 218, Springer, 2013. DOI: 10.1007/978-1-4419-9982-5.
+
+\bibitem{KobayashiNomizu}
+S. Kobayashi and K. Nomizu, \emph{Foundations of Differential Geometry}, Vol. I, Interscience, 1963; Wiley Classics Library reprint, 1996.
+
+\bibitem{BenIsraelGreville}
+A. Ben-Israel and T. N. E. Greville, \emph{Generalized Inverses: Theory and Applications}, 2nd ed., CMS Books in Mathematics, Springer, 2003. DOI: 10.1007/b97366.
+
+\bibitem{ChorinHaldKupferman}
+A. J. Chorin, O. H. Hald, and R. Kupferman, ``Optimal prediction and the Mori--Zwanzig representation of irreversible processes,'' \emph{Proceedings of the National Academy of Sciences} \textbf{97} (2000), 2968--2973. DOI: 10.1073/pnas.97.7.2968.
+
+\bibitem{GouasmiParishDuraisamy}
+A. Gouasmi, E. J. Parish, and K. Duraisamy, ``A priori estimation of memory effects in reduced-order models of nonlinear systems using the Mori--Zwanzig formalism,'' \emph{Proceedings of the Royal Society A} \textbf{473} (2017), 20170385. DOI: 10.1098/rspa.2017.0385.
+
+\bibitem{Temam}
+R. Temam, \emph{Navier--Stokes Equations: Theory and Numerical Analysis}, AMS Chelsea Publishing, Providence, retypeset edition based on the 1984 edition.
+
+\bibitem{ConstantinFoias}
+P. Constantin and C. Foias, \emph{Navier--Stokes Equations}, Chicago Lectures in Mathematics, University of Chicago Press, 1988. DOI: 10.7208/chicago/9780226764320.001.0001.
+
+\bibitem{MajdaBertozzi}
+A. J. Majda and A. L. Bertozzi, \emph{Vorticity and Incompressible Flow}, Cambridge Texts in Applied Mathematics 27, Cambridge University Press, 2002. DOI: 10.1017/CBO9780511613203.
+
+\bibitem{RobinsonRodrigoSadowski}
+J. C. Robinson, J. L. Rodrigo, and W. Sadowski, \emph{The Three-Dimensional Navier--Stokes Equations: Classical Theory}, Cambridge Studies in Advanced Mathematics 157, Cambridge University Press, 2016. DOI: 10.1017/CBO9781139095143.
+\end{thebibliography}
+
+\end{document}

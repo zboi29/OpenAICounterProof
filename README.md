@@ -1,16 +1,38 @@
-# Finite time blowup for Navier–Stokes and Euler equations
+# Primitive compatibility counter-proof for the Navier–Stokes construction
 
-This repository contains Lean 4 formalizations of the results presented in
-“[Finite time blowup for Navier–Stokes](https://cdn.openai.com/pdf/32d9f210-8b73-45e0-91bc-82a30aef8a9a/navier-stokes.pdf)” and
-“[Finite time blowup for the Euler equation](https://cdn.openai.com/pdf/315b36cd-ec98-4023-8342-93345194ece1/euler.pdf)” by OpenAI.
+This repository is a fork of
+[OpenAI's `NavierStokesAndEuler` Lean formalization](https://github.com/openai/NavierStokesAndEuler),
+released with its proposed three-dimensional Navier–Stokes and Euler blowup
+proofs. The fork retains the upstream development as the object of a
+source-grounded counter-proof program.
+
+The counter-proof targets a **primitive compatibility/liftability obstruction**:
+a reduced correction branch can remain smooth and algebraically coherent while
+failing to lift to the complete constrained physical state, or while requiring
+uncontrolled inverse amplification, holonomy, or derivative loss. This is not a
+claim of a basic algebraic, normalization, or omitted-term error. A decisive
+counter-proof must instantiate the obstruction on the actual Lean objects,
+control the complete future correction tail, and contradict the claimed flat
+physical residual, terminal regularity, or smooth force extension.
+
+The research program and its Lean targets are developed in:
+
+- [`docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex`](docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex)
+- [`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note.tex`](docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note.tex)
+- [`docs/Joseph_2026_Primitive_Compatibility_Counterproof_References_v1.bib`](docs/Joseph_2026_Primitive_Compatibility_Counterproof_References_v1.bib)
+
+The notes define a counter-proof program and explicit closure criteria; they do
+not treat a nonzero intermediate defect alone as a completed disproof.
+
+## Upstream sources
 
 - [Read the blog post](https://openai.com/index/navier-stokes-solution/)
 - [Read the Navier-Stokes paper](https://cdn.openai.com/pdf/32d9f210-8b73-45e0-91bc-82a30aef8a9a/navier-stokes.pdf)
 - [Read the Euler paper](https://cdn.openai.com/pdf/315b36cd-ec98-4023-8342-93345194ece1/euler.pdf)
 
-## Navier Stokes
+## Upstream Navier–Stokes claim
 
-For every positive viscosity, we prove two results:
+For every positive viscosity, the upstream formalization claims two results:
 
 - **Whole space $\mathbb{R}^3$:** There exist smooth initial data and forcing for
   which no global smooth solution with uniformly bounded kinetic energy exists.
@@ -23,9 +45,10 @@ in the Clay Mathematics Institute’s [official problem description](https://www
 of the [Navier–Stokes existence and smoothness](https://www.claymath.org/millennium/navier-stokes-equation/)
 [Millennium Prize Problem](https://www.claymath.org/millennium-problems/).
 
-## Euler
+## Upstream Euler claim
 
-We construct smooth, compactly supported, divergence-free initial velocity on
+The upstream formalization constructs smooth, compactly supported,
+divergence-free initial velocity on
 $\mathbb{R}^3$ whose solution to the unforced incompressible Euler equations
 develops a singularity in finite time. The velocity’s $C^1$ norm becomes unbounded
 near that time, and the time integral of the vorticity’s $L^\infty$ norm diverges.
@@ -44,3 +67,13 @@ lake build
 
 For instructions on checking the formalizations with Comparator, see the
 [ComparatorChallenges README](ComparatorChallenges/README.md).
+
+## Future Euler counter-proof
+
+After the Navier–Stokes primitive-obstruction program, this project intends to
+develop a separate, source-grounded counter-proof program targeting the upstream
+Euler formalization. It will follow substantially the same methodology and
+mathematical structure as the three-dimensional Navier–Stokes counter-proof—in
+particular, auditing primitive compatibility, liftability, correction tails, and
+terminal physical claims—while using localized obstructions, interfaces, and
+formal theorem targets specific to the Euler construction.

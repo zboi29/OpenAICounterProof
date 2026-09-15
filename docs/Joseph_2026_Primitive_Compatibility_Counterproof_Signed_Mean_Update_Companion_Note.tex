@@ -1,0 +1,996 @@
+\documentclass[12pt]{article}
+
+% -----------------------------------------------------------------------------
+% Layout and typography
+% -----------------------------------------------------------------------------
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{listings}
+
+% -----------------------------------------------------------------------------
+% Mathematics
+% -----------------------------------------------------------------------------
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{mathrsfs}
+\usepackage{bm}
+
+% -----------------------------------------------------------------------------
+% References and links
+% -----------------------------------------------------------------------------
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[backend=biber,style=numeric-comp,sorting=none,maxnames=8]{biblatex}
+\addbibresource{Joseph_2026_Primitive_Compatibility_Counterproof_References_v1.bib}
+
+% -----------------------------------------------------------------------------
+% Page style
+% -----------------------------------------------------------------------------
+\setstretch{1.08}
+\setlength{\parindent}{1.35em}
+\setlength{\parskip}{0.27em}
+\setlength{\headheight}{14.5pt}
+\setlength{\abovedisplayskip}{8.5pt plus 2pt minus 3pt}
+\setlength{\belowdisplayskip}{8.5pt plus 2pt minus 3pt}
+\setlength{\abovedisplayshortskip}{5.5pt plus 2pt minus 2pt}
+\setlength{\belowdisplayshortskip}{6.5pt plus 2pt minus 2pt}
+\setlength{\jot}{4pt}
+\renewcommand{\arraystretch}{1.10}
+\emergencystretch=2em
+\raggedbottom
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Primitive Compatibility Counter-Proof}
+\fancyhead[R]{Z. N. Joseph}
+\fancyfoot[C]{\thepage}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.55em}{}
+\titleformat{\subsubsection}{\normalsize\itshape}{\thesubsubsection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{2.35ex plus 0.7ex minus 0.25ex}{0.95ex plus 0.2ex}
+\titlespacing*{\subsection}{0pt}{1.95ex plus 0.55ex minus 0.2ex}{0.72ex plus 0.15ex}
+\titlespacing*{\subsubsection}{0pt}{1.55ex plus 0.45ex minus 0.2ex}{0.58ex plus 0.12ex}
+
+% -----------------------------------------------------------------------------
+% Theorem environments
+% -----------------------------------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Line-by-line proof derivations: deliberately medium-weight italic labels.
+% The explicit mdseries prevents theorem/list font inheritance from making
+% the line indicators visually heavy.
+\newlist{prooflines}{enumerate}{1}
+\setlist[prooflines]{
+  label={\normalfont\itshape\mdseries Line~\arabic*:},
+  leftmargin=4.15em,
+  labelsep=0.55em,
+  itemsep=0.34em,
+  topsep=0.42em,
+  parsep=0pt,
+  partopsep=0pt,
+  align=left,
+  before=\normalfont
+}
+
+% -----------------------------------------------------------------------------
+% Semantic macros
+% -----------------------------------------------------------------------------
+\newcommand{\R}{\mathbb R}
+\newcommand{\T}{\mathbb T}
+\newcommand{\A}{\mathcal A}
+\newcommand{\X}{\mathcal X}
+\newcommand{\Y}{\mathcal Y}
+\newcommand{\Zs}{\mathcal Z}
+\newcommand{\Rres}{\mathcal R}
+\newcommand{\D}{\mathrm D}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\Proj}{\operatorname{Proj}}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\SymCov}{\operatorname{SymCov}}
+\newcommand{\mean}{\operatorname{Av}}
+\newcommand{\Flat}{O(q^{\infty})}
+\newcommand{\Comp}{\mathfrak A}
+\newcommand{\Red}{\mathfrak B}
+\newcommand{\Hidden}{\mathfrak H}
+\newcommand{\Constr}{\mathcal C}
+\newcommand{\Obs}{\Pi}
+\newcommand{\Ktan}{\mathcal K}
+\newcommand{\Lift}{\mathcal L}
+\newcommand{\Budget}{\mathcal B}
+\newcommand{\Tail}{\mathscr T}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\kappaS}{\kappa_{\!s}}
+
+% -----------------------------------------------------------------------------
+% Listings
+% -----------------------------------------------------------------------------
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  breaklines=true,
+  frame=single,
+  framerule=0.3pt,
+  xleftmargin=0.4em,
+  xrightmargin=0.4em,
+  aboveskip=0.7em,
+  belowskip=0.7em,
+  showstringspaces=false
+}
+
+\begin{document}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+\vspace*{0.68in}
+{\LARGE\bfseries Primitive Compatibility Counter-Proof\\[0.17in]
+for the Signed Mean Update in the OpenAI Navier--Stokes Construction\par}
+\vspace{0.25in}
+{\large A companion research note to \emph{Primitive Liftability and Branch Extinction in Observationally Reduced Navier--Stokes Dynamics}\par}
+\vspace{0.46in}
+{\large Zachary Nathan Joseph\par}
+\vspace{0.07in}
+{\normalsize September 14, 2026\par}
+\vspace{0.08in}
+{\normalsize Version 1\par}
+\vspace{0.40in}
+\rule{0.82\textwidth}{0.4pt}
+\end{center}
+
+\vspace{0.26in}
+\begin{center}
+\begin{minipage}{0.88\textwidth}
+\begin{center}
+{\normalsize\bfseries Abstract}
+\end{center}
+\vspace{0.02in}
+\small\setstretch{1.055}
+This companion note audits the signed mean update in the supplied OpenAI Navier--Stokes blowup manuscript and its pinned Lean 4 formalization. From the exact state equations we derive \(\Delta W=S+E\), propagate the linearized remainder through radial-source and pressure reconstruction, and obtain the constrained physical response \(\Comp=\Red+\Hidden\). Eight formal results characterize the reduced-branch defect, the exact full-branch resolvent, range and conditioning obstructions, tail persistence, and transfer of a surviving algebraic mismatch to the physical residual. The main theorem isolates two rigorous failure certificates: a tail-stable nonflat defect, or a full-compatible response whose required lift exceeds the admissible correction tail. A second major part specifies the corresponding Lean implementation at the theorem and source-file level. The analysis is finite-jet and distinguishes a specification-bridge failure from inconsistency of Lean's kernel.
+\end{minipage}
+\end{center}
+\vfill
+\end{titlepage}
+\setcounter{page}{2}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}\label{sec:introduction}
+The supplied OpenAI manuscript proposes a finite-time breakdown construction for the three-dimensional incompressible Navier--Stokes equations by combining a singularly scaled background, oscillatory wave packets, averaged covariance corrections, pressure reconstruction, moment corrections, and an infinite correction sequence whose physical momentum residual is asserted to become flat to every order at the terminal singularity \cite[Secs.~3--10]{OpenAI2026}. The accompanying Lean repository formalizes substantial parts of that architecture, including the actual state update, covariance recomputation, pressure reconstruction, weighted coefficient classes, and physical residual estimates \cite{OpenAILeanRepo2026}. This note is a companion to the earlier primitive-liftability study and narrows the general obstruction framework to one concrete interface: the signed mean wave update.
+
+The source exposes an exact algebraic split. The signed solver selects amplitudes from a two-component cross-covariance request, while the covariance of the actual updated state contains both that selected cross term and a retained remainder. In \path{LabelSumBounds.lean} and \texttt{SignedMeanGain.lean}, the literal increment is proved to satisfy
+\[
+\Delta W=S+E,
+\]
+where \(S\) is the symmetric primary--tangent cross tensor and \(E\) contains the old-versus-primary discrepancy, the curl completion, and the quadratic signed contribution \cite{OpenAILeanRepo2026}. The same update reconstructs pressure from the changed radial source, and the axial residual change contains the derivative of that reconstructed pressure. The issue is therefore not that the formal state omits \(E\), pressure, or divergence. The precise question is whether the amplitude selected by the reduced cross solve is quantitatively equivalent, in the physical finite-jet norms required by the iteration, to an amplitude lying on the full constrained response branch.
+
+To state that question without a hidden gauge assumption, fix a correction stage \(j\), singular parameter \(q\), physical jet order \(m\), and a point or finite evaluation set \(\Xi\). After applying the finite jet-evaluation map \(J^m_{\Xi}\), split a tangent into an active signed-amplitude direction \(a\) and a hidden reconstruction direction \(h\). Linearizing the exact equality constraints and the two-component physical mean observation gives
+\[
+D\Constr(a,h)=Ga+Dh,
+\qquad
+D\Obs(a,h)=Ba+Ph.
+\]
+The actual reconstruction used by the state determines a differentiable hidden lift \(h=\Phi(a)\) with \(\Phi(0)=0\). Differentiating \(\Constr(a,\Phi(a))=0\) gives
+\[
+G+D\,D\Phi(0)=0,
+\]
+and the full constrained observation derivative is therefore
+\[
+\boxed{\Comp=B+P\,D\Phi(0).}
+\]
+When the hidden constraint block is invertible, \(D\Phi(0)=-D^{-1}G\) and this is the usual Schur complement \(\Comp=B-PD^{-1}G\). If a Moore--Penrose gauge is used instead, the same formula becomes \(B-PD^{\dagger}G\) provided the constraint image lies in \(\Ran D\) and the homogeneous hidden directions are either gauge-fixed or observation-null. These are standard constrained-elimination and generalized-inverse facts \cite{BenIsraelGreville2003,Zhang2005,Lee2012}.
+
+The exact Lean identities make the difference between the reduced and full operators concrete. Let \(p\) denote the primary field, \(u\) the old field, \(t(a)\) the selected tangent wave, and \(k(a)\) its curl completion. The first-order part of the retained covariance remainder is
+\[
+E_1(a)=\SymCov(p,k'(0)a)
++\SymCov(u-p,t'(0)a+k'(0)a),
+\]
+while the quadratic signed covariance has zero derivative at the zero request. Propagating \(S_1(a)+E_1(a)\) through the exact covariance-to-residual operators and through the differential of the pressure reconstruction gives a physical mean response
+\[
+\boxed{\Comp=\Red+\Hidden,}
+\]
+where \(\Red\) is the radial-divergence cross response used by the signed target and \(\Hidden\) contains the remaining cross derivatives, the linearized remainder, and pressure feedback. Consequently, if \(b\) is the signed request and \(a^L=\Red^{-1}b\) is the reduced branch,
+\[
+\boxed{d=\Comp a^L-b=\Hidden a^L.}
+\]
+If a full branch exists, \(a^C=\Comp^{-1}b\), then
+\[
+\boxed{a^C-a^L=-\Comp^{-1}\Hidden a^L.}
+\]
+The resolvent identity is exact. It separates a harmless higher-order output from an inverse-sensitive branch displacement: a uniform bound \(\|\Red^{-1}\Hidden\|_m\lesssim q^\rho\) with \(\rho>0\) closes the interface perturbatively, whereas a near-cokernel or a rapidly growing inverse can consume the apparent gain. Classical matrix perturbation theory, singular-value perturbation bounds, and conditioning theory make precisely this distinction \cite{StewartSun1990,Wedin1972,TrefethenBau1997,GolubVanLoan2013}.
+
+The source already establishes nontrivial output-level control. In particular, \path{signed_tensor_bounds} places the literal increment tensor in class \(1+\sigma-\kappa\) and the remainder tensor in class \(1+\sigma+17/100+\kappa\), a positive tensor-level gap of \(17/100+2\kappa\) \cite{OpenAILeanRepo2026}. That fact is important evidence in favor of perturbative closure, but it is not by itself a derivative-level relative bound: the request-to-amplitude map contains an inverse covariance factor, and differentiating inverses or pseudoinverses introduces additional factors whose control requires a constant-rank or uniform-conditioning estimate \cite{GolubPereyra1973,StewartSun1990}. The warning in \path{CycleContinuationInvariant.lean} that an inverse covariance factor may grow at a flat annulus edge therefore identifies a genuine audit point rather than an omitted algebraic term \cite{OpenAILeanRepo2026}.
+
+A second rigor point is equally important. A nonzero defect at one finite correction stage does not, by itself, contradict the final flat residual: later stages are designed to remove higher-order errors. The relevant witness must survive the admissible correction tail. This note therefore introduces a tail-stability condition: a bounded dual functional detects an algebraic component of the stage defect, while the total contribution of all later admissible corrections and nonlinear remainders in the same functional is strictly smaller. Only such a surviving mismatch is transferred to the terminal physical residual. This closes the logical gap between a local branch discrepancy and the all-order conclusion of Proposition~9.9.
+
+The manuscript's summation architecture makes both mechanisms testable. Lemma~5.4 requires correction gains tending to infinity against a derivative loss independent of stage, and Lemma~9.8 supplies manuscript-specific bounds of the form \(\|Z_j\|_m+\|\Delta u_j\|_m\lesssim q^{g_j-\ell_m}\) with \(\ell_m\) fixed in \(j\) \cite[Lemmas~5.4 and 9.8]{OpenAI2026}. Proposition~9.9 then asserts \(O(q^N)\) decay of every fixed physical residual derivative for every \(N\) \cite[Prop.~9.9]{OpenAI2026}. Hence a tail-stable algebraic component of \(\Hidden a^L\), once related to the final residual through only polynomial physical sensitivity, contradicts flatness. Alternatively, a full-response near-cokernel can require more correction in a target direction than the entire admissible future correction tail can supply; that is a direct branch-liftability obstruction rather than a statement about one convenient matrix block.
+
+The note develops eight formal results. After fixing the manuscript and source scope, \cref{sec:notation} centralizes the finite-jet notation. \Cref{sec:formal-derivations}--\ref{sec:counterproof} derive the exact covariance split, full response, constrained reconstruction operator, reduced defect, full-branch resolvent, quantitative range/tail-budget obstruction, tail-stable residual exposure, and the main counter-proof theorem. \Cref{sec:lean-instantiation} is the second major section and gives a theorem-level Lean instantiation strategy. The scope is deliberately exact: Lean certifies the proposition that is encoded; correspondence between that proposition and the intended full physical interface must itself be represented by a theorem \cite{deMouraEtAl2015,Lean4TPIL,Lean4Reference}. The counter-proof is therefore formulated in terms of concrete failure certificates on the same state, ledger, and physical residual objects used by the construction.
+
+\section{Scope relative to the OpenAI construction}\label{sec:scope}
+\subsection{The terminal claim is physical, not merely representational}
+The manuscript ultimately defines physical velocity and pressure fields and then sets the force equal to the physical momentum residual after localization. Smooth extension of this force to the terminal time relies on the residual being flat at the singular point \cite[Secs.~9--10]{OpenAI2026}. Classical references make clear that vorticity, pressure, energy, and velocity-gradient identities are consequences of the physical Navier--Stokes equation once the required smoothness is available \cite{MajdaBertozzi2002,RobinsonRodrigoSadowski2016}. The decisive obstruction must therefore reach the actual physical residual, or a quantitatively indispensable regularity statement used to construct the terminal force; an intermediate coordinate mismatch is insufficient without such a bridge.
+
+\subsection{The signed update is an exact full-state update}
+The pinned Lean commit defines the correction state with a mean field, pressure, oscillation, oscillatory pressure, and error data. The covariance is recomputed from the actual oscillation. The signed wave stage adds the complete wave and then invokes the moving-gauge pressure reconstruction. Theorems \texttt{waveStage\_covariance}, \path{waveStage_gr_change}, and \texttt{waveStage\_axial\_change} therefore expose rather than suppress the hidden response \cite{OpenAILeanRepo2026}.
+
+This observation materially narrows the audit. The formalization cannot be refuted merely by observing that a projected two-component request exists. A counter-proof must show that the branch selected from that request cannot be reconciled, within the stated quantitative budget, with the exact state recomputation the repository itself performs.
+
+\subsection{The formalization target is a specification bridge}
+Lean's small kernel checks a proof term against the proposition actually encoded \cite{deMouraEtAl2015,Lean4Reference}. Accordingly, a mathematical counter-proof to the intended manuscript can interact with the Lean development in two distinct ways:
+\begin{enumerate}[label=(\roman*),leftmargin=2.1em,itemsep=0.1em]
+\item derive a contradiction from the instantiated hypotheses of a Lean theorem, exposing a false assumption or inconsistent bridge theorem; or
+\item prove that the formal theorem is weaker than the intended manuscript statement because the missing correspondence property is not among its hypotheses or conclusions.
+\end{enumerate}
+The present note is designed to support both. The exact full-response operator is formulated as a standalone theorem target so that the repository can be tested constructively rather than criticized by analogy.
+
+\section{Centralized notation and definitions}\label{sec:notation}
+\subsection{Notation table}
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}p{0.43\textwidth}}
+\toprule
+Symbol & Type or definition & Role \\
+\midrule
+\endhead
+\(j\) & correction-stage index & Fixed during one signed update. \\
+\(q\) & singular similarity parameter & \(q\downarrow0\) approaches the terminal singular regime. \\
+\(m\) & physical derivative order & Fixed when a physical jet estimate is tested. \\
+\(\Xi\) & point or finite evaluation set & Makes \(J^m_{\Xi}\) finite-dimensional whenever singular values are invoked. \\
+\(X_{j,q,\Xi}^{(m)}\) & evaluated finite-jet state & Contains the actual mean, covariance, pressure, oscillation and reconstruction jets needed by the signed step. \\
+\(a\) & active signed-amplitude tangent & Two-component direction selected by the signed request. \\
+\(h\) & hidden/reconstruction tangent & Constrained state response not represented by the active request. \\
+\(\Constr\) & exact equality-constraint map & Representation, covariance, pressure reconstruction, divergence, moments, chart coherence and phase identities. \\
+\(G,D\) & blocks of \(D\Constr\) & \(D\Constr(a,h)=Ga+Dh\). \\
+\(\Phi\) & actual hidden reconstruction & A local map \(a\mapsto h\) satisfying \(\Constr(a,\Phi(a))=0\). \\
+\(\Obs\) & physical mean observation & The averaged tangential residual pair. \\
+\(B,P\) & blocks of \(D\Obs\) & \(D\Obs(a,h)=Ba+Ph\). \\
+\(\Ktan\) & \(\ker D\Constr\) & Tangent space to the exact constrained state. \\
+\(\Comp\) & \(B+P D\Phi(0)\) & Full response along the actual constrained reconstruction. \\
+\(\Red\) & reduced signed operator & Radial-divergence cross response inverted by the signed request. \\
+\(\Hidden\) & \(\Comp-\Red\) & Remaining first-order full-state response. \\
+\(p,u,t,k\) & primary, old, tangent, curl oscillations & Fields entering the exact signed covariance decomposition. \\
+\(S\) & \(\SymCov(p,t)\) & Reduced cross tensor. \\
+\(E\) & signed remainder tensor & Exact difference \(\Delta W-S\). \\
+\(E_1\) & Fr\'echet-linear part of \(E\) & Hidden first-order covariance response. \\
+\(b\) & signed target & Desired two-component averaged covariance/residual request. \\
+\(a^L\) & \(\Red^{-1}b\) & Reduced branch when \(\Red\) is invertible. \\
+\(a^C\) & \(\Comp^{-1}b\) & Full-compatible branch when \(\Comp\) is invertible. \\
+\(d\) & \(\Comp a^L-b\) & Full primitive defect of the reduced branch. \\
+\(\Tail_j\) & future correction contribution & Aggregate later-stage and nonlinear response in the same observed jet. \\
+\(\sigma_{\min}(\Comp)\) & smallest singular value & Used only after finite-dimensional jet evaluation. \\
+\(g_j\) & stage gain exponent & Increasing gain in the manuscript/Lean ledger. \\
+\(\ell_m\) & fixed physical derivative loss & Independent of stage in the summation hypothesis. \\
+\(\Rres(u,p)\) & physical NSE momentum residual & \(\partial_tu+(u\cdot\nabla)u-\Delta u+\nabla p\) before forcing is inserted. \\
+\(\Flat\) & flatness at \(q=0\) & \(O(q^N)\) for every finite \(N\). \\
+\bottomrule
+\end{longtable}
+\renewcommand{\arraystretch}{1}
+
+\subsection{Evaluated finite-jet constrained state}
+At fixed \((j,q,m,\Xi)\), let
+\[
+\widehat X_{j,q,\Xi}^{(m)}
+=J^m_{\Xi}\!\left(
+ s_j,\mathcal C_j,a_j,u_j^{-},w_j^{\rm tan},w_j^{\rm curl},
+ p_j^{\rm wave},e_j^G,W_j^{+},p_j^{+},u_j^{+}
+\right).
+\]
+When \(\Xi\) is finite, this jet lies in a finite-dimensional real vector space; singular values and Moore--Penrose inverses below are used only at this evaluated level. Global weighted function-space statements are instead expressed by continuous-linear-map norms and right-inverse estimates. Promoting covariance and pressure to coordinates adds no physical degree of freedom: it only exposes the exact reconstruction identities as constraints.
+
+Write
+\[
+\Constr
+=(\Constr_{\rm rep},\Constr_{\rm cov},\Constr_{\rm rec},
+\Constr_{\rm div},\Constr_{\rm mass},\Constr_{\rm coh},\Constr_{\rm phase}).
+\]
+Weighted class membership, support conditions, strict-cone inequalities, and smallness assumptions define the admissible domain; they are not inserted into \(\Constr\) as equality equations. Thus \(\Ktan=\ker D\Constr\) contains exactly the linearized equality constraints. This distinction prevents inequalities from being incorrectly promoted to tangent equations.
+
+\subsection{Exact signed covariance data}
+For oscillatory fields \(p,u,t,k\), define
+\begin{align}
+S(p,t)&:=\SymCov(p,t),\\
+\Delta W(u;t,k)&:=\Cov(u+t+k,u+t+k)-\Cov(u,u),\\
+E(p,u,t,k)&:=\Delta W(u;t,k)-S(p,t).
+\end{align}
+The Lean definition \texttt{signedRemainder} expands this as
+\begin{align}\label{eq:exact-remainder}
+E
+={}&\Cov(u,t+k)+\Cov(t+k,u)\\
+&\quad+\Cov(t+k,t+k)-\SymCov(p,t).
+\end{align}
+This is the literal formula in \path{LabelSumBounds.lean}; \path{SignedMeanGain.incrementTensor_split} proves \(\Delta W=S+E\) for the assembled fields \cite{OpenAILeanRepo2026}.
+
+\subsection{Physical tangential observation}
+Use the covariance differential operators in the same index convention as the Lean source:
+\begin{align}
+\Theta(X)&:=D_r^{(2)}X_{01}+D_zX_{21},\\
+Z(X)&:=D_r^{(1)}X_{02}+D_zX_{22},\\
+\mathcal R_0(X)&:=-D_r^{(1)}X_{00}-D_zX_{20}+r^{-1}X_{11}.
+\end{align}
+Let \(\mathscr P\) denote the Fr\'echet derivative of the moving-gauge pressure reconstruction with respect to the radial source. The two-component observation is
+\[
+\Obs(X)=\bigl(\mean R_\theta(X),\mean R_z(X)\bigr).
+\]
+On the common slow domain, under the smoothness and periodicity hypotheses formalized by the repository's moving-field machinery, the exact Lean identities commute the relevant averaging and physical derivative operations and give covariance responses \(\Theta(X)\) and \(Z(X)\), with the additional \(D_z\delta p\) term in the axial component after pressure reconstruction \cite{OpenAILeanRepo2026}. These regularity hypotheses are carried explicitly in \cref{prop:fullresponse} rather than being hidden in notation.
+
+\section{Formal proof derivations}\label{sec:formal-derivations}
+This section is the first major component of the companion note. The eight results are stated either in the global continuous-linear setting or after a finite jet evaluation \(J^m_{\Xi}\). Whenever singular values are used, the latter finite-dimensional setting is understood. This avoids conflating a fixed derivative order with finite dimensionality of an entire function space.
+
+\subsection{Exact covariance decomposition}
+\begin{theorem}[Exact signed covariance decomposition]\label{thm:covsplit}
+Let \(p,u,t,k\) be oscillatory fields for which the bilinear covariance is defined. Then
+\[
+\boxed{\Delta W(u;t,k)=S(p,t)+E(p,u,t,k),}
+\]
+with \(E\) given by \eqref{eq:exact-remainder}. If \(t=t(a)\) and \(k=k(a)\) are Fr\'echet differentiable at \(a=0\) and satisfy \(t(0)=k(0)=0\), then
+\[
+\boxed{
+DE(0)[a]
+=\SymCov(p,Dk(0)[a])
++\SymCov(u-p,Dt(0)[a]+Dk(0)[a]).
+}
+\]
+In particular, the quadratic signed covariance contributes no first-order term.
+\end{theorem}
+
+\begin{proof}
+\begin{prooflines}
+\item Expand the covariance increment:
+\[
+\Delta W=\Cov(u+t+k,u+t+k)-\Cov(u,u).
+\]
+\item Bilinearity gives
+\[
+\Delta W=\Cov(u,t+k)+\Cov(t+k,u)+\Cov(t+k,t+k).
+\]
+\item Add and subtract \(S(p,t)=\SymCov(p,t)\). The result is exactly \(S+E\), with \(E\) as in \eqref{eq:exact-remainder}; this is the identity formalized by \path{covariance_increment_split} and \path{incrementTensor_split} \cite{OpenAILeanRepo2026}.
+\item Differentiate at \(a=0\). Since \(t(0)+k(0)=0\), bilinearity implies
+\[
+D\!\left[\Cov(t+k,t+k)\right]_{0}[a]=0.
+\]
+\item The derivative of the remaining terms is
+\[
+\SymCov(u,Dt(0)[a]+Dk(0)[a])-\SymCov(p,Dt(0)[a]).
+\]
+\item Substitute \(u=p+(u-p)\) and cancel the two primary--tangent terms. The displayed formula follows.
+\end{prooflines}
+\end{proof}
+
+\begin{remark}
+The theorem uses the repository's exact update rather than a reduced surrogate. The counter-proof therefore does not depend on claiming that the signed remainder was discarded; it depends on comparing the operator used to select the request amplitude with the operator obtained after the retained remainder and reconstructed pressure are propagated through the same state.
+\end{remark}
+
+\subsection{Exact full tangential response}
+\begin{proposition}[Full first-order mean-residual response]\label{prop:fullresponse}
+Assume the signed fields, covariance entries, and pressure reconstruction are smooth on the common slow domain, the relevant torus averages commute with the radial/axial derivatives as in the repository's moving-field lemmas, and the pressure reconstruction is Fr\'echet differentiable. Put
+\[
+S_1(a):=DS(p,t(\cdot))_{0}[a],
+\qquad
+E_1(a):=DE(p,u,t(\cdot),k(\cdot))_{0}[a],
+\]
+and
+\[
+\delta p(a)=\mathscr P\,\mathcal R_0\bigl(S_1(a)+E_1(a)\bigr).
+\]
+Then the first-order averaged tangential residual response of the actual reconstructed state is
+\begin{align}
+D\Obs[a]&=\Red a+\Hidden a,\label{eq:A=B+H}\\
+\Red a&:=\left(
+D_r^{(2)}\mean S_{01,1}(a),
+D_r^{(1)}\mean S_{02,1}(a)
+\right),\label{eq:Bdef}\\
+\Hidden a&:=\left(
+\mean\Theta(E_1(a))+\mean D_zS_{21,1}(a),
+\mean Z(E_1(a))+\mean D_zS_{22,1}(a)+\mean D_z\delta p(a)
+\right).
+\label{eq:Hdef}
+\end{align}
+The split is definitional: \(\Red\) contains exactly the radial-divergence cross channel used by the signed request, and \(\Hidden\) is the remainder of the full physical differential.
+\end{proposition}
+
+\begin{proof}
+\begin{prooflines}
+\item By \cref{thm:covsplit}, the actual covariance differential is \(S_1(a)+E_1(a)\).
+\item The exact theta-residual identity in \texttt{SignedMeanGain.lean} gives, on the common domain,
+\[
+\delta R_\theta(a)=\Theta(S_1(a)+E_1(a)).
+\]
+\item Expand \(\Theta\):
+\[
+\delta R_\theta
+=D_r^{(2)}S_{01,1}+D_zS_{21,1}+\Theta(E_1).
+\]
+By the assumed regularity, averaging may be applied termwise; the first term is \(\Red_\theta a\) and the remaining terms form \(\Hidden_\theta a\).
+\item The exact radial-source identity gives
+\[
+\delta g_r(a)=\mathcal R_0(S_1(a)+E_1(a)).
+\]
+Differentiability of the actual moving-gauge reconstruction therefore yields the stated \(\delta p(a)\).
+\item The exact axial-residual identity gives
+\[
+\delta R_z(a)=Z(S_1(a)+E_1(a))+D_z\delta p(a).
+\]
+The pressure term is forced by the same \texttt{waveStage} state reconstruction and is not an optional correction \cite{OpenAILeanRepo2026}.
+\item Expanding \(Z\), averaging termwise, and isolating the radial-divergence cross term produces \eqref{eq:Bdef}--\eqref{eq:Hdef}. Hence \(D\Obs=\Red+\Hidden\).
+\end{prooflines}
+\end{proof}
+
+\begin{remark}
+The source-level estimate \path{signed_tensor_bounds} places the exact increment tensor in class \(1+\sigma-\kappa\) and the remainder in class \(1+\sigma+17/100+\kappa\) \cite{OpenAILeanRepo2026}. This is a genuine positive output gap. The stronger quantity relevant to branch equivalence is a derivative-level relative operator such as \(\Red^{-1}\Hidden\), after differentiating the request-to-amplitude inverse and including pressure reconstruction. Differentiation of inverses and constant-rank pseudoinverses is classical but requires explicit conditioning hypotheses \cite{GolubPereyra1973,StewartSun1990}.
+\end{remark}
+
+\section{Full compatibility operator and branch equations}\label{sec:branch-equations}
+\subsection{Constrained reconstruction and the Schur complement}
+\begin{theorem}[Constrained reconstruction compatibility operator]\label{thm:schur}
+Let \(A,H,Z,Y\) be finite-dimensional real inner-product spaces (or normed spaces for the first two conclusions). Let
+\[
+D\Constr(0,0)(a,h)=Ga+Dh,
+\qquad
+D\Obs(0,0)(a,h)=Ba+Ph.
+\]
+Suppose there is a differentiable reconstruction map \(\Phi\colon A\to H\) with \(\Phi(0)=0\) and
+\[
+\Constr(a,\Phi(a))=0
+\]
+near \(a=0\). Then
+\[
+G+D\,D\Phi(0)=0
+\]
+and the full constrained observation derivative along the actual reconstruction is
+\[
+\boxed{\Comp=B+P\,D\Phi(0).}
+\]
+If \(D\) is bijective, then
+\[
+\boxed{\Comp=B-PD^{-1}G.}
+\]
+More generally, if \(G(A)\subseteq\Ran D\) and the reconstruction uses the Moore--Penrose gauge \(D\Phi(0)=-D^{\dagger}G\), then \(\Comp=B-PD^{\dagger}G\). This Moore--Penrose representation is independent of the hidden representative precisely when \(P(\Ker D)=\{0\}\); otherwise homogeneous hidden directions contribute the additional observation subspace \(P(\Ker D)\).
+\end{theorem}
+
+\begin{proof}
+\begin{prooflines}
+\item Differentiate the exact identity \(\Constr(a,\Phi(a))=0\) at \(a=0\). The chain rule gives
+\[
+G+D\,D\Phi(0)=0.
+\]
+\item Differentiate the observed reconstructed state \(a\mapsto\Obs(a,\Phi(a))\). The chain rule gives
+\[
+D(\Obs\circ(\Id,\Phi))(0)=B+P\,D\Phi(0),
+\]
+which defines \(\Comp\).
+\item If \(D\) is bijective, the differentiated constraint identity gives \(D\Phi(0)=-D^{-1}G\), hence the Schur-complement formula \(B-PD^{-1}G\). This is the standard block-elimination mechanism \cite{Zhang2005}.
+\item If \(G(A)\subseteq\Ran D\), the Moore--Penrose solution of \(Dh=-Ga\) is \(-D^{\dagger}Ga\). Every other solution differs by an element of \(\Ker D\) \cite{BenIsraelGreville2003}.
+\item If \(P(\Ker D)=\{0\}\), all such hidden representatives have the same observation and the reduced operator is gauge-independent. If not, the observable homogeneous contribution is exactly \(P(\Ker D)\). This proves the final assertion.
+\end{prooflines}
+\end{proof}
+
+\begin{remark}
+The theorem closes a potential ambiguity in using a pseudoinverse. The primary object for the Lean instantiation is the derivative of the reconstruction the source actually performs. A Moore--Penrose inverse is a valid canonical comparison only after the gauge or observation-nullity of \(\Ker D\) has been established. Smooth reconstruction by the implicit-function theorem and Schur-complement elimination are standard in finite-dimensional differential geometry and matrix analysis \cite{Lee2012,Zhang2005}.
+\end{remark}
+
+\subsection{Reduced-branch defect}
+\begin{proposition}[Exact reduced-branch defect identity]\label{prop:defect}
+Assume \(\Red\) is invertible and define
+\[
+a^L:=\Red^{-1}b.
+\]
+For \(\Comp=\Red+\Hidden\),
+\[
+\boxed{d:=\Comp a^L-b=\Hidden a^L.}
+\]
+Thus \(a^L\) is a full-compatible branch exactly when \(\Hidden\Red^{-1}b=0\). Moreover, if \(\eta\neq0\) satisfies \(\Comp^*\eta=0\), then any target with \(\langle\eta,b\rangle\neq0\) lies outside \(\Ran\Comp\).
+\end{proposition}
+
+\begin{proof}
+\begin{prooflines}
+\item By definition, \(\Red a^L=b\).
+\item Hence
+\[
+\Comp a^L=(\Red+\Hidden)a^L=b+\Hidden a^L.
+\]
+\item Subtracting \(b\) gives \(d=\Hidden a^L\), and the compatibility equivalence follows immediately.
+\item If \(\Comp^*\eta=0\), then every \(y=\Comp a\) satisfies \(\langle\eta,y\rangle=\langle\Comp^*\eta,a\rangle=0\). Therefore \(\langle\eta,b\rangle\neq0\) implies \(b\notin\Ran\Comp\).
+\end{prooflines}
+\end{proof}
+
+\subsection{Correct-branch resolvent}
+\begin{theorem}[Correct-branch resolvent and perturbative closure]\label{thm:resolvent}
+Assume \(\Red\) and \(\Comp=\Red+\Hidden\) are invertible. Then
+\[
+\boxed{
+a^C-a^L
+=-\Comp^{-1}\Hidden a^L
+=-\bigl(I+\Red^{-1}\Hidden\bigr)^{-1}\Red^{-1}\Hidden a^L.
+}
+\]
+If
+\[
+\|\Red^{-1}\Hidden\|\le\rho<1,
+\]
+then
+\begin{align}
+\|\Comp^{-1}\|&\le \frac{\|\Red^{-1}\|}{1-\rho},\label{eq:inverse-bound}\\
+\|a^C-a^L\|&\le \frac{\rho}{1-\rho}\,\|a^L\|.\label{eq:branch-bound}
+\end{align}
+If, after finite jet evaluation, \(\eta_q\) is a unit left singular vector of \(\Comp_q\) with singular value \(\sigma_q\) and \(|\langle\eta_q,b_q\rangle|\ge c q^\alpha\), then every exact full-compatible solution satisfies
+\[
+\|a^C_q\|\ge c q^\alpha/\sigma_q.
+\]
+\end{theorem}
+
+\begin{proof}
+\begin{prooflines}
+\item The branch equations are \(\Comp a^C=b=\Red a^L\).
+\item Subtract \(\Comp a^L\):
+\[
+\Comp(a^C-a^L)=-\Hidden a^L.
+\]
+\item Multiply by \(\Comp^{-1}\) to obtain the first resolvent identity.
+\item Factor \(\Comp=\Red(I+\Red^{-1}\Hidden)\). This yields the second identity.
+\item If \(\|\Red^{-1}\Hidden\|\le\rho<1\), the Neumann series gives
+\[
+\|(I+\Red^{-1}\Hidden)^{-1}\|\le(1-\rho)^{-1},
+\]
+and \eqref{eq:inverse-bound}--\eqref{eq:branch-bound} follow.
+\item For the singular-value statement, \(\|\Comp_q^*\eta_q\|=\sigma_q\). Therefore
+\[
+cq^\alpha\le|\langle\eta_q,b_q\rangle|
+=|\langle\Comp_q^*\eta_q,a_q^C\rangle|
+\le\sigma_q\|a_q^C\|,
+\]
+which proves the lower bound.
+\end{prooflines}
+The inverse and singular-value estimates are standard consequences of perturbation theory and SVD conditioning \cite{StewartSun1990,Wedin1972,TrefethenBau1997}.
+\end{proof}
+
+\begin{remark}
+If a request-dependent matrix \(M(a)\) is invertible, then
+\[
+D(M^{-1})[\dot M]=-M^{-1}\dot M M^{-1}.
+\]
+For a constant-rank pseudoinverse, the derivative contains analogous projector terms \cite{GolubPereyra1973}. Thus an output-level gain for \(E\) does not automatically imply the same gain for \(\Red^{-1}\Hidden\). The conditioning of the amplitude inverse must be included explicitly.
+\end{remark}
+
+\section{Quantitative primitive obstruction and residual exposure}\label{sec:quant-obstruction}
+\subsection{Admissible stage and tail budgets}
+For fixed physical derivative order \(m\), the manuscript uses estimates of the form
+\[
+\|Z_j\|_m+\|\Delta u_j\|_m
+\le C_{j,m}q^{g_j-\ell_m}(1+|\log q|)^{P_{j,m}},
+\]
+with \(\ell_m\) independent of \(j\) \cite[Lemmas~5.4 and 9.8]{OpenAI2026}. Let \(\Budget_{j,m}(q)\) denote the corresponding admissible correction set after retaining the logarithmic factor. For a bounded dual functional \(\eta\), define the linearized future response capacity
+\[
+\Gamma_{j,m,\eta}(q)
+:=\sum_{k\ge j}\sup_{a\in\Budget_{k,m}(q)}
+|\langle\eta,\Comp_{k,q}^{(m)}a\rangle|,
+\]
+whenever the sum is finite. A separate term \(N_{j,m,\eta}(q)\) will bound nonlinear tail interactions not represented by the first-order sum.
+
+\begin{theorem}[Quantitative range-or-tail-budget obstruction]\label{thm:budget}
+Let \(\Comp_{j,q}^{(m)}\) be a finite-jet full compatibility operator and let \(\eta_{j,q}\) be unit norm. Suppose
+\[
+\|\Comp_{j,q}^{(m)*}\eta_{j,q}\|\le Cq^{\kappa_{j,m}},
+\qquad
+|\langle\eta_{j,q},b_{j,q}\rangle|\ge cq^{\alpha_{j,m}}.
+\]
+Then every exact full-compatible active lift satisfies
+\[
+\boxed{\|a^C_{j,q}\|_m\ge(c/C)q^{\alpha_{j,m}-\kappa_{j,m}}.}
+\]
+Consequently, for any fixed \(j,m\), if
+\[
+\alpha_{j,m}-\kappa_{j,m}<g_j-\ell_m,
+\]
+then there exists \(q_{j,m}>0\) such that the compatible lift lies outside \(\Budget_{j,m}(q)\) for all \(0<q<q_{j,m}\) in the common iteration domain. More strongly, if
+\[
+|\langle\eta_{j,q},b_{j,q}\rangle|
+>\Gamma_{j,m,\eta}(q)+N_{j,m,\eta}(q),
+\]
+then no admissible correction tail beginning at stage \(j\), including nonlinear interactions bounded by \(N_{j,m,\eta}\), can realize that target component. If \(\Comp_{j,q}^{(m)*}\eta_{j,q}=0\) and the target component is nonzero, exact range failure occurs.
+\end{theorem}
+
+\begin{proof}
+\begin{prooflines}
+\item If \(\Comp a^C=b\), then
+\[
+|\langle\eta,b\rangle|=|\langle\Comp^*\eta,a^C\rangle|
+\le\|\Comp^*\eta\|\,\|a^C\|_m.
+\]
+\item Insert the two hypotheses to obtain
+\[
+cq^{\alpha_{j,m}}\le Cq^{\kappa_{j,m}}\|a^C\|_m,
+\]
+which yields the displayed lower bound.
+\item Compare this with the stage upper bound \(C_{j,m}q^{g_j-\ell_m}(1+|\log q|)^{P_{j,m}}\). If the lower-bound exponent is strictly smaller, the power separation dominates both fixed constants and every fixed logarithmic power as \(q\downarrow0\). Hence a threshold \(q_{j,m}\) exists.
+\item For a complete admissible tail, linearity of the dual functional and the triangle inequality give
+\[
+\left|\left\langle\eta,\sum_{k\ge j}\Comp_{k,q}^{(m)}a_k\right\rangle\right|
+\le\Gamma_{j,m,\eta}(q).
+\]
+Adding the nonlinear remainder changes the right-hand side by at most \(N_{j,m,\eta}(q)\). If the target component exceeds this total capacity, no admissible tail can realize it.
+\item If \(\Comp^*\eta=0\), the left side of the compatibility identity is zero for every active lift; a nonzero target component is therefore outside the range.
+\end{prooflines}
+\end{proof}
+
+\subsection{Tail-stable residual exposure}
+\begin{proposition}[Tail-stable defect forces a nonflat physical residual]\label{prop:residual}
+Let \(d_{j,q}\) be a stage defect and let \(\Tail_{j,q}\) denote the total contribution of all later admissible corrections and nonlinear interactions to the same final observed jet. Suppose a bounded functional \(\lambda_{j,q}\), constants \(c>0\), \(\alpha<\infty\), and \(0\le\theta<1\) satisfy
+\[
+|\lambda_{j,q}(d_{j,q})|\ge cq^\alpha,
+\qquad
+|\lambda_{j,q}(\Tail_{j,q})|\le\theta cq^\alpha.
+\]
+Then the final observed mismatch \(\Delta^{\infty}_{\Obs,q}=d_{j,q}+\Tail_{j,q}\) satisfies
+\[
+|\lambda_{j,q}(\Delta^{\infty}_{\Obs,q})|
+\ge(1-\theta)cq^\alpha.
+\]
+Assume further that, for the same finite jet, the final mismatch is generated by the physical residual \(r_q\) through
+\[
+\Delta^{\infty}_{\Obs,q}=T_qr_q+e_q,
+\]
+with
+\[
+\|\lambda_{j,q}\circ T_q\|\le Cq^{-M},
+\qquad
+|\lambda_{j,q}(e_q)|\le\tfrac12(1-\theta)cq^\alpha.
+\]
+Then
+\[
+\boxed{\|r_q\|\ge \frac{(1-\theta)c}{2C}q^{\alpha+M}.}
+\]
+In particular, \(r_q\) cannot be \(O(q^N)\) for every \(N\).
+\end{proposition}
+
+\begin{proof}
+\begin{prooflines}
+\item By the reverse triangle inequality,
+\[
+|\lambda(d+\Tail)|\ge|\lambda(d)|-|\lambda(\Tail)|
+\ge(1-\theta)cq^\alpha.
+\]
+This is the required stage-to-final persistence statement.
+\item Insert \(\Delta^{\infty}_{\Obs,q}=T_qr_q+e_q\) and use the bound on \(e_q\):
+\[
+|\lambda(T_qr_q)|
+\ge\tfrac12(1-\theta)cq^\alpha.
+\]
+\item The operator-norm estimate gives
+\[
+|\lambda(T_qr_q)|\le Cq^{-M}\|r_q\|.
+\]
+Combining the inequalities yields the displayed residual lower bound.
+\item Choose any integer \(N>\alpha+M\). Then \(\|r_q\|/q^N\to\infty\) along the witness sequence, so \(r_q\neq O(q^N)\), hence \(r_q\neq O(q^\infty)\).
+\end{prooflines}
+\end{proof}
+
+\begin{remark}
+The tail hypothesis is essential. A finite-stage algebraic defect can be harmless if later corrections cancel it. The proposition deliberately requires either direct control of the actual future tail or a bound obtained from \(\Gamma_{j,m,\lambda}\) and the nonlinear remainder. Only then is a stage witness legitimately transferred to the terminal physical residual. The final step uses only finite-jet differentiability and a polynomial physical sensitivity bound, the same type of fixed-order control used by the manuscript's physical derivative conversion \cite{RobinsonRodrigoSadowski2016,OpenAI2026}.
+\end{remark}
+
+\section{Main counter-proof result}\label{sec:counterproof}
+\begin{theorem}[Primitive compatibility counter-proof at the signed-mean interface]\label{thm:main}
+Fix a physical jet order \(m\), an evaluation set \(\Xi\), and a correction stage \(j\). Suppose the actual signed-state differential satisfies
+\[
+\Comp_{j,q}^{(m)}=\Red_{j,q}^{(m)}+\Hidden_{j,q}^{(m)}
+\]
+as in \cref{prop:fullresponse}, and suppose the signed construction selects
+\[
+a^L_{j,q}=(\Red_{j,q}^{(m)})^{-1}b_{j,q}.
+\]
+Then:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em,itemsep=0.35em]
+\item The exact full primitive defect of the selected branch is
+\[
+\boxed{d_{j,q}=\Hidden_{j,q}^{(m)}a^L_{j,q}.}
+\]
+Thus exact reduced cross cancellation is not, by itself, exact full compatibility.
+
+\item If \(d_{j,q}\) admits a tail-stable dual witness in the sense of \cref{prop:residual}, and the final observation-to-residual map has only polynomial sensitivity, then the actual physical residual has a finite algebraic lower bound and cannot be flat. This contradicts the all-order physical residual conclusion asserted in Proposition~9.9 for that instantiated branch \cite[Prop.~9.9]{OpenAI2026}.
+
+\item If, instead, a dual direction satisfies the hypotheses of \cref{thm:budget} and its target component exceeds the total admissible future response capacity
+\[
+\Gamma_{j,m,\eta}(q)+N_{j,m,\eta}(q),
+\]
+then no correction sequence obeying the stated stage budgets can lie on the full constrained branch in that direction. In particular, replacing the reduced branch by a full-compatible branch cannot be absorbed into the correction tail covered by Lemmas~5.4 and 9.8.
+
+\item A sufficient closure certificate for this interface is a stage-uniform theorem controlling the \emph{full} reconstructed response, for example
+\[
+\|\Red^{-1}\Hidden\|_m\le C_mq^\rho,\qquad \rho>0,
+\]
+together with compatible tail and nonlinear-remainder estimates. A full right-inverse or singular-value bound that yields the same branch and tail control is an alternative sufficient certificate.
+
+Output membership of \(E\) in a higher weighted class is not by itself such a certificate unless it is propagated through request differentiation, inverse conditioning, pressure reconstruction, and the physical jet map.
+\end{enumerate}
+
+Accordingly, an instantiated certificate under (b) or (c) is a complete counter-proof to the signed-mean-to-flat-residual bridge: (b) contradicts the terminal residual conclusion itself, while (c) excludes the full-compatible branch from the entire admissible correction class used to reach that conclusion. In Lean, the witness should be stated directly on the concrete objects consumed by \texttt{CorrectionAnalyticStep}, the iteration ledger, and \path{PhysicalResidualJetBounds}.
+\end{theorem}
+
+\begin{proof}
+\begin{prooflines}
+\item Part (a) is \cref{prop:defect} instantiated with the exact full response of \cref{prop:fullresponse}.
+\item Under part (b), \cref{prop:residual} first proves that the stage defect survives all later admissible corrections in the chosen functional, then transfers the surviving mismatch to an algebraic lower bound on a physical residual jet.
+\item Proposition~9.9 asserts \(O(q^N)\) decay for every fixed residual derivative and every \(N\) after the summation procedure \cite[Prop.~9.9]{OpenAI2026}. The algebraic lower bound from part (b) contradicts this for all integers \(N\) larger than its finite exponent.
+\item Under part (c), \cref{thm:budget} bounds the maximum response of the entire admissible future correction tail in the witness direction, including the separately bounded nonlinear remainder. A target component larger than this capacity is not reachable by any branch satisfying the stage budgets.
+\item Lemma~5.4 applies only to sequences satisfying its fixed-derivative-loss hypotheses, and Lemma~9.8 supplies the manuscript-specific stage estimates used to invoke that summation mechanism \cite[Lemmas~5.4 and 9.8]{OpenAI2026}. Therefore a full-compatible response excluded from the admissible tail is not recovered by the same diagonal summation argument.
+\item Finally, \cref{thm:resolvent} proves that the relative contraction in part (d) is sufficient for branch equivalence, while standard SVD/right-inverse bounds control the alternative full-operator formulation \cite{StewartSun1990,Wedin1972,GolubVanLoan2013}. The additional tail estimate prevents a local perturbative statement from being mistaken for a terminal one.
+\end{prooflines}
+\end{proof}
+
+\begin{remark}[Rigor boundary]
+The theorem does not infer a contradiction merely from \(\Hidden\neq0\), from a finite-stage remainder, or from absence of a theorem name in the repository. A counter-proof closes only after one of the explicit certificates in (b) or (c) is instantiated on the actual source objects. This stronger formulation removes the otherwise invalid inference from ``nonzero intermediate error'' to ``nonflat final residual'' while preserving the exact obstruction mechanism.
+\end{remark}
+
+\section{Lean instantiation and formalization strategy}\label{sec:lean-instantiation}
+This section is the second major component of the note. The goal is a small companion module that imports the actual signed-state implementation at the pinned commit, differentiates the source's own reconstruction path, and terminates either in a full-interface closure theorem or in one of the concrete counter-witnesses of \cref{thm:main}. No replacement state or surrogate covariance system is required.
+
+\subsection{Pinned source and trust boundary}
+The relevant source is \texttt{openai/NavierStokesAndEuler} at commit
+\[
+\texttt{f9e8bc5b38b6e212696e8a30e3e91517af887bbd}.
+\]
+Lean's kernel checks proof terms against the propositions actually encoded \cite{deMouraEtAl2015,Lean4Reference}. The companion module should therefore prove ordinary propositions about imported definitions; it should not treat metaprogram behavior, comments, or the absence of a declaration as mathematical evidence.
+
+\subsection{Source interface map}
+\begin{longtable}{>{\raggedright\arraybackslash\scriptsize}p{0.28\textwidth}>{\raggedright\arraybackslash}p{0.28\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}}
+\toprule
+Lean file / theorem & Existing content used & Companion theorem target \\
+\midrule
+\endhead
+\texttt{LabelSumBounds.lean}\newline \texttt{signedRemainder} & Exact remainder, including curl and signed-square terms & Reuse literally; prove its Fr\'echet linearization. \\
+\texttt{SignedMeanGain.lean}\newline \texttt{incrementTensor\_split} & \(\Delta W=S+E\) exactly & Identify \(S_1\) and \(E_1\) on the assembled fields. \\
+\texttt{SignedMeanGain.lean}\newline \texttt{waveStage\_theta\_change}\newline \texttt{waveStage\_gr\_change}\newline \texttt{waveStage\_axial\_change} & Exact state-to-residual and pressure response & Define the full reconstructed tangential differential. \\
+\texttt{SignedMeanGain.lean}\newline \texttt{signed\_tensor\_bounds} & Increment class \(1+\sigma-\kappa\); remainder class \(1+\sigma+17/100+\kappa\) & Differentiate with respect to the request and retain inverse factors. \\
+\texttt{CrossBasedMeanComposition.lean}\newline \texttt{cross\_cancels\_with\_defect} & Physical cross cancellation with literal defect retained & Identify the reduced operator without identifying it with the full response. \\
+\path{CrossBasedMeanComposition.lean}\newline \path{signed_mean_gain_of_cross_defects} & Mean-gain propagation from cross/remainder classes & Determine whether its hypotheses imply full derivative-level closure. \\
+\texttt{CycleContinuationInvariant.lean} & Explicit warning about possible inverse-covariance growth at a flat edge & Isolate the weighted inverse bound used in request differentiation. \\
+\texttt{ActualIterationLedger.lean} & Increasing stage gain and fixed physical loss & Instantiate the single-stage and future-tail capacities. \\
+\path{ActualCycleResidualBounds.lean}\newline \path{PhysicalResidualJetBounds.lean} & Transfer cycle estimates to the actual physical residual & Attach a tail-stable dual witness to the terminal residual predicate. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Phase I: differentiate the actual reconstruction path}
+The companion should encode the derivative of the reconstruction the source actually performs, rather than selecting a pseudoinverse before the gauge is known. A schematic interface is
+\begin{lstlisting}
+structure CompatibilityBlocks where
+  Active : Type
+  Hidden : Type
+  Obs : Type
+  Constraint : Type
+  G : Active ->L[R] Constraint
+  D : Hidden ->L[R] Constraint
+  B : Active ->L[R] Obs
+  P : Hidden ->L[R] Obs
+  reconstructDeriv : Active ->L[R] Hidden
+  constraint_lift : D.comp reconstructDeriv = -G
+
+noncomputable def fullCompatibility (K : CompatibilityBlocks) :
+    K.Active ->L[R] K.Obs :=
+  K.B + K.P.comp K.reconstructDeriv
+\end{lstlisting}
+The algebraic bridge is then
+\begin{lstlisting}
+theorem reconstructed_observation_deriv
+    : fullCompatibility K = K.B + K.P.comp K.reconstructDeriv := rfl
+\end{lstlisting}
+If the source reconstruction can additionally be identified with an invertible hidden block or a Moore--Penrose gauge, prove that as a separate theorem. In the pseudoinverse case the companion must also prove either \texttt{P} vanishes on \texttt{ker D} or that the chosen gauge is the one actually used. This is the Lean form of \cref{thm:schur}.
+
+At the global level, keep these as continuous linear maps on the repository's function spaces. Only after composing with a finite jet-evaluation map should the development introduce matrices, ranks, singular values, or finite-dimensional dual certificates.
+
+\subsection{Phase II: instantiate \texorpdfstring{\(\Red\)}{the reduced operator} from the exact cross tensor}
+Define \(\Red\) by differentiating the actual \texttt{crossTensor} under the same averaged radial-divergence observation used by the physical cancellation theorem. No surrogate covariance matrix is needed. The theorem \path{native_physical_cross} already identifies the physical double average of the primary--signed cross with the requested stress; the companion should differentiate that request-to-wave map and prove that its cross observation is the reduced response on the two request coordinates wherever the strict-cone amplitude map is differentiable.
+
+\subsection{Phase III: instantiate \texorpdfstring{\(\Hidden\)}{the hidden operator} by subtraction, then expand it}
+Define
+\[
+\Hidden:=\Comp-\Red
+\]
+from the full reconstructed differential first. Then prove the explicit formula \eqref{eq:Hdef}. This order prevents the specification from omitting a hidden state channel by construction. A useful theorem chain is
+\begin{lstlisting}
+theorem remainder_linearization_eq_E1 : ...
+theorem theta_hidden_response_eq : ...
+theorem radial_source_hidden_response_eq : ...
+theorem pressure_hidden_response_eq : ...
+theorem axial_hidden_response_eq : ...
+theorem full_response_eq_reduced_add_hidden : ...
+\end{lstlisting}
+The pressure theorem is indispensable because the source reconstructs pressure from the changed radial source before recomputing the axial residual.
+
+\subsection{Phase IV: differentiate the weighted estimates through the inverse}
+The source proves
+\[
+\Delta W\in M_{1+\sigma-\kappa},
+\qquad
+E\in M_{1+\sigma+17/100+\kappa}.
+\]
+To obtain branch closure, this must be upgraded to a request-derivative estimate after the amplitude inverse, curl completion, pressure reconstruction, averaging, and physical jet conversion. For an ordinary inverse, differentiation introduces the factor \(M^{-1}(DM)M^{-1}\); for a constant-rank pseudoinverse, the derivative has additional projector terms \cite{GolubPereyra1973}. Near-rank loss is quantitatively governed by singular values and subspace perturbation bounds \cite{Wedin1972,StewartSun1990}.
+
+A direct positive theorem target is
+\begin{lstlisting}
+theorem full_relative_contraction
+    : Norm (reducedInv.comp hidden) <= C * q^rho
+\end{lstlisting}
+with \(\rho>0\) and losses uniform in stage for each fixed physical jet order. A counter-theorem should negate the exact bound actually required by the ledger, not merely produce a large condition number at one arbitrary point.
+
+\subsection{Phase V: encode a dual range or near-cokernel certificate}
+After finite jet evaluation, exact range failure can be certified without a complete singular-value library:
+\begin{lstlisting}
+structure CokernelWitness where
+  eta : ObsDual
+  eta_ne : eta != 0
+  annihilates : forall a, eta (fullCompatibility a) = 0
+  target_nonzero : eta target != 0
+\end{lstlisting}
+For near-singularity, replace \texttt{annihilates} by a quantitative estimate on \(\|\Comp^*\eta\|\). This is precisely the dual hypothesis of \cref{thm:budget}. Standard SVD and condition-number references provide the finite-dimensional model for this reduction \cite{TrefethenBau1997,GolubVanLoan2013}.
+
+\subsection{Phase VI: formalize the admissible future tail}
+A finite-stage defect is not yet a terminal contradiction. The companion therefore needs a response-capacity theorem for the correction tail. Using the exact ledger exponents, define a dual capacity corresponding to
+\[
+\Gamma_{j,m,\eta}(q)
+=\sum_{k\ge j}\sup_{a\in\Budget_{k,m}(q)}
+|\eta(\Comp_{k,q}^{(m)}a)|,
+\]
+and separately bound nonlinear interactions by \(N_{j,m,\eta}(q)\). The decisive theorem has the form
+\begin{lstlisting}
+theorem target_exceeds_admissible_tail
+    (htarget : abs (eta target) > Gamma j m eta q + Ntail j m eta q) :
+    not (Exists fun tail : AdmissibleTail => realizes target tail) := ...
+\end{lstlisting}
+This statement is stronger than showing that one stage correction is too small: it rules out repair by all later corrections covered by the same summation architecture.
+
+\subsection{Phase VII: residual contradiction with tail stability}
+If the reduced branch itself supplies the witness, first prove that its dual component survives the actual future tail:
+\begin{lstlisting}
+theorem interface_defect_survives_tail
+    (hdefect : abs (lambda (interfaceDefect q)) >= c * q^alpha)
+    (htail : abs (lambda (futureTail q)) <= theta * c * q^alpha)
+    (htheta : theta < 1) :
+    abs (lambda (finalMismatch q)) >= (1-theta) * c * q^alpha := ...
+\end{lstlisting}
+Only after this theorem should the proof invoke the polynomial sensitivity of the final physical residual. The terminal theorem can then negate the same all-order residual predicate consumed by \path{PhysicalResidualJetBounds} and Proposition~9.9.
+
+\subsection{Phase VIII: formal dependency graph}
+The recommended dependency chain is
+\[
+\boxed{
+\begin{array}{c}
+\texttt{incrementTensor\_split}\\
+\downarrow\\
+E_1\ \text{and exact reconstructed differential}\\
+\downarrow\\
+\Comp=\Red+\Hidden\\
+\downarrow\\
+\text{dual defect / inverse-loss certificate}\\
+\downarrow\\
+\text{future-tail capacity or survival theorem}\\
+\downarrow\\
+\text{ledger impossibility or nonflat physical residual}.
+\end{array}}
+\]
+Every arrow is a theorem target. This organization keeps the counter-proof anchored to the source's complete state while preventing a local intermediate error from being mistaken for a terminal contradiction.
+
+\section{Consequences for the claimed blowup construction}\label{sec:consequences}
+\subsection{Exact cross cancellation is necessary but not sufficient}
+The signed covariance inversion and the Lean cross-tail machinery establish a genuine exact statement about selected cross components. The source also retains finite-head defects rather than silently setting them to zero. Those facts are substantive strengths. What remains to be proved for the full interface is a reconstruction statement: after the actual remainder and pressure are recomputed, the selected amplitude must either coincide with a full-compatible branch or differ from it by a correction lying inside the quantified future budget.
+
+\subsection{Higher-order output control must survive differentiation and inversion}
+The class gap in \path{signed_tensor_bounds} is precisely the type of gain a convergent correction scheme needs. Yet condition number and perturbation size are different quantities: a small realized remainder can have a large derivative with respect to the request when the request-to-amplitude inverse is ill-conditioned \cite{TrefethenBau1997,StewartSun1990}. The appropriate source-level audit is therefore the differentiated, composed operator through covariance inversion, curl completion, pressure reconstruction, averaging, and physical jet conversion.
+
+\subsection{The decisive estimate is full-operator and tail-aware}
+A strict cone proves pointwise invertibility of a local covariance matrix; a Fourier inverse controls an auxiliary derivative on a zero-mean subspace; a five-row moment system supplies another finite-dimensional inverse. Each is useful, but none alone is the condition number of the composed physical compatibility map. Likewise, a one-stage estimate is not the terminal statement. The verification object is the full reconstructed operator together with the future response capacity permitted by the ledger.
+
+\subsection{The physical residual is the final exposure channel}
+The final residual is the strongest comparison object because it is the quantity localized and interpreted as forcing. Once a tail-stable finite-jet mismatch is related to that residual by a polynomially bounded map, \cref{prop:residual} converts it into a direct contradiction with all-order flatness. This bypasses representational disputes and returns the argument to the physical PDE.
+
+\section{Strengthened counter-proof template}\label{sec:template}
+\subsection{Differentiate the actual reconstructed branch}
+Start from the source's literal state update and define \(\Comp=D(\Obs\circ(\Id,\Phi))\). Use a pseudoinverse representation only after the relevant gauge or kernel-annihilation condition has been proved.
+
+\subsection{Compute \texorpdfstring{\(d=\Hidden a^L\)}{the exact reduced-branch defect}}
+Use the exact covariance split and pressure reconstruction to obtain \(\Hidden\), then evaluate the reduced branch. Do not infer a contradiction from \(\Hidden\neq0\); identify a dual component and its asymptotic order.
+
+\subsection{Test relative size and conditioning}
+If \(\Red^{-1}\Hidden=O(q^\rho)\) uniformly with \(\rho>0\), the interface is perturbatively closed by \cref{thm:resolvent}. If not, seek a dual near-cokernel or a lower bound on the required full-compatible lift. Pseudoinverse differentiation and SVD perturbation theory provide the correct machinery \cite{GolubPereyra1973,Wedin1972}.
+
+\subsection{Compare with the complete correction tail}
+A stage mismatch matters only if later admissible corrections cannot absorb it. Bound the dual future capacity \(\Gamma_{j,m,\eta}\) and nonlinear tail \(N_{j,m,\eta}\), or prove a direct tail-survival inequality. This is the bridge from a local operator witness to the terminal construction.
+
+\subsection{Expose a surviving defect through the residual}
+Choose the lowest-order physical jet functional that sees the surviving mismatch. Establish polynomial sensitivity to the actual residual and apply \cref{prop:residual}. The conclusion then directly conflicts with the all-order flatness predicate.
+
+\subsection{Keep Lean and manuscript endpoints identical}
+A Lean counter-theorem should terminate either in failure of the precise stage/tail predicate consumed by the iteration or in failure of the physical residual-flatness predicate. The manuscript argument should identify the corresponding hypothesis at Lemma~5.4, Lemma~9.8, or Proposition~9.9. Matching endpoints prevents semantic drift between the formal and analytic versions of the counter-proof.
+
+\section{Interpretive structure}\label{sec:interpretation}
+\subsection{The obstruction is a branch problem, not an omitted-term claim}
+The remainder is present in the formal state. The structural question is whether the amplitude selected from the reduced cross request lies on, or remains uniformly close to, the full reconstructed response branch. That distinction survives even in a formally exact state update.
+
+\subsection{Output gain and inverse conditioning are distinct observables}
+Weighted classes measure the size of realized fields. Compatibility conditioning measures the input effort needed to realize or correct an output. The derivative of an inverse can contain two inverse factors, and constant-rank pseudoinverses carry additional projector terms \cite{GolubPereyra1973}. Consequently, a higher-order remainder does not automatically imply a higher-order branch displacement.
+
+\subsection{A correct reduced solve can select a different full branch}
+The equation \(\Red a=b\) can be solved exactly and stably while \(\Comp a=b\) has a different solution, is nearly singular, or has a range defect. The reduced solve is not mathematically ``wrong'' on its own coordinates. The specification error would be to identify it with the full physical branch without the required reconstruction and tail theorem.
+
+\subsection{Formal proof and physical correspondence are separate obligations}
+Lean checks the encoded theorem with a small trusted kernel \cite{deMouraEtAl2015,Lean4Reference}. A specification audit should exploit that precision: formulate the reconstruction, full-response, tail-capacity, and residual-transfer statements as explicit theorems. Either they are derivable from the current hypotheses or a concrete counter-witness shows where the manuscript bridge fails.
+
+\section{Conclusion}\label{sec:conclusion}
+This companion note converts the primitive-liftability framework into an explicit, gauge-aware audit of the signed mean update. The literal formal state gives \(\Delta W=S+E\), reconstructs pressure from the changed radial source, and recomputes the tangential residual. Differentiating the actual reconstruction path yields a full response \(\Comp=\Red+\Hidden\); the reduced branch therefore has the exact primitive defect \(d=\Hidden a^L\), while an existing full branch obeys the exact resolvent relation \(a^C-a^L=-\Comp^{-1}\Hidden a^L\).
+
+The revision sharpens two points that are essential for a rigorous counter-proof. First, the constrained operator is defined from the derivative of the source's actual reconstruction map, so a Moore--Penrose representation is used only after its gauge conditions are justified. Second, a nonzero finite-stage defect is not promoted directly to a terminal contradiction. The defect must either survive the complete admissible correction tail or exceed the total response capacity of that tail. With this addition, the residual-exposure theorem legitimately reaches the same physical \(O(q^\infty)\) predicate used in the final construction.
+
+The source already proves meaningful output-level gains, including a higher weighted class for the signed remainder. The remaining decisive question is therefore quantitative and compositional: does that gain survive request differentiation, covariance inversion, curl completion, pressure reconstruction, averaging, physical jet evaluation, and the future correction tail? A stage-uniform relative contraction or full right-inverse theorem closes the interface. A tail-stable nonflat dual witness or a target component exceeding the admissible full-response capacity closes the counter-proof. Both outcomes are now stated as explicit theorem targets that can be checked against the pinned Lean source without appealing to an omitted-term narrative.
+
+\appendix
+\section{Computational diagnostics}\label{sec:computations}
+The supplementary computational artifact \path{Primitive_Compatibility_Supplement_v1.py} performs finite-dimensional checks of the algebraic identities and asymptotic mechanisms used in the note. These computations are validation aids; none replaces the analytic proofs.
+
+\begin{table}[H]
+\centering
+\caption{Representative checks reproduced by the supplementary computational artifact.}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.35\textwidth}}
+\toprule
+Check & Representative result & Interpretation \\
+\midrule
+Schur-complement identity & error \(8.9\times10^{-16}\) & Direct constrained response agrees with the eliminated block formula. \\
+Reduced defect identity & error \(9.0\times10^{-17}\) & \((B+H)B^{-1}b-b=HB^{-1}b\). \\
+Resolvent identity & error \(2.2\times10^{-17}\) & Exact branch-displacement formula verified numerically. \\
+Conditioned family \(A_q=\operatorname{diag}(1,q^{0.75})\) & log--log slope \(-0.75\) & Compatible lift grows like \(q^{-0.75}\). \\
+Residual exposure example & \(q^{1.3}/q^2=10^7\) at \(q=10^{-10}\) & A surviving finite algebraic residual lower bound is incompatible with all-order flatness. \\
+Perturbative good regime & normalized spread \(1.38\times10^{-2}\) & If \(H=q^{0.3}M\), branch displacement has the expected positive-power scaling. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The conditioned-family calculation sanity-checks \cref{thm:budget}; the perturbative example sanity-checks the opposite regime in \cref{thm:resolvent}. Neither calculation establishes the sign or magnitude of the actual OpenAI interface operator. Their purpose is to verify the algebra and to distinguish the two asymptotic regimes the Lean instantiation must decide.
+
+\section{Reproducibility note}
+The computational supplement referenced by this note is the companion file
+\begin{center}
+\small\texttt{Primitive\_Compatibility\_Supplement\_v1.py}.
+\end{center}
+It uses NumPy only and has a \texttt{main()} entry point. All principal mathematical claims in the note are analytic and do not depend on floating-point computation.
+
+\section{Manuscript and Lean interface checklist}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.37\textwidth}}
+\toprule
+Interface & Existing evidence & Counter-proof check \\
+\midrule
+\endhead
+Signed covariance request & Exact native cross identity and strict-cone amplitudes & Differentiate the request-to-amplitude map and bound the inverse in the same physical jet norm. \\
+Actual covariance update & \path{incrementTensor_split}; remainder retained & Compute \(E_1\) and its complete tangential response. \\
+Hidden reconstruction & Actual pressure/state reconstruction & Differentiate the reconstruction used by the source; justify any pseudoinverse gauge separately. \\
+Radial source / pressure & \path{waveStage_gr_change}; pressure reconstructed & Include \(D_z\mathscr P\mathcal R_0(S_1+E_1)\) in \(\Hidden\). \\
+Cross cancellation & \path{cross_cancels_with_defect} & Distinguish reduced cancellation from \(\Comp a=b\). \\
+Weighted gain & \path{signed_tensor_bounds}; mean-gain theorems & Upgrade the output class gap to derivative-level full-operator control, or exhibit a counter-witness. \\
+Flat edge & Inverse-covariance warning in cycle continuation & Bound inverse derivatives with the same edge weights and stage losses. \\
+Iteration ledger & Stage gain increases; physical derivative loss fixed in stage & Bound the complete future response capacity \(\Gamma+N\). \\
+Physical residual & Actual residual jet bounds and Proposition~9.9 & Prove tail survival, then push the surviving defect to a concrete residual jet functional. \\
+\bottomrule
+\end{longtable}
+
+\printbibliography[heading=bibintoc,title={References}]
+
+\end{document}
