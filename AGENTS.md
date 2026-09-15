@@ -28,6 +28,10 @@ Anchor proofs to pinned definitions. Prefer the notes' full-response, tail-stabl
 
 Follow Lean/mathlib style: two-space indentation, focused imports, and short public doc comments. Use `UpperCamelCase.lean` filenames, matching namespaces, and descriptive declarations. Keep assumptions explicit; Euler treats warnings as errors. Match neighboring code.
 
+## Mathematical Communication
+
+When communicating with users, write rigorous mathematics in explicit plain-print form. Do not use LaTeX commands, LaTeX delimiters, or MathJax by default. Use applicable Unicode notation generously—such as ∀, ∃, →, ↔, ∈, ∉, ≤, ≥, Σ, and ∘—while defining symbols and keeping expressions readable in a linear text layout. Use LaTeX only when the user explicitly requests it or when the task or deliverable inherently requires LaTeX, such as editing a `.tex` source.
+
 ## Testing Guidelines
 
 Compilation is the test gate. Build the affected library, then run `lake build`. Do not add `sorry` or `admit` to proof modules; placeholders in `ComparatorChallenges/*.lean` are intentional. Run Comparator when changing exported adapters or challenge definitions.
