@@ -20,9 +20,12 @@ framework and its downstream
   branch formulas and quantifies their exact displacement.
 - [`Certificates/`](Certificates/) turns cokernel witnesses, tail bounds, and
   residual exposure into independent or unified terminal obstructions.
+- [`Adapter/`](Adapter/) imports exact upstream signed-update, reconstruction,
+  cross-defect, ledger, and physical-residual proofs for concrete instantiation.
 
-Each directory has a focused README and an umbrella import at
-`NavierStokes.CounterProof.{Liftability,Reconstruction,Certificates}`.
+Each directory has a focused README. `SignedMeanInterface.lean` is the public
+root-level module for the `Adapter/` subsystem; the other three subsystems use
+same-named umbrella imports under `NavierStokes.CounterProof`.
 
 ## Root Modules
 
@@ -30,12 +33,14 @@ Each directory has a focused README and an umbrella import at
 shared vocabulary across the proof program. `SignedMeanInterface.lean` also
 remains here: it is the attachment boundary to completed proofs in the
 upstream `NavierStokes/` system, not an abstract obstruction component.
-The three other root modules are import-only entry points for their matching
+The other root modules are import-only entry points for their matching
 subdirectories.
 
 The dependency flow is:
 
-`(Compatibility → Reconstruction) + Liftability → Certificates → SignedMeanInterface`.
+`(Compatibility → Reconstruction) + Liftability → Certificates`, with
+`NavierStokes/ → Adapter → SignedMeanInterface` supplying the concrete source
+attachment and its conclusions.
 
 The principal unified endpoint is
 `JointCokernelCertificate.joint_obstruction`; its two conclusions remain

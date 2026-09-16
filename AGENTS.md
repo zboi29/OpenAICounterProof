@@ -4,7 +4,7 @@
 
 This fork uses OpenAI's `NavierStokesAndEuler` formalization as the audit target for a Lean counter-proof of primitive compatibility/liftability. It is not a routine algebraic, normalization, projection, or omitted-term critique. A defect counts only if it survives the correction tail and contradicts an exact upstream endpoint such as residual flatness or smooth force extension.
 
-`NavierStokes.lean` and `Euler.lean` are entry points; modules live in matching directories, with whole-space work under `NavierStokes/R3/`. `NavierStokes/CounterProof/` separates liftability, reconstruction, and certificate modules into matching subdirectories while retaining shared interfaces at its root. `ComparatorChallenges/` holds independent checks. Keep paths, namespaces, and imports aligned.
+`NavierStokes.lean` and `Euler.lean` are entry points; modules live in matching directories, with whole-space work under `NavierStokes/R3/`. `NavierStokes/CounterProof/` separates liftability, reconstruction, certificate, and source-adapter modules into matching subdirectories while retaining shared interfaces at its root. `SignedMeanInterface.lean` is the public root and concluding layer for `CounterProof/Adapter/`. `ComparatorChallenges/` holds independent checks. Keep paths, namespaces, and imports aligned.
 
 ## Counter-Proof Sources
 

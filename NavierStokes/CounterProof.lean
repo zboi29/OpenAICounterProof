@@ -9,13 +9,16 @@ import NavierStokes.CounterProof.SignedMeanInterface
 
 Aggregate import for the source-grounded Navier–Stokes counter-proof subsystem.
 
-The implementation is organized into three dependency-oriented subsystems:
+The implementation is organized into four dependency-oriented subsystems:
 
 1. `Liftability` for affine range tests, lift cost, endpoints, and curvature;
 2. `Reconstruction` for full/reduced branch mechanics and resolvent bounds; and
-3. `Certificates` for cokernel, tail, residual, joint, and terminal closure.
+3. `Certificates` for cokernel, tail, residual, joint, and terminal closure; and
+4. `Adapter` for concrete imports and source-specific instantiation.
 
-The shared compatibility blocks and signed-mean attachment remain root modules.
+The shared compatibility blocks remain at the root. `SignedMeanInterface` is
+the root entry point and concluding layer for concrete adapters under
+`CounterProof/Adapter/`.
 
 Importing this file provides the reusable theorem layer.  It does not by itself
 instantiate a counterexample against the signed-mean construction; concrete
