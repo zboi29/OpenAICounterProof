@@ -10,22 +10,31 @@ The modules follow the companion note's formal dependency graph:
 2. `AffineLift.lean` proves that first-order liftability is exactly membership
    in the homogeneous compatibility range and that this test is independent of
    the chosen particular constrained tangent.
-3. `SchurComplement.lean` derives the reconstruction and full-response Schur
+3. `PrimitiveFramework.lean` defines admissible fibers, extended-valued lift
+   cost, branch extinction, and endpoint compatibility.
+4. `SchurComplement.lean` derives the reconstruction and full-response Schur
    formulas and isolates the kernel condition for gauge independence.
-4. `BranchDefect.lean` isolates the exact defect of a reduced solve.
-5. `BranchResolvent.lean` proves the exact correct-branch resolvent and its
+5. `BranchDefect.lean` isolates the exact defect of a reduced solve.
+6. `BranchResolvent.lean` proves the exact correct-branch resolvent and its
    relative-response inverse and displacement bounds.
-6. `DualCertificate.lean` packages finite-jet range obstructions.
-7. `QuantitativeObstruction.lean` proves the near-cokernel lift bound and joins
+7. `DualCertificate.lean` and `HilbertCokernel.lean` connect functional range
+   obstructions to exact and near adjoint-kernel directions.
+8. `RankCollapse.lean` proves singular-direction lift blowup and terminal range
+   loss.
+9. `QuantitativeObstruction.lean` proves the near-cokernel lift bound and joins
    it to the complete future-tail obstruction.
-8. `TailCapacity.lean` rules out repair by the complete admissible future tail.
-9. `ResidualExposure.lean` proves tail-stable physical residual lower bounds
-   and converts every positive finite-order bound into nonflatness.
-10. `TerminalCertificate.lean` packages the physical residual contradiction.
-11. `SignedMeanInterface.lean` imports the actual upstream signed update,
+10. `TailCapacity.lean` rules out repair by the complete admissible future tail.
+11. `DynamicalMismatch.lean` and `ResidualExposure.lean` prove the exact
+   mismatch identity, residual lower bounds, and nonflatness.
+12. `LiftCurvature.lean` formalizes vertical curvature and the exact hidden
+   holonomy model in local Banach charts.
+13. `JointObstruction.lean` proves both Version 1.1 branches from one cokernel
+   direction and exposes the physical-residual lower bound.
+14. `TerminalCertificate.lean` packages the physical residual contradiction.
+15. `SignedMeanInterface.lean` imports the actual upstream signed update,
    iteration ledger, and physical residual modules for concrete instantiation.
 
-The three principal formal endpoints are
+The principal independent formal endpoints are
 `ReducedBranch.exact_reduced_branch_defect`,
 `quantitative_range_or_tail_budget_obstruction`, and
 `tail_stable_defect_forces_nonflat_physical_residual`. Together they establish
@@ -38,6 +47,10 @@ to prove that the reduced-branch defect survives every covered future
 correction and to rule out reaching the full-compatible target within total
 tail capacity. Keep the two conclusions modular: either independently closes a
 counter-proof branch, and neither implication is reversible.
+
+The reusable endpoint is now `JointCokernelCertificate.joint_obstruction`, with
+`JointCokernelCertificate.residual_lower_bound` providing its physical exposure
+projection.
 
 The preceding reconstruction layer is supplied by
 `admissible_first_order_lift_iff_mem_range`,
