@@ -1,0 +1,13 @@
+OpenAICounterProof
+Copyright 2026 Zachary Nathan Joseph
+
+Zachary Nathan Joseph is the author and maintainer of this fork and of its
+fork-specific primitive-compatibility counter-proof program, including the
+original Lean formalization under NavierStokes/CounterProof/ and the research
+materials under docs/.
+
+This project is based on OpenAI's NavierStokesAndEuler formalization. Copyright
+and attribution for upstream material remain with their respective holders.
+
+This NOTICE supplements, and does not replace or modify, the Apache License,
+Version 2.0 in LICENSE.

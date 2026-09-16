@@ -98,3 +98,11 @@ mathematical structure as the three-dimensional Navier–Stokes counter-proof—
 particular, auditing primitive compatibility, liftability, correction tails, and
 terminal physical claims—while using localized obstructions, interfaces, and
 formal theorem targets specific to the Euler construction.
+
+## License and attribution
+
+The repository remains licensed under the
+[Apache License 2.0](LICENSE). [The project NOTICE](NOTICE) identifies Zachary
+Nathan Joseph as the author and maintainer of this fork and its fork-specific
+primitive-compatibility counter-proof program. The upstream formalization
+remains attributed to its respective copyright holders.
