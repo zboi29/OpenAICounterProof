@@ -8,6 +8,11 @@ This module formalizes the dual estimate in the companion note.  A target
 component detected by a bounded functional forces a lower bound on every exact
 full-compatible lift.  The same functional can also rule out realization by
 the complete admissible future tail.
+
+The certificate uses scalar lower and upper bounds rather than an adjoint, so
+it applies on general real normed spaces after finite-jet evaluation.  Concrete
+instances must prove both the target detection bound and the composed operator
+norm bound for the actual full reconstructed response.
 -/
 
 noncomputable section
@@ -21,18 +26,26 @@ variable {Active Obs Tail : Type*}
 /-- Quantitative near-cokernel data for one target direction. -/
 structure QuantitativeDualCertificate
     (fullCompatibility : Active →L[ℝ] Obs) (target : Obs) where
+  /-- Dual direction used to test both the target and compatible responses. -/
   functional : Obs →L[ℝ] ℝ
+  /-- Certified lower bound for the detected target component. -/
   targetMagnitude : ℝ
+  /-- Certified upper bound for the response in the same dual direction. -/
   responseMagnitude : ℝ
+  /-- Sign condition needed for meaningful target estimates. -/
   target_nonneg : 0 ≤ targetMagnitude
+  /-- Sign condition needed for operator and quotient estimates. -/
   response_nonneg : 0 ≤ responseMagnitude
+  /-- The functional sees at least `targetMagnitude` of the target. -/
   detects_target : targetMagnitude ≤ |functional target|
+  /-- The composed full response is at most `responseMagnitude` in operator
+  norm. -/
   near_cokernel : ‖functional.comp fullCompatibility‖ ≤ responseMagnitude
 
 namespace QuantitativeDualCertificate
 
 /-- Every exact lift is at least as expensive as the detected target component
-divided by the near-cokernel response size. -/
+in product form: `targetMagnitude ≤ responseMagnitude · ‖active‖`. -/
 theorem compatible_lift_product_lower_bound
     {fullCompatibility : Active →L[ℝ] Obs} {target : Obs}
     (Q : QuantitativeDualCertificate fullCompatibility target)
@@ -48,7 +61,7 @@ theorem compatible_lift_product_lower_bound
       mul_le_mul_of_nonneg_right Q.near_cokernel (norm_nonneg active)
 
 /-- Quotient form of the compatible-lift lower bound when the near-cokernel
-response size is positive. -/
+response size is positive: `targetMagnitude / responseMagnitude ≤ ‖active‖`. -/
 theorem compatible_lift_norm_lower_bound
     {fullCompatibility : Active →L[ℝ] Obs} {target : Obs}
     (Q : QuantitativeDualCertificate fullCompatibility target)

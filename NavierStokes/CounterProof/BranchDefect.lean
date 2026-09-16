@@ -6,6 +6,10 @@ import NavierStokes.CounterProof.Compatibility
 The reduced solve is retained as a first-class object.  Full compatibility is
 equivalent to vanishing of the hidden response, rather than being assumed from
 reduced cancellation.
+
+This module corresponds to the exact reduced-branch defect proposition in the
+signed-mean companion note.  It makes no smallness or tail claim: those enter
+later through `QuantitativeObstruction` and `ResidualExposure`.
 -/
 
 noncomputable section
@@ -21,7 +25,9 @@ variable {Active Hidden Obs Constraint : Type*}
 /-- A branch selected by solving only the reduced response equation. -/
 structure ReducedBranch
     (K : CompatibilityBlocks Active Hidden Obs Constraint) (target : Obs) where
+  /-- Active tangent chosen by the reduced solver. -/
   active : Active
+  /-- Exact cancellation of the target in the reduced observation block. -/
   reduced_eq : K.reducedResponse active = target
 
 namespace ReducedBranch
@@ -36,6 +42,7 @@ def FullCompatible {K : CompatibilityBlocks Active Hidden Obs Constraint} {targe
     (B : ReducedBranch K target) : Prop :=
   K.fullCompatibility B.active = target
 
+/-- The full response is the requested target plus the exact hidden defect. -/
 theorem full_eq_target_add_defect
     {K : CompatibilityBlocks Active Hidden Obs Constraint} {target : Obs}
     (B : ReducedBranch K target) :
@@ -52,6 +59,8 @@ theorem exact_reduced_branch_defect
   rw [B.full_eq_target_add_defect]
   abel
 
+/-- Reduced cancellation is full compatibility exactly when the hidden defect
+vanishes. -/
 theorem fullCompatible_iff_defect_eq_zero
     {K : CompatibilityBlocks Active Hidden Obs Constraint} {target : Obs}
     (B : ReducedBranch K target) :

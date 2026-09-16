@@ -6,22 +6,36 @@ import NavierStokes.CounterProof.TailCapacity
 The source-specific work must prove an exposure bridge from flat physical
 residuals to flat observed mismatches.  The final logical contradiction is kept
 separate and reusable here.
+
+The quantitative route in this file is stronger: it starts from a dual defect
+that survives the complete future tail, controls the observation error, pays a
+polynomial sensitivity loss, and constructs an explicit finite-order lower
+bound for the physical residual.  That lower bound is then shown incompatible
+with `FlatAtZero`.
 -/
 
 namespace NavierStokes.CounterProof
 
-/-- All-order decay at the positive side of `q = 0`. -/
+/-- All-order decay at the positive side of `q = 0`: for every natural order
+`N`, the size is eventually bounded by `C · q^N`, with `C` allowed to depend on
+`N`. -/
 def FlatAtZero (size : ℝ → ℝ) : Prop :=
   ∀ N : ℕ, ∃ C ε : ℝ, 0 ≤ C ∧ 0 < ε ∧
     ∀ q : ℝ, 0 < q → q < ε → size q ≤ C * q ^ N
 
 /-- A uniform positive algebraic lower bound near `q = 0`. -/
 structure AlgebraicLowerBound (size : ℝ → ℝ) where
+  /-- Strictly positive leading coefficient. -/
   coefficient : ℝ
+  /-- Finite power of `q` appearing in the lower bound. -/
   order : ℕ
+  /-- Positive radius on which the lower bound is valid. -/
   radius : ℝ
+  /-- Positivity of the leading coefficient. -/
   coefficient_pos : 0 < coefficient
+  /-- Positivity of the validity radius. -/
   radius_pos : 0 < radius
+  /-- Uniform lower estimate throughout the punctured positive neighborhood. -/
   lower_bound : ∀ q : ℝ, 0 < q → q < radius → coefficient * q ^ order ≤ size q
 
 namespace AlgebraicLowerBound
@@ -63,10 +77,13 @@ end AlgebraicLowerBound
 observable mismatch.  Polynomial sensitivity is established by concrete
 instances, not assumed globally by the counter-proof core. -/
 structure ResidualExposure (residualSize mismatchSize : ℝ → ℝ) where
+  /-- Flat physical residuals force flat observed mismatches. -/
   flat_transfer : FlatAtZero residualSize → FlatAtZero mismatchSize
 
 namespace ResidualExposure
 
+/-- Contrapositive exposure principle: a nonflat observed mismatch forces a
+nonflat physical residual. -/
 theorem residual_not_flat_of_mismatch_not_flat
     {residualSize mismatchSize : ℝ → ℝ}
     (E : ResidualExposure residualSize mismatchSize)
@@ -82,7 +99,9 @@ variable {Obs Residual : Type*}
 
 /-- Pointwise tail-stable transfer from an observed interface defect to a
 physical residual norm.  This is the quantitative core of the residual
-exposure proposition in the companion note. -/
+exposure proposition in the companion note.  The conclusion pays half of the
+surviving observed magnitude for exposure error and divides by the sensitivity
+bound of `functional ∘ exposure`. -/
 theorem tail_stable_residual_lower_bound
     (functional : Obs →L[ℝ] ℝ) (exposure : Residual →L[ℝ] Obs)
     {defect futureTail mismatch error : Obs} {residual : Residual}
@@ -127,7 +146,9 @@ theorem tail_stable_residual_lower_bound
 /-- The complete tail-stable residual theorem.  Algebraic detection of the
 stage defect, strict domination of the entire future tail, and polynomial
 observation sensitivity force the physical residual to fail all-order
-flatness. -/
+flatness.  With defect order `α` and sensitivity loss `M`, the constructed
+physical lower bound has finite order `α + M` and positive coefficient
+`(1 - θ) · c / (2 · C)`. -/
 theorem tail_stable_defect_forces_nonflat_physical_residual
     (functional : ℝ → Obs →L[ℝ] ℝ)
     (exposure : ℝ → Residual →L[ℝ] Obs)
