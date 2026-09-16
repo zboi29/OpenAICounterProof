@@ -1,6 +1,6 @@
-import NavierStokes.CounterProof.HilbertCokernel
-import NavierStokes.CounterProof.QuantitativeObstruction
-import NavierStokes.CounterProof.ResidualExposure
+import NavierStokes.CounterProof.Certificates.HilbertCokernel
+import NavierStokes.CounterProof.Certificates.QuantitativeObstruction
+import NavierStokes.CounterProof.Certificates.ResidualExposure
 
 /-!
 # Unified same-witness joint obstruction

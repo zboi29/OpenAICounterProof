@@ -1,19 +1,7 @@
 import NavierStokes.CounterProof.Compatibility
-import NavierStokes.CounterProof.AffineLift
-import NavierStokes.CounterProof.PrimitiveFramework
-import NavierStokes.CounterProof.SchurComplement
-import NavierStokes.CounterProof.BranchDefect
-import NavierStokes.CounterProof.BranchResolvent
-import NavierStokes.CounterProof.DualCertificate
-import NavierStokes.CounterProof.HilbertCokernel
-import NavierStokes.CounterProof.RankCollapse
-import NavierStokes.CounterProof.QuantitativeObstruction
-import NavierStokes.CounterProof.TailCapacity
-import NavierStokes.CounterProof.ResidualExposure
-import NavierStokes.CounterProof.DynamicalMismatch
-import NavierStokes.CounterProof.LiftCurvature
-import NavierStokes.CounterProof.JointObstruction
-import NavierStokes.CounterProof.TerminalCertificate
+import NavierStokes.CounterProof.Liftability
+import NavierStokes.CounterProof.Reconstruction
+import NavierStokes.CounterProof.Certificates
 import NavierStokes.CounterProof.SignedMeanInterface
 
 /-!
@@ -21,13 +9,13 @@ import NavierStokes.CounterProof.SignedMeanInterface
 
 Aggregate import for the source-grounded Navier–Stokes counter-proof subsystem.
 
-The modules are ordered by proof dependency:
+The implementation is organized into three dependency-oriented subsystems:
 
-1. compatibility spaces, affine liftability, lift cost, and Schur reconstruction;
-2. reduced/full branch comparison, cokernel certificates, and rank collapse;
-3. local lift curvature, complete future-tail capacity, and residual exposure;
-4. the same-witness joint obstruction; and
-5. the signed-mean attachment importing completed upstream proofs.
+1. `Liftability` for affine range tests, lift cost, endpoints, and curvature;
+2. `Reconstruction` for full/reduced branch mechanics and resolvent bounds; and
+3. `Certificates` for cokernel, tail, residual, joint, and terminal closure.
+
+The shared compatibility blocks and signed-mean attachment remain root modules.
 
 Importing this file provides the reusable theorem layer.  It does not by itself
 instantiate a counterexample against the signed-mean construction; concrete

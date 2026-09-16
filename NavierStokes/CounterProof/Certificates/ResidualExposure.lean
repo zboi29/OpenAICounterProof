@@ -1,4 +1,4 @@
-import NavierStokes.CounterProof.TailCapacity
+import NavierStokes.CounterProof.Certificates.TailCapacity
 
 /-!
 # Terminal residual exposure

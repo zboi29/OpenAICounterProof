@@ -1,73 +1,52 @@
 # Navier–Stokes Counter-Proof Subsystem
 
-This directory implements the downstream Lean program from the primitive-
-liftability research note and the revised Version 1.1 signed-mean companion,
+This directory implements the primitive-compatibility counter-proof program
+from the general research note and its revised Version 1.1 signed-mean
+companion. The layout separates reusable liftability geometry, concrete branch
+reconstruction, and contradiction certificates. Relocation changes import
+paths but preserves the public `NavierStokes.CounterProof` declaration
+namespace.
+
+The governing sources are the
+[`Primitive_Liftability_Obstructions_NSE_Research_Note.tex`](../../docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex)
+framework and its downstream
 [`Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`](../../docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex).
-The modules follow the companion note's formal dependency graph:
 
-1. `Compatibility.lean` defines the full reconstructed response and hidden
-   response.
-2. `AffineLift.lean` proves that first-order liftability is exactly membership
-   in the homogeneous compatibility range and that this test is independent of
-   the chosen particular constrained tangent.
-3. `PrimitiveFramework.lean` defines admissible fibers, extended-valued lift
-   cost, branch extinction, and endpoint compatibility.
-4. `SchurComplement.lean` derives the reconstruction and full-response Schur
-   formulas and isolates the kernel condition for gauge independence.
-5. `BranchDefect.lean` isolates the exact defect of a reduced solve.
-6. `BranchResolvent.lean` proves the exact correct-branch resolvent and its
-   relative-response inverse and displacement bounds.
-7. `DualCertificate.lean` and `HilbertCokernel.lean` connect functional range
-   obstructions to exact and near adjoint-kernel directions.
-8. `RankCollapse.lean` proves singular-direction lift blowup and terminal range
-   loss.
-9. `QuantitativeObstruction.lean` proves the near-cokernel lift bound and joins
-   it to the complete future-tail obstruction.
-10. `TailCapacity.lean` rules out repair by the complete admissible future tail.
-11. `DynamicalMismatch.lean` and `ResidualExposure.lean` prove the exact
-   mismatch identity, residual lower bounds, and nonflatness.
-12. `LiftCurvature.lean` formalizes vertical curvature and the exact hidden
-   holonomy model in local Banach charts.
-13. `JointObstruction.lean` proves both Version 1.1 branches from one cokernel
-   direction and exposes the physical-residual lower bound.
-14. `TerminalCertificate.lean` packages the physical residual contradiction.
-15. `SignedMeanInterface.lean` imports the actual upstream signed update,
-   iteration ledger, and physical residual modules for concrete instantiation.
+## Subsystems
 
-The principal independent formal endpoints are
-`ReducedBranch.exact_reduced_branch_defect`,
-`quantitative_range_or_tail_budget_obstruction`, and
-`tail_stable_defect_forces_nonflat_physical_residual`. Together they establish
-the note's chain from an exact reduced-branch mismatch, through dual and tail
-control, to failure of all-order physical residual flatness.
+- [`Liftability/`](Liftability/) develops the source-independent affine range,
+  lift-cost, endpoint, curvature, and holonomy framework.
+- [`Reconstruction/`](Reconstruction/) derives the full and reduced signed-mean
+  branch formulas and quantifies their exact displacement.
+- [`Certificates/`](Certificates/) turns cokernel witnesses, tail bounds, and
+  residual exposure into independent or unified terminal obstructions.
 
-Version 1.1 strengthens the preferred endpoint to a joint certificate built
-from one dual direction. Concrete instantiations should use that witness both
-to prove that the reduced-branch defect survives every covered future
-correction and to rule out reaching the full-compatible target within total
-tail capacity. Keep the two conclusions modular: either independently closes a
-counter-proof branch, and neither implication is reversible.
+Each directory has a focused README and an umbrella import at
+`NavierStokes.CounterProof.{Liftability,Reconstruction,Certificates}`.
 
-The reusable endpoint is now `JointCokernelCertificate.joint_obstruction`, with
-`JointCokernelCertificate.residual_lower_bound` providing its physical exposure
-projection.
+## Root Modules
 
-The preceding reconstruction layer is supplied by
-`admissible_first_order_lift_iff_mem_range`,
-`CompatibilityBlocks.fullCompatibility_eq_schur`, and
-`correctBranch_sub_reducedBranch_relative`. The associated helper theorems
-prove affine-origin independence, hidden-representative independence, the full
-inverse bound, and the correct-versus-reduced branch displacement estimate.
+`Compatibility.lean` remains at the root because its block decomposition is
+shared vocabulary across the proof program. `SignedMeanInterface.lean` also
+remains here: it is the attachment boundary to completed proofs in the
+upstream `NavierStokes/` system, not an abstract obstruction component.
+The three other root modules are import-only entry points for their matching
+subdirectories.
 
-Do not replace source objects with surrogate covariance systems. A nonzero
-finite-stage defect is not a counter-proof until a tail-stable certificate
-reaches an exact terminal predicate used by the upstream construction.
+The dependency flow is:
 
-## Source-Reuse Policy
+`(Compatibility → Reconstruction) + Liftability → Certificates → SignedMeanInterface`.
 
-Import completed proofs from the existing `NavierStokes/` proof system whenever
-the full counter-proof needs an upstream identity, estimate, state invariant, or
-terminal claim. Keep those results intact. New modules in this directory should
-provide only the source-specific adapters, differentiations, primitive
-obstruction certificates, and contradiction bridges needed by the downstream
-program.
+The principal unified endpoint is
+`JointCokernelCertificate.joint_obstruction`; its two conclusions remain
+independently usable. `JointCokernelCertificate.residual_lower_bound` exposes
+the surviving witness through the physical residual.
+
+## Formalization Discipline
+
+Use the exact source objects and import completed upstream identities,
+estimates, invariants, and terminal claims rather than recreating them here.
+New code should be limited to source adapters, differentiations, primitive
+obstruction certificates, and contradiction bridges. A nonzero finite-stage
+defect is insufficient: the certificate must cover every admissible future
+correction and reach a pinned upstream endpoint.

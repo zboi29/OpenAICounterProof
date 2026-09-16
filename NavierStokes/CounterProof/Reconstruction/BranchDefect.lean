@@ -3,6 +3,8 @@ import NavierStokes.CounterProof.Compatibility
 /-!
 # Reduced branches and their exact primitive defect
 
+This module records the reduced-branch layer of the reconstruction subsystem.
+
 The reduced solve is retained as a first-class object.  Full compatibility is
 equivalent to vanishing of the hidden response, rather than being assumed from
 reduced cancellation.

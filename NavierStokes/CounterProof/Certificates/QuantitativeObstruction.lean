@@ -1,5 +1,5 @@
-import NavierStokes.CounterProof.DualCertificate
-import NavierStokes.CounterProof.TailCapacity
+import NavierStokes.CounterProof.Certificates.DualCertificate
+import NavierStokes.CounterProof.Certificates.TailCapacity
 
 /-!
 # Quantitative range and tail-budget obstruction

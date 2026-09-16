@@ -1,5 +1,5 @@
-import NavierStokes.CounterProof.HilbertCokernel
-import NavierStokes.CounterProof.PrimitiveFramework
+import NavierStokes.CounterProof.Certificates.HilbertCokernel
+import NavierStokes.CounterProof.Liftability.PrimitiveFramework
 import Mathlib.Topology.Algebra.Order.Field
 
 /-!

@@ -1,4 +1,4 @@
-import NavierStokes.CounterProof.ResidualExposure
+import NavierStokes.CounterProof.Certificates.ResidualExposure
 
 /-!
 # Observable dynamical mismatch

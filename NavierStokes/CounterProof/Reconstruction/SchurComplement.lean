@@ -3,6 +3,8 @@ import NavierStokes.CounterProof.Compatibility
 /-!
 # Constrained reconstruction and Schur complement
 
+This module is the algebraic entry point of the reconstruction subsystem.
+
 This module derives the compatibility operator from the derivative of the
 actual reconstruction.  When the hidden constraint block is continuously
 invertible, the derivative and full response reduce to their exact Schur

@@ -1,4 +1,4 @@
-import NavierStokes.CounterProof.AffineLift
+import NavierStokes.CounterProof.Liftability.AffineLift
 import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Data.ENNReal.Inv
 

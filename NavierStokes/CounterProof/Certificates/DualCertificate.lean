@@ -1,7 +1,9 @@
-import NavierStokes.CounterProof.BranchDefect
+import NavierStokes.CounterProof.Reconstruction.BranchDefect
 
 /-!
 # Dual certificates for primitive incompatibility
+
+This module is the functional-analytic entry point of the `Certificates` subsystem.
 
 This finite-jet interface implements the exact cokernel-witness route without
 requiring a complete singular-value library.

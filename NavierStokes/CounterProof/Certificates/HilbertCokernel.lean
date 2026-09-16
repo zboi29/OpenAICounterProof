@@ -1,4 +1,4 @@
-import NavierStokes.CounterProof.DualCertificate
+import NavierStokes.CounterProof.Certificates.DualCertificate
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 /-!

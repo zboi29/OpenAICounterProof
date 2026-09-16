@@ -1,9 +1,11 @@
-import NavierStokes.CounterProof.DualCertificate
-import NavierStokes.CounterProof.TailCapacity
-import NavierStokes.CounterProof.ResidualExposure
+import NavierStokes.CounterProof.Certificates.DualCertificate
+import NavierStokes.CounterProof.Certificates.TailCapacity
+import NavierStokes.CounterProof.Certificates.ResidualExposure
 
 /-!
 # Terminal counter-proof certificates
+
+This module packages the terminal closure layer of the `Certificates` subsystem.
 
 A completed certificate reaches the same all-order physical residual predicate
 as the upstream construction.  Interface defects and tail estimates remain

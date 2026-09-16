@@ -1,4 +1,4 @@
-import NavierStokes.CounterProof.TerminalCertificate
+import NavierStokes.CounterProof.Certificates.TerminalCertificate
 import NavierStokes.CrossBasedMeanComposition
 import NavierStokes.ActualCycleResidualBounds
 
