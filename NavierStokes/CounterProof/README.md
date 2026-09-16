@@ -1,8 +1,9 @@
 # Navier–Stokes Counter-Proof Subsystem
 
 This directory implements the downstream Lean program from the primitive-
-liftability research note and its signed-mean companion. The modules follow the
-companion note's formal dependency graph:
+liftability research note and the revised Version 1.1 signed-mean companion,
+[`Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`](../../docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex).
+The modules follow the companion note's formal dependency graph:
 
 1. `Compatibility.lean` defines the full reconstructed response and hidden
    response.
@@ -30,6 +31,13 @@ The three principal formal endpoints are
 `tail_stable_defect_forces_nonflat_physical_residual`. Together they establish
 the note's chain from an exact reduced-branch mismatch, through dual and tail
 control, to failure of all-order physical residual flatness.
+
+Version 1.1 strengthens the preferred endpoint to a joint certificate built
+from one dual direction. Concrete instantiations should use that witness both
+to prove that the reduced-branch defect survives every covered future
+correction and to rule out reaching the full-compatible target within total
+tail capacity. Keep the two conclusions modular: either independently closes a
+counter-proof branch, and neither implication is reversible.
 
 The preceding reconstruction layer is supplied by
 `admissible_first_order_lift_iff_mem_range`,

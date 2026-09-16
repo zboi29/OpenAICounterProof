@@ -151,9 +151,9 @@ for the Signed Mean Update in the OpenAI Navier--Stokes Construction\par}
 \vspace{0.46in}
 {\large Zachary Nathan Joseph\par}
 \vspace{0.07in}
-{\normalsize September 14, 2026\par}
+{\normalsize September 16, 2026\par}
 \vspace{0.08in}
-{\normalsize Version 1\par}
+{\normalsize Version 1.1\par}
 \vspace{0.40in}
 \rule{0.82\textwidth}{0.4pt}
 \end{center}
@@ -166,7 +166,7 @@ for the Signed Mean Update in the OpenAI Navier--Stokes Construction\par}
 \end{center}
 \vspace{0.02in}
 \small\setstretch{1.055}
-This companion note audits the signed mean update in the supplied OpenAI Navier--Stokes blowup manuscript and its pinned Lean 4 formalization. From the exact state equations we derive \(\Delta W=S+E\), propagate the linearized remainder through radial-source and pressure reconstruction, and obtain the constrained physical response \(\Comp=\Red+\Hidden\). Eight formal results characterize the reduced-branch defect, the exact full-branch resolvent, range and conditioning obstructions, tail persistence, and transfer of a surviving algebraic mismatch to the physical residual. The main theorem isolates two rigorous failure certificates: a tail-stable nonflat defect, or a full-compatible response whose required lift exceeds the admissible correction tail. A second major part specifies the corresponding Lean implementation at the theorem and source-file level. The analysis is finite-jet and distinguishes a specification-bridge failure from inconsistency of Lean's kernel.
+This companion note isolates the signed mean wave update in the supplied OpenAI Navier--Stokes blowup construction as a primitive compatibility interface and audits it against the pinned Lean 4 formalization. The exact state update yields the covariance split \(\Delta W=S+E\); after radial-source and pressure reconstruction, its first-order physical response is \(\Comp=\Red+\Hidden\). Nine formal results establish the exact covariance and mean-residual identities, the constrained reconstruction operator, the reduced-branch defect and full-branch resolvent, quantitative range and future-tail obstructions, tail-stable residual exposure, a joint-obstruction corollary, and the main counter-proof theorem. This structure separates two independent mechanisms: a reduced-branch defect that survives the admissible tail, and a full-compatible response that lies beyond that tail's capacity. Certifying both with one dual witness is the strengthened target, while either branch remains independently decisive. A second major component gives a theorem- and source-level Lean instantiation strategy. The analysis is finite-jet and places the decisive issue in the specification bridge from reduced solve to reconstructed physical state and terminal residual, rather than in Lean's kernel.
 \end{minipage}
 \end{center}
 \vfill
@@ -224,9 +224,9 @@ The source already establishes nontrivial output-level control. In particular, \
 
 A second rigor point is equally important. A nonzero defect at one finite correction stage does not, by itself, contradict the final flat residual: later stages are designed to remove higher-order errors. The relevant witness must survive the admissible correction tail. This note therefore introduces a tail-stability condition: a bounded dual functional detects an algebraic component of the stage defect, while the total contribution of all later admissible corrections and nonlinear remainders in the same functional is strictly smaller. Only such a surviving mismatch is transferred to the terminal physical residual. This closes the logical gap between a local branch discrepancy and the all-order conclusion of Proposition~9.9.
 
-The manuscript's summation architecture makes both mechanisms testable. Lemma~5.4 requires correction gains tending to infinity against a derivative loss independent of stage, and Lemma~9.8 supplies manuscript-specific bounds of the form \(\|Z_j\|_m+\|\Delta u_j\|_m\lesssim q^{g_j-\ell_m}\) with \(\ell_m\) fixed in \(j\) \cite[Lemmas~5.4 and 9.8]{OpenAI2026}. Proposition~9.9 then asserts \(O(q^N)\) decay of every fixed physical residual derivative for every \(N\) \cite[Prop.~9.9]{OpenAI2026}. Hence a tail-stable algebraic component of \(\Hidden a^L\), once related to the final residual through only polynomial physical sensitivity, contradicts flatness. Alternatively, a full-response near-cokernel can require more correction in a target direction than the entire admissible future correction tail can supply; that is a direct branch-liftability obstruction rather than a statement about one convenient matrix block.
+The manuscript's summation architecture makes both mechanisms testable. Lemma~5.4 requires correction gains tending to infinity against a derivative loss independent of stage, and Lemma~9.8 supplies manuscript-specific bounds of the form \(\|Z_j\|_m+\|\Delta u_j\|_m\lesssim q^{g_j-\ell_m}\) with \(\ell_m\) fixed in \(j\) \cite[Lemmas~5.4 and 9.8]{OpenAI2026}. Proposition~9.9 then asserts \(O(q^N)\) decay of every fixed physical residual derivative for every \(N\) \cite[Prop.~9.9]{OpenAI2026}. The counter-proof logic is therefore deliberately two-branched. If a dual component of \(d=\Hidden a^L\) survives every later admissible correction and the observation-to-residual map has only polynomial sensitivity, that component yields a finite algebraic lower bound on the terminal physical residual and contradicts flatness. If, instead, the same or another dual direction shows that the target component exceeds the complete admissible future response capacity, then no correction tail satisfying the manuscript's own stage budgets can reach the full-compatible branch. Neither implication requires the other. When both estimates hold for one dual witness, however, the obstruction is stronger: the admissible tail is simultaneously too small to reach full compatibility and too small to erase the defect left by the reduced branch. Establishing this joint regime is the primary quantitative target, while either individual certificate remains a complete endpoint for its own counter-proof route.
 
-The note develops eight formal results. After fixing the manuscript and source scope, \cref{sec:notation} centralizes the finite-jet notation. \Cref{sec:formal-derivations}--\ref{sec:counterproof} derive the exact covariance split, full response, constrained reconstruction operator, reduced defect, full-branch resolvent, quantitative range/tail-budget obstruction, tail-stable residual exposure, and the main counter-proof theorem. \Cref{sec:lean-instantiation} is the second major section and gives a theorem-level Lean instantiation strategy. The scope is deliberately exact: Lean certifies the proposition that is encoded; correspondence between that proposition and the intended full physical interface must itself be represented by a theorem \cite{deMouraEtAl2015,Lean4TPIL,Lean4Reference}. The counter-proof is therefore formulated in terms of concrete failure certificates on the same state, ledger, and physical residual objects used by the construction.
+The note develops nine formal results. After fixing the manuscript and source scope, \cref{sec:notation} centralizes the finite-jet notation. \Cref{sec:formal-derivations}--\ref{sec:counterproof} proceed from exact state identities to the two counter-proof endpoints: the covariance decomposition and full mean-residual differential determine \(\Comp=\Red+\Hidden\); the constrained reconstruction theorem identifies the correct full compatibility operator; the defect and resolvent results compare the reduced and full branches; the range/tail-budget theorem and residual-exposure proposition isolate the two independent obstruction mechanisms; and the joint-obstruction corollary gives a sufficient same-witness regime in which both mechanisms hold simultaneously. The main theorem then assembles these results while retaining the logical significance of either branch on its own. \Cref{sec:lean-instantiation} is the second major section and gives a theorem-level Lean instantiation strategy. The scope is deliberately exact: Lean certifies the proposition that is encoded; correspondence between that proposition and the intended full physical interface must itself be represented by a theorem \cite{deMouraEtAl2015,Lean4TPIL,Lean4Reference}. The counter-proof is therefore formulated in terms of concrete failure certificates on the same state, ledger, and physical residual objects used by the construction.
 
 \section{Scope relative to the OpenAI construction}\label{sec:scope}
 \subsection{The terminal claim is physical, not merely representational}
@@ -277,7 +277,7 @@ Symbol & Type or definition & Role \\
 \(a^L\) & \(\Red^{-1}b\) & Reduced branch when \(\Red\) is invertible. \\
 \(a^C\) & \(\Comp^{-1}b\) & Full-compatible branch when \(\Comp\) is invertible. \\
 \(d\) & \(\Comp a^L-b\) & Full primitive defect of the reduced branch. \\
-\(\Tail_j\) & future correction contribution & Aggregate later-stage and nonlinear response in the same observed jet. \\
+\(\Tail_{j,q}\) & future correction contribution & Aggregate later-stage and nonlinear response in the same observed jet. \\
 \(\sigma_{\min}(\Comp)\) & smallest singular value & Used only after finite-dimensional jet evaluation. \\
 \(g_j\) & stage gain exponent & Increasing gain in the manuscript/Lean ledger. \\
 \(\ell_m\) & fixed physical derivative loss & Independent of stage in the summation hypothesis. \\
@@ -335,7 +335,7 @@ Let \(\mathscr P\) denote the Fr\'echet derivative of the moving-gauge pressure 
 On the common slow domain, under the smoothness and periodicity hypotheses formalized by the repository's moving-field machinery, the exact Lean identities commute the relevant averaging and physical derivative operations and give covariance responses \(\Theta(X)\) and \(Z(X)\), with the additional \(D_z\delta p\) term in the axial component after pressure reconstruction \cite{OpenAILeanRepo2026}. These regularity hypotheses are carried explicitly in \cref{prop:fullresponse} rather than being hidden in notation.
 
 \section{Formal proof derivations}\label{sec:formal-derivations}
-This section is the first major component of the companion note. The eight results are stated either in the global continuous-linear setting or after a finite jet evaluation \(J^m_{\Xi}\). Whenever singular values are used, the latter finite-dimensional setting is understood. This avoids conflating a fixed derivative order with finite dimensionality of an entire function space.
+This section is the first major component of the companion note. The nine results are stated either in the global continuous-linear setting or after a finite jet evaluation \(J^m_{\Xi}\). Whenever singular values are used, the latter finite-dimensional setting is understood. This avoids conflating a fixed derivative order with finite dimensionality of an entire function space.
 
 \subsection{Exact covariance decomposition}
 \begin{theorem}[Exact signed covariance decomposition]\label{thm:covsplit}
@@ -607,7 +607,16 @@ then there exists \(q_{j,m}>0\) such that the compatible lift lies outside \(\Bu
 |\langle\eta_{j,q},b_{j,q}\rangle|
 >\Gamma_{j,m,\eta}(q)+N_{j,m,\eta}(q),
 \]
-then no admissible correction tail beginning at stage \(j\), including nonlinear interactions bounded by \(N_{j,m,\eta}\), can realize that target component. If \(\Comp_{j,q}^{(m)*}\eta_{j,q}=0\) and the target component is nonzero, exact range failure occurs.
+then no admissible correction tail beginning at stage \(j\), including nonlinear interactions bounded by \(N_{j,m,\eta}\), can realize that target component. For the reduced branch \(a^L_{j,q}\), the same dual direction also obeys the exact lower estimate
+\[
+\boxed{
+|\langle\eta_{j,q},d_{j,q}\rangle|
+\ge
+|\langle\eta_{j,q},b_{j,q}\rangle|
+-\|\Comp_{j,q}^{(m)*}\eta_{j,q}\|\,\|a^L_{j,q}\|_m .
+}
+\]
+Thus a near-cokernel witness that exposes an algebraic target component can simultaneously expose a reduced-branch defect whenever the adjoint-response term is smaller than that component. If \(\Comp_{j,q}^{(m)*}\eta_{j,q}=0\) and the target component is nonzero, exact range failure occurs and in fact \(\langle\eta_{j,q},d_{j,q}\rangle=-\langle\eta_{j,q},b_{j,q}\rangle\) exactly.
 \end{theorem}
 
 \begin{proof}
@@ -629,7 +638,14 @@ which yields the displayed lower bound.
 \le\Gamma_{j,m,\eta}(q).
 \]
 Adding the nonlinear remainder changes the right-hand side by at most \(N_{j,m,\eta}(q)\). If the target component exceeds this total capacity, no admissible tail can realize it.
-\item If \(\Comp^*\eta=0\), the left side of the compatibility identity is zero for every active lift; a nonzero target component is therefore outside the range.
+\item For the reduced branch, use \(d=\Comp a^L-b\). Duality and the reverse triangle inequality give
+\[
+|\langle\eta,d\rangle|
+=|\langle\Comp^*\eta,a^L\rangle-\langle\eta,b\rangle|
+\ge |\langle\eta,b\rangle|-\|\Comp^*\eta\|\,\|a^L\|_m,
+\]
+which proves the additional defect estimate. This shows explicitly how the same dual direction can control both branch reachability and reduced-branch persistence.
+\item If \(\Comp^*\eta=0\), the left side of the compatibility identity is zero for every active lift; a nonzero target component is therefore outside the range. The same identity gives \(\langle\eta,d\rangle=-\langle\eta,b\rangle\), so the inaccessible target component appears exactly as reduced-branch defect in that direction.
 \end{prooflines}
 \end{proof}
 
@@ -646,7 +662,11 @@ Then the final observed mismatch \(\Delta^{\infty}_{\Obs,q}=d_{j,q}+\Tail_{j,q}\
 |\lambda_{j,q}(\Delta^{\infty}_{\Obs,q})|
 \ge(1-\theta)cq^\alpha.
 \]
-Assume further that, for the same finite jet, the final mismatch is generated by the physical residual \(r_q\) through
+The tail hypothesis is in particular implied by a complete response-capacity estimate
+\[
+\Gamma_{j,m,\lambda}(q)+N_{j,m,\lambda}(q)\le\theta c q^\alpha
+\]
+whenever the actual future tail belongs to the admissible class used to define those quantities. Assume further that, for the same finite jet, the final mismatch is generated by the physical residual \(r_q\) through
 \[
 \Delta^{\infty}_{\Obs,q}=T_qr_q+e_q,
 \]
@@ -670,7 +690,7 @@ In particular, \(r_q\) cannot be \(O(q^N)\) for every \(N\).
 |\lambda(d+\Tail)|\ge|\lambda(d)|-|\lambda(\Tail)|
 \ge(1-\theta)cq^\alpha.
 \]
-This is the required stage-to-final persistence statement.
+This is the required stage-to-final persistence statement. If the tail estimate is supplied through \(\Gamma+N\), its definition and the triangle inequality give \( |\lambda(\Tail)|\le\Gamma+N\le\theta c q^\alpha\), so the same conclusion follows without a separate tail calculation.
 \item Insert \(\Delta^{\infty}_{\Obs,q}=T_qr_q+e_q\) and use the bound on \(e_q\):
 \[
 |\lambda(T_qr_q)|
@@ -687,6 +707,69 @@ Combining the inequalities yields the displayed residual lower bound.
 
 \begin{remark}
 The tail hypothesis is essential. A finite-stage algebraic defect can be harmless if later corrections cancel it. The proposition deliberately requires either direct control of the actual future tail or a bound obtained from \(\Gamma_{j,m,\lambda}\) and the nonlinear remainder. Only then is a stage witness legitimately transferred to the terminal physical residual. The final step uses only finite-jet differentiability and a polynomial physical sensitivity bound, the same type of fixed-order control used by the manuscript's physical derivative conversion \cite{RobinsonRodrigoSadowski2016,OpenAI2026}.
+\end{remark}
+
+\begin{corollary}[Joint-obstruction corollary]\label{cor:joint-obstruction}
+Fix \(j,m\) and suppose the actual future correction tail is covered by the admissible linear and nonlinear tail bounds encoded by \(\Gamma_{j,m,\eta}\) and \(N_{j,m,\eta}\). Let \(\eta_{j,q}\) be a unit dual functional. Assume that for some \(c>0\), \(\alpha<\infty\), and \(0\le\theta<1\),
+\[
+|\langle\eta_{j,q},b_{j,q}\rangle|
+-\|\Comp_{j,q}^{(m)*}\eta_{j,q}\|\,\|a^L_{j,q}\|_m
+\ge c q^\alpha,
+\qquad
+\Gamma_{j,m,\eta}(q)+N_{j,m,\eta}(q)
+\le\theta c q^\alpha.
+\]
+Then the same dual witness establishes both primitive counter-proof branches simultaneously:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em,itemsep=0.25em]
+\item the reduced branch has a tail-stable defect,
+\[
+|\langle\eta_{j,q},d_{j,q}+\Tail_{j,q}\rangle|
+\ge (1-\theta)cq^\alpha;
+\]
+\item the full-compatible target is outside the total admissible future response capacity,
+\[
+|\langle\eta_{j,q},b_{j,q}\rangle|
+>\Gamma_{j,m,\eta}(q)+N_{j,m,\eta}(q).
+\]
+If, in addition, the polynomial observation-to-residual hypotheses of \cref{prop:residual} hold, then the reduced branch produces the corresponding finite algebraic lower bound on the physical residual. This joint criterion is a preferred strengthening, not a prerequisite for either counter-proof route: conclusion (i) alone and conclusion (ii) alone remain independently decisive for their respective targets, and either may hold when the other fails.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+Set
+\[
+\delta_q:=|\langle\eta_{j,q},b_{j,q}\rangle|
+-\|\Comp_{j,q}^{(m)*}\eta_{j,q}\|\,\|a^L_{j,q}\|_m,
+\qquad
+\mathcal C_q:=\Gamma_{j,m,\eta}(q)+N_{j,m,\eta}(q).
+\]
+The hypotheses are \(\delta_q\ge cq^\alpha\) and \(\mathcal C_q\le\theta cq^\alpha\). By \cref{thm:budget},
+\[
+|\langle\eta_{j,q},d_{j,q}\rangle|\ge\delta_q.
+\]
+By the assumed coverage of the actual future tail,
+\[
+|\langle\eta_{j,q},\Tail_{j,q}\rangle|\le \mathcal C_q.
+\]
+Hence the reverse triangle inequality gives the quantitative joint margin
+\[
+|\langle\eta_{j,q},d_{j,q}+\Tail_{j,q}\rangle|
+\ge \delta_q-\mathcal C_q
+\ge (1-\theta)cq^\alpha,
+\]
+which proves (i). For (ii), the nonnegative adjoint term in the definition of \(\delta_q\) gives
+\[
+|\langle\eta_{j,q},b_{j,q}\rangle|
+\ge \delta_q
+\ge cq^\alpha
+>\theta cq^\alpha
+\ge \mathcal C_q,
+\]
+so the target component exceeds the complete admissible future response capacity. The residual conclusion is exactly \cref{prop:residual}. The proof uses a single sufficient regime to obtain both endpoints; it does not derive either endpoint from the other, and therefore supplies no converse between the two individual branches.
+\end{proof}
+
+\begin{remark}[Joint target and individual closure]
+The joint certificate is the primary strengthened target because one source-level witness closes both reconciliation routes at once: the admissible tail can neither reach a full-compatible response nor erase the reduced-branch defect. It is not, however, a required endpoint of the audit. A branch-(b) certificate remains a complete terminal-residual counter-proof even if no branch-(c) capacity obstruction is available, while a branch-(c) certificate remains a complete branch-liftability obstruction within the stated admissible correction class even if the particular reduced defect is not proved tail-stable. Failure to establish one branch therefore does not weaken an independently established certificate for the other.
 \end{remark}
 
 \section{Main counter-proof result}\label{sec:counterproof}
@@ -709,11 +792,27 @@ Thus exact reduced cross cancellation is not, by itself, exact full compatibilit
 
 \item If \(d_{j,q}\) admits a tail-stable dual witness in the sense of \cref{prop:residual}, and the final observation-to-residual map has only polynomial sensitivity, then the actual physical residual has a finite algebraic lower bound and cannot be flat. This contradicts the all-order physical residual conclusion asserted in Proposition~9.9 for that instantiated branch \cite[Prop.~9.9]{OpenAI2026}.
 
-\item If, instead, a dual direction satisfies the hypotheses of \cref{thm:budget} and its target component exceeds the total admissible future response capacity
+\item If a dual direction satisfies the hypotheses of \cref{thm:budget} and its target component exceeds the total admissible future response capacity
 \[
 \Gamma_{j,m,\eta}(q)+N_{j,m,\eta}(q),
 \]
-then no correction sequence obeying the stated stage budgets can lie on the full constrained branch in that direction. In particular, replacing the reduced branch by a full-compatible branch cannot be absorbed into the correction tail covered by Lemmas~5.4 and 9.8.
+then no correction tail obeying the stated stage budgets can realize the full-compatible target component in that direction. In particular, replacing the reduced branch by a full-compatible branch cannot be absorbed into the correction tail covered by Lemmas~5.4 and 9.8.
+
+\item The two preceding certificates can hold simultaneously, and proving this joint regime is the primary strengthened counter-proof target, while either preceding certificate remains independently sufficient for its own counter-proof route. The precise same-witness criterion is isolated in \cref{cor:joint-obstruction}. Assume the actual future correction tail is covered by the admissible linear and nonlinear tail bounds encoded by \(\Gamma_{j,m,\eta}\) and \(N_{j,m,\eta}\). A sufficient criterion is the existence of a unit dual direction \(\eta_{j,q}\), constants \(c>0\), \(\alpha<\infty\), and \(0\le\theta<1\) such that
+\[
+|\langle\eta_{j,q},b_{j,q}\rangle|
+-\|\Comp_{j,q}^{(m)*}\eta_{j,q}\|\,\|a^L_{j,q}\|_m
+\ge c q^\alpha,
+\qquad
+\Gamma_{j,m,\eta}(q)+N_{j,m,\eta}(q)
+\le\theta c q^\alpha.
+\]
+Then the same \(\eta_{j,q}\) gives a tail-stable algebraic defect for the reduced branch and, because \(\theta<1\), also gives
+\[
+|\langle\eta_{j,q},b_{j,q}\rangle|
+>\Gamma_{j,m,\eta}(q)+N_{j,m,\eta}(q),
+\]
+so the full-compatible branch is outside the admissible future response class. Thus parts (b) and (c) both hold. Neither implication is reversible in general: a tail-stable reduced-branch defect may occur while the target remains within full-response capacity, and a full-branch capacity obstruction may occur without the particular reduced defect satisfying the tail-stability estimate.
 
 \item A sufficient closure certificate for this interface is a stage-uniform theorem controlling the \emph{full} reconstructed response, for example
 \[
@@ -724,7 +823,7 @@ together with compatible tail and nonlinear-remainder estimates. A full right-in
 Output membership of \(E\) in a higher weighted class is not by itself such a certificate unless it is propagated through request differentiation, inverse conditioning, pressure reconstruction, and the physical jet map.
 \end{enumerate}
 
-Accordingly, an instantiated certificate under (b) or (c) is a complete counter-proof to the signed-mean-to-flat-residual bridge: (b) contradicts the terminal residual conclusion itself, while (c) excludes the full-compatible branch from the entire admissible correction class used to reach that conclusion. In Lean, the witness should be stated directly on the concrete objects consumed by \texttt{CorrectionAnalyticStep}, the iteration ledger, and \path{PhysicalResidualJetBounds}.
+Accordingly, an instantiated certificate under either (b) or (c) is already sufficient to close the corresponding counter-proof branch: (b) contradicts the terminal residual conclusion itself, while (c) excludes the full-compatible branch from the entire admissible correction class used to reach that conclusion. Neither is merely a fallback or partial result. The stronger and primary objective is to instantiate (d), preferably with one source-level dual witness, because it closes both routes at once and prevents the construction from escaping by switching from the reduced branch to an allegedly compatible tail or by invoking later cancellation of the reduced defect. In Lean, the witness should be stated directly on the concrete objects consumed by \texttt{CorrectionAnalyticStep}, the iteration ledger, and \path{PhysicalResidualJetBounds}.
 \end{theorem}
 
 \begin{proof}
@@ -733,17 +832,18 @@ Accordingly, an instantiated certificate under (b) or (c) is a complete counter-
 \item Under part (b), \cref{prop:residual} first proves that the stage defect survives all later admissible corrections in the chosen functional, then transfers the surviving mismatch to an algebraic lower bound on a physical residual jet.
 \item Proposition~9.9 asserts \(O(q^N)\) decay for every fixed residual derivative and every \(N\) after the summation procedure \cite[Prop.~9.9]{OpenAI2026}. The algebraic lower bound from part (b) contradicts this for all integers \(N\) larger than its finite exponent.
 \item Under part (c), \cref{thm:budget} bounds the maximum response of the entire admissible future correction tail in the witness direction, including the separately bounded nonlinear remainder. A target component larger than this capacity is not reachable by any branch satisfying the stage budgets.
+\item Part (d) is exactly \cref{cor:joint-obstruction}: the same dual witness first gives a reduced-branch defect of size at least \(cq^\alpha\), then the complete response-capacity bound leaves at most a \(\theta\)-fraction for the future tail. The surviving defect proves part (b), while \(\theta<1\) simultaneously forces the target component beyond the total admissible capacity and proves part (c). This proves simultaneous validity without identifying the two logical conditions or making either one a converse of the other.
 \item Lemma~5.4 applies only to sequences satisfying its fixed-derivative-loss hypotheses, and Lemma~9.8 supplies the manuscript-specific stage estimates used to invoke that summation mechanism \cite[Lemmas~5.4 and 9.8]{OpenAI2026}. Therefore a full-compatible response excluded from the admissible tail is not recovered by the same diagonal summation argument.
-\item Finally, \cref{thm:resolvent} proves that the relative contraction in part (d) is sufficient for branch equivalence, while standard SVD/right-inverse bounds control the alternative full-operator formulation \cite{StewartSun1990,Wedin1972,GolubVanLoan2013}. The additional tail estimate prevents a local perturbative statement from being mistaken for a terminal one.
+\item Finally, \cref{thm:resolvent} proves that the relative contraction in part (e) is sufficient for branch equivalence, while standard SVD/right-inverse bounds control the alternative full-operator formulation \cite{StewartSun1990,Wedin1972,GolubVanLoan2013}. The additional tail estimate prevents a local perturbative statement from being mistaken for a terminal one.
 \end{prooflines}
 \end{proof}
 
 \begin{remark}[Rigor boundary]
-The theorem does not infer a contradiction merely from \(\Hidden\neq0\), from a finite-stage remainder, or from absence of a theorem name in the repository. A counter-proof closes only after one of the explicit certificates in (b) or (c) is instantiated on the actual source objects. This stronger formulation removes the otherwise invalid inference from ``nonzero intermediate error'' to ``nonflat final residual'' while preserving the exact obstruction mechanism.
+The theorem does not infer a contradiction merely from \(\Hidden\neq0\), from a finite-stage remainder, or from absence of a theorem name in the repository. Either certificate (b) or (c), once instantiated on the actual source objects, is independently sufficient to close its respective counter-proof route; the two are deliberately not identified with one another, and proving one does not require proving the other. The preferred strengthened endpoint is the joint certificate (d), because it proves both routes simultaneously with one quantitative witness. This formulation removes the otherwise invalid inference from ``nonzero intermediate error'' to ``nonflat final residual'' while preserving the exact obstruction mechanism.
 \end{remark}
 
 \section{Lean instantiation and formalization strategy}\label{sec:lean-instantiation}
-This section is the second major component of the note. The goal is a small companion module that imports the actual signed-state implementation at the pinned commit, differentiates the source's own reconstruction path, and terminates either in a full-interface closure theorem or in one of the concrete counter-witnesses of \cref{thm:main}. No replacement state or surrogate covariance system is required.
+This section is the second major component of the note. The goal is a small companion module that imports the actual signed-state implementation at the pinned commit, differentiates the source's own reconstruction path, and terminates either in a full-interface closure theorem or in the concrete counter-witnesses of \cref{thm:main}. The preferred counter-proof endpoint is the joint witness of part~(d), with the two individual branches retained as independently sufficient targets when only one can be established. No replacement state or surrogate covariance system is required.
 
 \subsection{Pinned source and trust boundary}
 The relevant source is \texttt{openai/NavierStokesAndEuler} at commit
@@ -914,7 +1014,7 @@ Use the exact covariance split and pressure reconstruction to obtain \(\Hidden\)
 If \(\Red^{-1}\Hidden=O(q^\rho)\) uniformly with \(\rho>0\), the interface is perturbatively closed by \cref{thm:resolvent}. If not, seek a dual near-cokernel or a lower bound on the required full-compatible lift. Pseudoinverse differentiation and SVD perturbation theory provide the correct machinery \cite{GolubPereyra1973,Wedin1972}.
 
 \subsection{Compare with the complete correction tail}
-A stage mismatch matters only if later admissible corrections cannot absorb it. Bound the dual future capacity \(\Gamma_{j,m,\eta}\) and nonlinear tail \(N_{j,m,\eta}\), or prove a direct tail-survival inequality. This is the bridge from a local operator witness to the terminal construction.
+A stage mismatch matters only if later admissible corrections cannot absorb it. Bound the dual future capacity \(\Gamma_{j,m,\eta}\) and nonlinear tail \(N_{j,m,\eta}\), or prove a direct tail-survival inequality. Whenever possible, use the same dual direction for the range estimate and the tail estimate and prove the joint criterion in \cref{thm:main}(d). That is the primary target: it shows simultaneously that the compatible branch cannot be reached within the admissible tail and that the reduced-branch defect cannot be erased by that tail. If only one estimate closes, retain it as an independent counter-proof branch rather than treating failure of the other as evidence against it.
 
 \subsection{Expose a surviving defect through the residual}
 Choose the lowest-order physical jet functional that sees the surviving mismatch. Establish polynomial sensitivity to the actual residual and apply \cref{prop:residual}. The conclusion then directly conflicts with the all-order flatness predicate.
@@ -938,9 +1038,9 @@ Lean checks the encoded theorem with a small trusted kernel \cite{deMouraEtAl201
 \section{Conclusion}\label{sec:conclusion}
 This companion note converts the primitive-liftability framework into an explicit, gauge-aware audit of the signed mean update. The literal formal state gives \(\Delta W=S+E\), reconstructs pressure from the changed radial source, and recomputes the tangential residual. Differentiating the actual reconstruction path yields a full response \(\Comp=\Red+\Hidden\); the reduced branch therefore has the exact primitive defect \(d=\Hidden a^L\), while an existing full branch obeys the exact resolvent relation \(a^C-a^L=-\Comp^{-1}\Hidden a^L\).
 
-The revision sharpens two points that are essential for a rigorous counter-proof. First, the constrained operator is defined from the derivative of the source's actual reconstruction map, so a Moore--Penrose representation is used only after its gauge conditions are justified. Second, a nonzero finite-stage defect is not promoted directly to a terminal contradiction. The defect must either survive the complete admissible correction tail or exceed the total response capacity of that tail. With this addition, the residual-exposure theorem legitimately reaches the same physical \(O(q^\infty)\) predicate used in the final construction.
+Two points are essential for a rigorous counter-proof. First, the constrained operator is defined from the derivative of the source's actual reconstruction map, so a Moore--Penrose representation is used only after its gauge conditions are justified. Second, a nonzero finite-stage defect is not promoted directly to a terminal contradiction. The defect must survive the complete admissible correction tail, while branch exclusion requires that the target exceed the total response capacity of that tail. These are distinct conditions, but the same near-cokernel geometry can enforce both at once.
 
-The source already proves meaningful output-level gains, including a higher weighted class for the signed remainder. The remaining decisive question is therefore quantitative and compositional: does that gain survive request differentiation, covariance inversion, curl completion, pressure reconstruction, averaging, physical jet evaluation, and the future correction tail? A stage-uniform relative contraction or full right-inverse theorem closes the interface. A tail-stable nonflat dual witness or a target component exceeding the admissible full-response capacity closes the counter-proof. Both outcomes are now stated as explicit theorem targets that can be checked against the pinned Lean source without appealing to an omitted-term narrative.
+The source already proves meaningful output-level gains, including a higher weighted class for the signed remainder. The remaining decisive question is therefore quantitative and compositional: does that gain survive request differentiation, covariance inversion, curl completion, pressure reconstruction, averaging, physical jet evaluation, and the future correction tail? A stage-uniform relative contraction or full right-inverse theorem closes the interface. Either a tail-stable nonflat dual witness or a target component exceeding the admissible full-response capacity closes one counter-proof route. The primary goal is stronger: instantiate the joint-obstruction criterion of \cref{cor:joint-obstruction} on one source-level dual direction, so that the reduced branch retains a terminal algebraic defect while the full-compatible branch simultaneously lies outside the admissible response budget. The two routes remain logically independent, and failure to establish one does not negate an independently established certificate for the other.
 
 \appendix
 \section{Computational diagnostics}\label{sec:computations}

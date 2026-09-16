@@ -18,14 +18,19 @@ physical residual, terminal regularity, or smooth force extension.
 The research program and its Lean targets are developed in:
 
 - [`docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex`](docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex)
-- [`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note.tex`](docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note.tex),
-  the downstream companion to the preceding primitive-liftability research note;
-  it sharpens that framework into a signed-mean program with concrete Lean
-  formalization targets
+- [`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`](docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex),
+  the revised Version 1.1 downstream companion to the preceding primitive-
+  liftability research note. Its crucial upgrade is a preferred same-witness
+  joint obstruction: one dual direction simultaneously certifies that the
+  reduced defect survives the complete admissible tail and that the full-
+  compatible target exceeds total tail capacity. Each branch remains an
+  independently decisive counter-proof route
 - [`docs/Joseph_2026_Primitive_Compatibility_Counterproof_References_v1.bib`](docs/Joseph_2026_Primitive_Compatibility_Counterproof_References_v1.bib)
 
 The notes define a counter-proof program and explicit closure criteria; they do
-not treat a nonzero intermediate defect alone as a completed disproof.
+not treat a nonzero intermediate defect alone as a completed disproof. Version
+1.1 makes the joint certificate the strengthened target without requiring both
+branches when one already closes against an exact upstream endpoint.
 
 ## Upstream sources
 

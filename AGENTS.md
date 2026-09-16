@@ -11,10 +11,10 @@ This fork uses OpenAI's `NavierStokesAndEuler` formalization as the audit target
 Read and exploit these sources before formalizing the counter-proof program:
 
 - [`docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex`](docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex) defines the range, lift-cost, curvature, endpoint, and residual-leakage framework.
-- [`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note.tex`](docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note.tex) is the downstream companion to the general research note; it sharpens that framework at the signed-mean interface into concrete Lean formalization targets.
+- [`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`](docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex) is the revised Version 1.1 downstream companion to the general research note. It strengthens the signed-mean program with a preferred same-witness joint obstruction: one dual direction should both preserve the reduced-branch defect through the complete admissible tail and place the full-compatible target beyond total tail capacity. Either branch remains independently decisive.
 - [`docs/Joseph_2026_Primitive_Compatibility_Counterproof_References_v1.bib`](docs/Joseph_2026_Primitive_Compatibility_Counterproof_References_v1.bib) records the analytical and formal references.
 
-Anchor proofs to pinned definitions. Prefer the notes' full-response, tail-stable witness, and residual-exposure targets over surrogates.
+Anchor proofs to pinned definitions. Prefer Version 1.1's joint certificate when the source estimates support it, while retaining either independently closed branch. Use full-response, complete-tail, and residual-exposure targets rather than surrogates.
 
 ## Build, Test, and Development Commands
 
