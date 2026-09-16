@@ -1,0 +1,62 @@
+name: NavierStokes + Comparator Lean pass rate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  navier-stokes-and-comparator:
+    name: Build NavierStokes and ComparatorChallenges
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      LEAN_ABORT_ON_PANIC: "1"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install Lean and restore the Mathlib cache
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9 # v1.5.0
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: true
+
+      - name: Restore combined build cache
+        uses: actions/cache@v6
+        with:
+          path: .lake/build
+          key: navier-stokes-comparator-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('lean-toolchain', 'lakefile.toml', 'lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            navier-stokes-comparator-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('lean-toolchain', 'lakefile.toml', 'lake-manifest.json') }}-
+
+      - name: Build NavierStokes and ComparatorChallenges
+        id: lean-build
+        run: lake build NavierStokes ComparatorChallenges
+
+      - name: Report combined pass rate
+        if: always()
+        env:
+          BUILD_OUTCOME: ${{ steps.lean-build.outcome }}
+        run: |
+          echo "## NavierStokes + Comparator Lean pass rate" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$BUILD_OUTCOME" = "success" ]; then
+            echo '- **100%** — `lake build NavierStokes ComparatorChallenges` passed.' >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$BUILD_OUTCOME" = "failure" ]; then
+            echo '- **0%** — `lake build NavierStokes ComparatorChallenges` failed.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- **Incomplete** — setup failed or the build did not finish." >> "$GITHUB_STEP_SUMMARY"
+          fi

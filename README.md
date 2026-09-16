@@ -1,5 +1,18 @@
 # Primitive compatibility counter-proof for the Navier–Stokes construction
 
+[![CounterProof Lean pass rate](https://github.com/zboi29/OpenAICounterProof/actions/workflows/counterproof-lean.yml/badge.svg?branch=main&event=push)](https://github.com/zboi29/OpenAICounterProof/actions/workflows/counterproof-lean.yml?query=branch%3Amain)
+[![NavierStokes + Comparator Lean pass rate](https://github.com/zboi29/OpenAICounterProof/actions/workflows/navier-stokes-comparator-lean.yml/badge.svg?branch=main&event=push)](https://github.com/zboi29/OpenAICounterProof/actions/workflows/navier-stokes-comparator-lean.yml?query=branch%3Amain)
+
+These badges are independent, all-or-nothing Lean compilation pass rates:
+
+- **CounterProof Lean** is 100% only when
+  `lake build NavierStokes.CounterProof` succeeds for the focused
+  `NavierStokes/CounterProof/` import closure.
+- **NavierStokes + Comparator Lean** is 100% only when
+  `lake build NavierStokes ComparatorChallenges` succeeds for the complete
+  `NavierStokes/` and `ComparatorChallenges/` libraries. It intentionally
+  excludes the `Euler/` library as a top-level build target.
+
 This repository is a fork of
 [OpenAI's `NavierStokesAndEuler` Lean formalization](https://github.com/openai/NavierStokesAndEuler),
 released with its proposed three-dimensional Navier–Stokes and Euler blowup
@@ -68,7 +81,7 @@ The project uses Lean 4.34.0-rc2, Mathlib, and Lake. With
 
 ```sh
 lake exe cache get
-lake build
+lake build NavierStokes ComparatorChallenges
 ```
 
 ## Independent proof checking

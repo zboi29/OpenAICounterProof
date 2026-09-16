@@ -1,0 +1,62 @@
+name: CounterProof Lean pass rate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  counterproof:
+    name: Build CounterProof subsystem
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      LEAN_ABORT_ON_PANIC: "1"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install Lean and restore the Mathlib cache
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9 # v1.5.0
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: true
+
+      - name: Restore CounterProof build cache
+        uses: actions/cache@v6
+        with:
+          path: .lake/build
+          key: counterproof-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('lean-toolchain', 'lakefile.toml', 'lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            counterproof-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('lean-toolchain', 'lakefile.toml', 'lake-manifest.json') }}-
+
+      - name: Build CounterProof subsystem
+        id: lean-build
+        run: lake build NavierStokes.CounterProof
+
+      - name: Report CounterProof pass rate
+        if: always()
+        env:
+          BUILD_OUTCOME: ${{ steps.lean-build.outcome }}
+        run: |
+          echo "## CounterProof Lean pass rate" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$BUILD_OUTCOME" = "success" ]; then
+            echo '- **100%** — `lake build NavierStokes.CounterProof` passed.' >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$BUILD_OUTCOME" = "failure" ]; then
+            echo '- **0%** — `lake build NavierStokes.CounterProof` failed.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- **Incomplete** — setup failed or the build did not finish." >> "$GITHUB_STEP_SUMMARY"
+          fi
