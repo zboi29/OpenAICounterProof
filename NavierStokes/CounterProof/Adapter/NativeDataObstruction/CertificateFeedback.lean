@@ -7,8 +7,8 @@ import NavierStokes.CounterProof.Adapter.FiniteJetWitness
 The NativeData contradiction and the dual-branch program are logically
 independent counter-proof routes:
 
-* direct NativeData closure refutes any claimed endpoint that entails existence of
-  `NativeData` on the actual geometry;
+* the completed NativeData counter-proof refutes availability of `NativeData`
+  on the actual geometry and optionally transports to any claim entailing it;
 * the dual route detects a full-response mismatch or excludes a target beyond
   complete tail capacity.
 

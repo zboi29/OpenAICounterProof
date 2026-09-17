@@ -101,7 +101,7 @@ prerequisite. The precise route hierarchy is:
 
 | Route | Logically sufficient? | Requires NativeData? | Project role |
 | --- | --- | --- | --- |
-| Direct NativeData closure | Yes | Uses its nonexistence | Valid focused counter-proof |
+| NativeData obstruction | Yes; already complete | Its nonexistence is the conclusion | Complete pinned-source counter-proof |
 | Reduced branch | Yes | No | Independent terminal route |
 | Full-compatible branch | Yes | No | Independent terminal route |
 | Joint certificate | Yes | No | Primary project endpoint |
@@ -123,11 +123,13 @@ value exists: `NativeData.tail_bound` forces the normalized strip coordinate
 to be at most `1/2`, whereas every point in the actual strip has coordinate
 strictly greater than `1/2`.
 
-This is a genuine direct counter-proof closure. If a claimed endpoint
-entails existence of the complete native package, then
-`ClaimRequiresNativeData.refutes_claim` disproves that endpoint immediately.
-It does not require a reduced/full-compatible branch comparison, a dual functional, or a
-`JointCokernelCertificate`.
+This is a complete, source-instantiated counter-proof of the pinned native
+route: `native_route_unavailable` directly proves that its required input does
+not exist on the actual geometry. No further instantiation, endpoint wrapper,
+reduced/full-compatible branch comparison, dual functional, or
+`JointCokernelCertificate` is needed. `ClaimRequiresNativeData.refutes_claim`
+is only an optional transport rule: if a broader named endpoint entails the
+impossible package, the completed counter-proof also refutes that endpoint.
 
 For cross cancellation, the actual cycle replaces the unavailable package with
 the narrower identity
@@ -179,25 +181,26 @@ and a matching finite-jet coordinate into a `ReducedDefectWitness`. If that
 same coordinate also satisfies the full-response near-cokernel and complete
 tail-capacity bounds, it can become the shared functional of a
 `JointCokernelCertificate`, following companion-note §8 Phases V–VI and
-Corollary 6.3. The NativeData contradiction alone does not discharge those
-quantitative obligations. Failure to complete the promotion does not weaken
-the independent direct NativeData closure or either independently completed
-branch.
+Corollary 6.3. The completed NativeData counter-proof alone does not discharge
+those quantitative obligations. Failure to complete the promotion does not
+weaken the independent NativeData counter-proof or either independently
+completed branch.
 
 ## Route-selection criteria
 
-Target the primary joint certificate when the pinned source supplies a common witness, while
-retaining every independently complete closure:
+Target the primary joint certificate when the pinned source supplies a common
+witness, while retaining every independently complete closure:
 
-- Use direct NativeData closure when the endpoint entails the complete normalized
-  native package. Prove that dependency explicitly, then apply package
-  nonexistence.
+- Treat the NativeData obstruction as complete for the pinned native route. If
+  applying it to a broader named endpoint, separately prove that endpoint's
+  dependency on the impossible package and use the optional transport rule.
 - Use the reduced route when an actual reconstructed mismatch can be detected
   and shown to survive every admissible future correction.
 - Use the full-compatible route when the target component is larger than the
   total response capacity, even if no reduced branch has been selected.
-- Instantiate the joint certificate when one functional supports the reduced defect,
-  near-cokernel response estimate, and complete-tail bound simultaneously.
+- Instantiate the joint certificate when one functional supports the reduced
+  defect, near-cokernel response estimate, and complete-tail bound
+  simultaneously.
 - Prefer the NativeData-driven bridge for the current pinned source: audit the
   forced physical replacement, derive the common defect/repair obligation, and
   prove both branch estimates for the same finite-jet functional.
@@ -233,15 +236,16 @@ prescribed by companion-note §8 Phases II–VI and §15.
 
 Import `NavierStokes.CounterProof.SignedMeanInterface` for the public adapter
 layer. Import `NavierStokes.CounterProof.Adapter.NativeDataObstruction` when
-working on the direct NativeData closure or the preferred source bridge into
-the primary joint certificate.
+working on the completed NativeData counter-proof or the preferred source
+bridge into the primary joint certificate.
 
 ## Proof discipline
 
 Keep these distinctions explicit in new work:
 
-- Prove an endpoint's dependency on NativeData before using package
-  nonexistence to refute that endpoint.
+- Do not describe the NativeData obstruction as awaiting instantiation; prove
+  an endpoint dependency only when transporting it beyond the pinned native
+  route it already refutes.
 - Do not treat eventual cross-tail agreement as construction of NativeData.
 - Keep the partition factor when reasoning before its threshold.
 - Do not promote a scalar cross defect to a complete-response defect without a
@@ -256,9 +260,9 @@ When adding a source adapter:
 1. Pin the upstream declaration and record the relevant manuscript section in
    the module documentation.
 2. Preserve the source statement exactly before deriving a simplified helper.
-3. State whether the result closes the direct NativeData, reduced, or
-   full-compatible route, instantiates the joint certificate, or advances the
-   preferred NativeData-driven joint instantiation.
+3. State whether the result transports the completed NativeData obstruction,
+   closes the reduced or full-compatible route, instantiates the joint
+   certificate, or advances the preferred NativeData-driven joint instantiation.
 4. Keep finite-prefix factors, inverse losses, reconstructed pressure, and
    nonlinear tail terms visible until a theorem removes them.
 5. Export only stable route-level declarations through

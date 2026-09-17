@@ -130,7 +130,8 @@ on the physical-scale data in `ActualSignedMeanBinding.lean`, then construct
 its concrete `CompatibilityBlocks`.  Do not use either generic theorem that
 requires `SignedMeanGain.NativeData`: `NativeDataObstruction` proves that the
 required package cannot exist on `ActualInitialization.geometry`.  This is a
-direct dependency closure for any claimed endpoint requiring that package.
+complete counter-proof of the pinned native route, not an obligation awaiting
+further instantiation; endpoint dependency only transports it to another claim.
 NativeData is not logically necessary for the compatibility branches or their
 primary joint synthesis.  For the preferred pinned-source instantiation, use
 the precisely scoped partition-factor/tail replacement inserted into

@@ -24,9 +24,10 @@ These cross-defect helpers do not by themselves establish the terminal
 compatibility obstruction: `ActualSignedMeanBinding.family_defects_all_exponents`
 proves that the literal defects have every weighted exponent.  The reduced
 route must therefore use the complete remainder/pressure response exposed by
-`FullCompatibility` and the complete tail.  Direct NativeData closure remains
-independently sufficient for a claimed endpoint requiring the unavailable
-generic package.  NativeData is not logically necessary for this branch or the
+`FullCompatibility` and the complete tail.  NativeData nonexistence is already
+a complete, independently sufficient counter-proof of the unavailable pinned
+generic route; dependency on it only transports that result to a broader
+claim.  NativeData is not logically necessary for this branch or the
 primary joint certificate; on the pinned source its physical replacement is
 the preferred common provenance for this reduced defect, the full-compatible
 repair obligation, and a candidate same-witness observation map.  This is the

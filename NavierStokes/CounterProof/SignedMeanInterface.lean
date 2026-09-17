@@ -37,10 +37,12 @@ same-witness `JointCokernelCertificate` is the primary project endpoint.  The
 
 `NativeDataObstruction` proves that the generic normalized-tail
 `SignedMeanGain.NativeData` package is uninhabited on the actual geometry,
-including after label-only reindexing.  Any claimed endpoint shown to require
-that package is therefore false without invoking either dual branch.  This
-direct closure, the reduced branch, and the full-compatible branch are each
-independently usable counter-proofs.
+including after label-only reindexing.  This is already a complete,
+source-instantiated counter-proof of the pinned native route; it awaits no
+finite-jet, tail, or joint-certificate instantiation.  `ClaimRequiresNativeData`
+only transports that result to a broader endpoint.  The completed NativeData
+counter-proof, the reduced branch, and the full-compatible branch are each
+independently usable.
 
 NativeData is not logically necessary to instantiate either branch or the
 primary joint certificate.  It is nevertheless the preferred robust
@@ -61,8 +63,8 @@ Proposition 8.2 and Corollary 8.3.
 
 The preferred `CounterProof/Adapter/` source integration is:
 
-1. establish direct NativeData closure where an endpoint entails the package,
-   and expose the forced physical-scale replacement used upstream;
+1. retain the completed NativeData counter-proof and expose the forced
+   physical-scale replacement used upstream;
 2. anchor the exact reconstructed state and covariance response;
 3. identify the native two-coordinate reduced cross response;
 4. use the exact missing component as a common defect/repair obligation;
@@ -97,7 +99,9 @@ export Adapter
 
 export Adapter.NativeDataObstruction
   (ActualNativeData NativeRouteAvailable native_route_unavailable
-    tail_bound_contradiction ClaimRequiresNativeData
+    exists_actual_strip_point_above_half native_tail_bound_le_half
+    tail_bound_contradiction actual_native_data_impossible
+    actual_nativeData_isEmpty ClaimRequiresNativeData
     refute_claim_of_native_data_requirement
     actualCrossComponent actualRequestedComponent actualMissingComponent actualCrossDefect
     actual_cross_eq_partition_factor actual_cross_defect_eq_neg_missing

@@ -13,8 +13,9 @@ the full-compatible branch, and their unified `JointCokernelCertificate`.
 The Version 1.1 joint certificate is the project’s primary terminal target;
 NativeData is not a premise of its abstract theory. For this pinned source,
 however, the NativeData discovery is the preferred robust bridge to both
-branches and their common witness. Direct NativeData closure and either
-completed individual branch remain independently sufficient counter-proofs.
+branches and their common witness. The NativeData counter-proof is already
+source-instantiated and complete; either completed individual branch remains
+independently sufficient as well.
 
 For new readers, `NativeData` is a Lean structure containing a complete native
 assembly interface—matrices, targets, masks, oscillatory data, support and cone
@@ -43,12 +44,14 @@ bridges between them.
 
 ## Conceptual map
 
-Five terms organize the argument:
+Six terms organize the argument:
 
 - **Native package:** the full `SignedMeanGain.NativeData` value required by the
   generic native mean-gain theorems.
-- **Dependency obstruction:** a proof that a claimed endpoint requires that
-  package, combined with a proof that the package cannot exist.
+- **NativeData obstruction:** the completed proof that the pinned native route's
+  required package cannot exist on the actual geometry.
+- **Optional endpoint transport:** a proof that another named claim entails
+  availability of that impossible package.
 - **Physical replacement** (or bypass): the partition-factor cross identity
   used by the actual correction cycle instead of `NativeData` for one specific
   cross-cancellation obligation.
@@ -59,7 +62,12 @@ Five terms organize the argument:
   defect and repair obligation to construct both branch estimates and one
   shared finite-jet functional for the primary joint certificate.
 
-The direct NativeData closure is
+The complete NativeData counter-proof is
+
+`NativeRouteAvailable → False`.
+
+It is already specialized to `ActualInitialization.geometry` and needs no
+further instantiation. An optional transport to a broader named claim is
 
 `Claim → NativeRouteAvailable → False`.
 
@@ -105,8 +113,8 @@ Combining the inequalities yields
 which is impossible. `ActualSignedMeanBinding.actual_strip_nonempty` supplies a
 concrete strip point, so the contradiction cannot be avoided by vacuous domain
 membership. The upstream theorem `no_legacy_nativeData` proves the resulting
-`IsEmpty` statement; this subsystem promotes it into an explicit counter-proof
-interface and dependency rule.
+`IsEmpty` statement; this subsystem exposes it as a complete counter-proof and
+provides a separate optional dependency-transport rule.
 
 Band reindexing does not change the conclusion. It reindexes finite labels and
 their coefficient identities, but its theorem still accepts the same
@@ -118,19 +126,23 @@ The central theorem is `native_route_unavailable`:
 
 `¬ Nonempty (SignedMeanGain.NativeData ActualInitialization.geometry)`.
 
-This supports a direct counter-proof schema. Let `Claim` be the proposition
-expressing one pinned endpoint of the claimed construction. If the audit proves
+This is already a terminal counter-proof of the pinned native route; the target
+`NativeRouteAvailable` and actual geometry are concrete. It does not await a
+finite-jet witness, tail estimate, joint certificate, or endpoint wrapper.
+
+The subsystem additionally supports optional transport. Let `Claim` be another
+proposition associated with the claimed construction. If an audit proves
 
 `Claim → Nonempty ActualNativeData`,
 
-then `Claim` is false. `ClaimRequiresNativeData.refutes_claim` and
+then `Claim` is also false. `ClaimRequiresNativeData.refutes_claim` and
 `refute_claim_of_native_data_requirement` formalize exactly this inference.
 
-The dependency premise matters. Nonexistence of one proof object does not, by
-itself, refute an unrelated mathematical proposition that might have a wholly
-different proof. The relevant counter-proof target is a claimed endpoint whose
-source dependency genuinely entails the native package or one of its
-unrecovered obligations. Concrete uses should therefore pin the endpoint and
+That dependency premise matters only for the broader transported claim; it is
+not a missing hypothesis or final-instantiation obligation for
+`native_route_unavailable`. Nonexistence of one proof object does not, by
+itself, refute an unrelated proposition that might have a wholly different
+proof. Any optional transport should therefore pin the broader endpoint and
 prove the implication rather than relying on prose-level association.
 
 In this README, a **route** means such a complete implication chain from pinned
@@ -143,7 +155,7 @@ The logical sufficiency and project priority are distinct:
 
 | Route | Logically sufficient? | Requires NativeData? | Project role |
 | --- | --- | --- | --- |
-| Direct NativeData closure | Yes | Uses its nonexistence | Valid focused counter-proof |
+| NativeData obstruction | Yes; already complete | Its nonexistence is the conclusion | Complete pinned-source counter-proof |
 | Reduced branch | Yes | No | Independent terminal route |
 | Full-compatible branch | Yes | No | Independent terminal route |
 | Joint certificate | Yes | No | Primary project endpoint |
@@ -152,10 +164,10 @@ The logical sufficiency and project priority are distinct:
 Companion-note Theorem 6.1 and Proposition 6.2 give the quantitative branch
 mechanisms, Corollary 6.3 gives their same-witness synthesis, and Theorem 7.1
 connects either decisive branch to a terminal counter-proof. The §15 interface
-checklist identifies the concrete Lean obligations. Thus direct NativeData
-closure needs neither a cokernel direction nor a tail budget, while the joint
-certificate remains available to any source argument that supplies its
-hypotheses without NativeData.
+checklist identifies the concrete Lean obligations. Thus the completed
+NativeData counter-proof needs neither a cokernel direction nor a tail budget,
+while the joint certificate remains available to any source argument that
+supplies its hypotheses without NativeData.
 
 ## Physical-scale replacement: exact scope
 
@@ -240,20 +252,24 @@ The bridge is therefore:
 
 `exact bypass defect and repair → common finite-jet witness candidate → two quantitative branch estimates → joint certificate`.
 
-It preserves direct NativeData closure while making the same-witness
-formulation the primary implementation target. A non-NativeData construction
-could still reach that target, but it would have to reproduce independently
-the complete observed defect, compatible repair target, common functional,
-inverse/reconstruction losses, and complete-tail control.
+It preserves the completed NativeData counter-proof while making the
+same-witness formulation the primary implementation target. A non-NativeData
+construction could still reach that target, but it would have to reproduce
+independently the complete observed defect, compatible repair target, common
+functional, inverse/reconstruction losses, and complete-tail control.
 
 ## Module map
 
 ### `GeometryContradiction.lean`
 
 - Names the actual native package and route-availability proposition.
-- Proves `native_route_unavailable`.
-- Exposes the pointwise `tail_bound_contradiction`.
-- Defines `ClaimRequiresNativeData` and the direct refutation rules.
+- Proves `native_route_unavailable` from an explicit actual-strip witness and
+  incompatible half-scale bounds.
+- Exposes `exists_actual_strip_point_above_half`,
+  `native_tail_bound_le_half`, `tail_bound_contradiction`, the direct eliminator
+  `actual_native_data_impossible`, and `actual_nativeData_isEmpty`.
+- Defines `ClaimRequiresNativeData` and optional transport rules for broader
+  claims.
 
 ### `PhysicalScaleReplacement.lean`
 
@@ -277,15 +293,17 @@ Import `NavierStokes.CounterProof.Adapter.NativeDataObstruction` for the whole
 subsystem. The public `SignedMeanInterface` re-exports its principal types and
 theorems.
 
-## Extension protocol
+## Optional transport and extension protocol
 
-New work should proceed in the following order:
+No work is required to complete `native_route_unavailable`. To transport that
+result to a broader endpoint or audit the physical replacement, proceed as
+follows:
 
 1. Select a precise claimed endpoint, not the entire project informally.
 2. Trace which generic native theorem or native consequence the endpoint uses.
-3. Prove `ClaimRequiresNativeData Claim`, or isolate the exact consequence that
-   the physical replacement must reproduce.
-4. Apply `native_route_unavailable` for direct NativeData closure.
+3. For optional transport, prove `ClaimRequiresNativeData Claim`; otherwise
+   isolate the exact consequence that the physical replacement must reproduce.
+4. Apply the already-complete `native_route_unavailable` result.
 5. Separately audit any proposed physical replacement through request
    differentiation, inverse loss, full reconstruction, and complete-tail
    control.

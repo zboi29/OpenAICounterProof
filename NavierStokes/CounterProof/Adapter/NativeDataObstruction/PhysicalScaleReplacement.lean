@@ -26,10 +26,11 @@ reconstruction, and mean-gain consequence formerly obtained from that package.
 For the pinned source this replacement is the common origin of the preferred
 joint instantiation: its omitted finite-prefix component seeds the reduced
 defect, while the compatible response needed to repair that component supplies
-the lift/capacity obligation for the full-compatible branch.  NativeData is not logically
-necessary for either branch or for `JointCokernelCertificate`, and direct
-NativeData closure remains independently sufficient for endpoints that entail
-the package.
+the lift/capacity obligation for the full-compatible branch.  NativeData is not
+logically necessary for either branch or for `JointCokernelCertificate`, and
+NativeData nonexistence is already a complete counter-proof of the pinned
+native route.  Endpoint dependency is only an optional transport beyond that
+target.
 
 ## Manuscript correspondence
 
