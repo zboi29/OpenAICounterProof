@@ -23,13 +23,24 @@ tail identity can replace the cross-cancellation field used by
 `NativeData` package or automatically recover every assembly, inverse,
 reconstruction, and mean-gain consequence formerly obtained from that package.
 
+For the pinned source this replacement is the common origin of the preferred
+joint instantiation: its omitted finite-prefix component seeds the reduced
+defect, while the compatible response needed to repair that component supplies
+the lift/capacity obligation for the full-compatible branch.  NativeData is not logically
+necessary for either branch or for `JointCokernelCertificate`, and direct
+NativeData closure remains independently sufficient for endpoints that entail
+the package.
+
 ## Manuscript correspondence
 
 These identities implement the source audit demanded by companion-note §8
 Phase II and the §15 "Cross cancellation" row.  Keeping the arbitrary-band
-factor visible is also necessary for §8 Phases IV--VI: differentiation and
-complete-tail estimates must be established for the physical replacement,
-not inherited from the unavailable normalized interface.
+factor visible is also necessary for §8 Phases III–VI: hidden-response
+subtraction, differentiation, finite-jet witness selection, and complete-tail
+estimates must be established for the physical replacement, not inherited
+from the unavailable normalized interface.  Theorem 6.1, Proposition 6.2, and
+Corollary 6.3 describe the two branch estimates and their primary same-witness
+synthesis.
 -/
 
 noncomputable section

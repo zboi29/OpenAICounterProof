@@ -19,19 +19,25 @@ such package exists.  Relabeling the finite sums does not change this
 geometric contradiction because the band-reindexed theorem retains the same
 `NativeData` argument.
 
-This gives a counter-proof route separate from the dual-branch formulation.
-Whenever a claimed endpoint entails the existence of this native package,
+This gives an independently sufficient direct closure.  Whenever a claimed
+endpoint entails the existence of this native package,
 `refute_claim_of_native_data_requirement` refutes that endpoint directly; no
 cokernel direction, tail budget, or `JointCokernelCertificate` is needed.
+NativeData is not logically required to construct either dual branch or the
+primary joint certificate.  On the pinned source, however, this exact geometry
+failure forces scrutiny of the physical replacement and is the preferred
+starting point for generating both branch obligations and their common witness.
 
 ## Manuscript correspondence
 
 The companion note's §8 Phase II requires the reduced operator to come from
-the exact cross tensor, while §8 Phase IV and the §15 rows "Weighted gain" and
-"Flat edge" require the resulting estimates to survive the actual inverse and
-physical geometry.  The contradiction below is the exact source-level audit
-of that interface: the normalized native package cannot be instantiated on
-the geometry whose reconstruction and weighted gain it is meant to control.
+the exact cross tensor, while §8 Phases III–VI and the §15 rows "Weighted gain"
+and "Flat edge" require hidden reconstruction, differentiated estimates, a
+finite-jet witness, and complete-tail control.  The contradiction below is the
+exact source-level audit of that interface: the normalized native package
+cannot be instantiated on the geometry whose reconstruction and weighted gain
+it is meant to control.  This NativeData incompatibility is a new Lean audit
+derived from the manuscript program, not a contradiction stated in the note.
 -/
 
 namespace NavierStokes.CounterProof.Adapter.NativeDataObstruction
@@ -68,9 +74,11 @@ structure ClaimRequiresNativeData (claim : Prop) : Prop where
 
 namespace ClaimRequiresNativeData
 
-/-- Standalone counter-proof rule for the NativeData route.  It is logically
-independent of both branches of `JointCokernelCertificate`: a claim requiring
-an impossible native package is false before any dual-tail analysis. -/
+/-- Direct counter-proof rule for NativeData-dependent endpoints.  It is
+logically independent of both branches of `JointCokernelCertificate`: a claim
+requiring an impossible native package is false before any dual-tail analysis.
+The same discovery can still seed the preferred source instantiation of the
+primary joint certificate through `PhysicalScaleReplacement`. -/
 theorem refutes_claim {claim : Prop} (requirement : ClaimRequiresNativeData claim) :
     ¬ claim := by
   intro hclaim

@@ -130,10 +130,13 @@ on the physical-scale data in `ActualSignedMeanBinding.lean`, then construct
 its concrete `CompatibilityBlocks`.  Do not use either generic theorem that
 requires `SignedMeanGain.NativeData`: `NativeDataObstruction` proves that the
 required package cannot exist on `ActualInitialization.geometry`.  This is a
-standalone dependency obstruction to any claimed endpoint requiring that
-package.  For the separate compatibility route, use the precisely scoped
-partition-factor/tail replacement inserted into
+direct dependency closure for any claimed endpoint requiring that package.
+NativeData is not logically necessary for the compatibility branches or their
+primary joint synthesis.  For the preferred pinned-source instantiation, use
+the precisely scoped partition-factor/tail replacement inserted into
 `CorrectionAnalyticStep.StepData.cross_tail`, then prove all remaining
-reconstruction and mean-gain obligations directly. -/
+reconstruction and mean-gain obligations directly.  This realizes
+companion-note §8 Phases III–IV and supplies the complete response needed by
+Theorem 6.1, Proposition 6.2, and Corollary 6.3. -/
 
 end NavierStokes.CounterProof.Adapter

@@ -24,11 +24,14 @@ These cross-defect helpers do not by themselves establish the terminal
 compatibility obstruction: `ActualSignedMeanBinding.family_defects_all_exponents`
 proves that the literal defects have every weighted exponent.  The reduced
 route must therefore use the complete remainder/pressure response exposed by
-`FullCompatibility` and the complete tail.  This limitation does not weaken
-the separate `NativeDataObstruction`: the generic global native interface is
-unavailable, and any claimed endpoint requiring that package is independently
-refuted.  The physical replacement's finite-prefix defect may additionally
-feed the reduced or joint route through a proved observation-coordinate map.
+`FullCompatibility` and the complete tail.  Direct NativeData closure remains
+independently sufficient for a claimed endpoint requiring the unavailable
+generic package.  NativeData is not logically necessary for this branch or the
+primary joint certificate; on the pinned source its physical replacement is
+the preferred common provenance for this reduced defect, the full-compatible
+repair obligation, and a candidate same-witness observation map.  This is the
+Phase II input to companion-note Theorem 6.1, Proposition 6.2, Corollary 6.3,
+and the §15 interface audit.
 -/
 
 noncomputable section

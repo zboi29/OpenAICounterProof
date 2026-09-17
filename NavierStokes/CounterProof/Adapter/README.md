@@ -35,7 +35,20 @@ interface from a mismatch inside a successfully instantiated interface.
 ## Architecture and data flow
 
 The public import is `NavierStokes.CounterProof.SignedMeanInterface`. Internally
-the source attachment follows four stages:
+the preferred source attachment follows this pipeline:
+
+`NativeData audit → forced physical replacement → common defect/repair obligation → two branch estimates → JointCokernelCertificate`.
+
+This is an implementation preference, not a logical premise of the abstract
+certificate theory. A non-NativeData source argument could instantiate either
+branch or the joint certificate if it supplied the same exact defect, compatible
+repair, finite-jet functional, reconstruction losses, and complete-tail bounds.
+For the pinned source, however, the NativeData audit is the most efficient and
+robust bridge: its contradiction is geometry-pinned, its physical replacement
+exhibits an exact omitted component, and that single incompatibility gives the
+reduced defect and full-compatible repair obligation a common provenance.
+
+The implementation work has four stages:
 
 | Stage | Responsibility | Principal modules |
 | --- | --- | --- |
@@ -56,28 +69,50 @@ premise.
 
 The NativeData subsystem emerged from following the companion note’s
 instantiation order rather than beginning with the already-packaged actual
-cycle. Phase II required tracing the reduced cross response to its source
-construction, and Phase IV required identifying the theorem that supplied its
-weighted gain. Both generic theorem paths converged on the same `NativeData`
-premise. Comparing that premise’s normalized `tail_bound` with the actual strip
-then exposed the exact `q > 1/2` versus `q ≤ 1/2` contradiction.
+cycle. In [§8 Phases II–VI of the companion note](../../../docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex),
+the audit progresses from the exact cross response through hidden-response
+subtraction, differentiated reconstruction and weighted estimates, finite-jet
+witness selection, and complete-tail control. Tracing Phases II and IV to the
+pinned source made both generic theorem paths converge on the same `NativeData`
+premise. Comparing its normalized `tail_bound` with the actual strip exposed
+the exact `q > 1/2` versus `q ≤ 1/2` contradiction. That incompatibility is a
+new Lean source audit obtained by carrying out the manuscript’s instantiation
+program; neither manuscript states this source-specific contradiction.
 
 The subsequent audit found that the actual cycle replaced this premise for one
 cross-cancellation obligation with a physical partition identity. That
-discovery did not erase the contradiction; it created a second audit
-obligation: determine exactly which NativeData
-consequences the replacement reconstructs. The directory split reflects this
-proof history and keeps future work from collapsing package existence,
-cross-tail cancellation, and complete reconstructed compatibility into one
-assertion.
+replacement exposes the exact missing component which seeds the reduced defect
+and identifies the compatible repair whose lift cost or total response capacity
+must be controlled on the full-compatible branch. This is the concrete source version of
+the range, lift-cost, compatibility, tail-survival, and residual-leakage
+framework in the
+[general research note](../../../docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex).
+Using one source incompatibility for both obligations avoids duplicated witness
+discovery, gives the strongest basis for choosing one common finite-jet
+functional, and prevents unavailable normalized gain estimates from entering
+either branch.
 
 ## Counter-proof route map
 
-The Adapter exposes four usable routes organized into three families: the
-standalone NativeData dependency obstruction; the independently closable
-reduced and full-compatible branches; and their stronger same-witness
-unification. They share source objects, but their hypotheses and conclusions
-must remain distinct.
+The Version 1.1 same-witness `JointCokernelCertificate` is the primary terminal
+route. “Primary” records project priority and the strength of its joint
+conclusion; it does not make NativeData, or either individual branch, a logical
+prerequisite. The precise route hierarchy is:
+
+| Route | Logically sufficient? | Requires NativeData? | Project role |
+| --- | --- | --- | --- |
+| Direct NativeData closure | Yes | Uses its nonexistence | Valid focused counter-proof |
+| Reduced branch | Yes | No | Independent terminal route |
+| Full-compatible branch | Yes | No | Independent terminal route |
+| Joint certificate | Yes | No | Primary project endpoint |
+| NativeData-driven joint instantiation | Yes | Uses the discovery as evidence | Preferred implementation strategy |
+
+The companion note’s Theorem 6.1 and Proposition 6.2 establish the quantitative
+branch mechanisms, Corollary 6.3 gives their same-witness joint synthesis, and
+Theorem 7.1 states the terminal signed-mean counter-proof. Its §15 interface
+checklist connects those obligations to the concrete Lean audit. These are the
+manuscript grounds for route sufficiency; the NativeData incompatibility itself
+is the Lean-derived source discovery described above.
 
 ### NativeData dependency obstruction
 
@@ -88,10 +123,10 @@ value exists: `NativeData.tail_bound` forces the normalized strip coordinate
 to be at most `1/2`, whereas every point in the actual strip has coordinate
 strictly greater than `1/2`.
 
-This is a genuine alternative counter-proof route. If a claimed endpoint
+This is a genuine direct counter-proof closure. If a claimed endpoint
 entails existence of the complete native package, then
 `ClaimRequiresNativeData.refutes_claim` disproves that endpoint immediately.
-It does not require a reduced/full branch comparison, a dual functional, or a
+It does not require a reduced/full-compatible branch comparison, a dual functional, or a
 `JointCokernelCertificate`.
 
 For cross cancellation, the actual cycle replaces the unavailable package with
@@ -116,11 +151,16 @@ The companion note's two branches analyze that physical-scale route directly:
 `FiniteJetWitness.lean`, `DiagonalTail.lean`, and
 `PhysicalResidualExposure.lean` keep these witnesses independent. Either
 branch is sufficient when its own source identification and tail hypotheses
-are discharged.
+are discharged, as formalized by companion-note Theorem 6.1, Proposition 6.2,
+and Theorem 7.1. For the reduced route, transport from a surviving observed
+mismatch to physical residual nonflatness is also grounded in Proposition 8.2
+and Corollary 8.3 of the
+[general research note](../../../docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex).
 
 ### Unified same-witness route
 
-`JointCokernelCertificate` strengthens the two compatibility branches by using
+`JointCokernelCertificate` is the primary terminal target and strengthens the
+two compatibility branches by using
 one observed direction for both conclusions. The direction is a vector in the
 Hilbert observation space; inner product with that vector induces a bounded
 scalar functional. The functional nearly annihilates admissible full responses
@@ -128,8 +168,9 @@ while detecting the target or defect. The Adapter does not yet instantiate that
 certificate. It preserves the exact source data needed to do so without
 pretending that separately constructed functionals are already equal.
 
-The NativeData route can feed this unified route without being reduced to it.
-The physical replacement has the exact finite-prefix defect
+NativeData is not logically necessary to construct this certificate. It is the
+preferred source-instantiation bridge for the pinned source because the forced
+physical replacement has the exact finite-prefix defect
 
 `cross − request = −missingWeight × request`.
 
@@ -137,27 +178,35 @@ The physical replacement has the exact finite-prefix defect
 and a matching finite-jet coordinate into a `ReducedDefectWitness`. If that
 same coordinate also satisfies the full-response near-cokernel and complete
 tail-capacity bounds, it can become the shared functional of a
-`JointCokernelCertificate`. Failure to complete that promotion does not weaken
-the independent NativeData dependency obstruction.
+`JointCokernelCertificate`, following companion-note §8 Phases V–VI and
+Corollary 6.3. The NativeData contradiction alone does not discharge those
+quantitative obligations. Failure to complete the promotion does not weaken
+the independent direct NativeData closure or either independently completed
+branch.
 
 ## Route-selection criteria
 
-Start with the smallest route that reaches a pinned claimed endpoint:
+Target the primary joint certificate when the pinned source supplies a common witness, while
+retaining every independently complete closure:
 
-- Use the NativeData route when the endpoint entails the complete normalized
+- Use direct NativeData closure when the endpoint entails the complete normalized
   native package. Prove that dependency explicitly, then apply package
   nonexistence.
 - Use the reduced route when an actual reconstructed mismatch can be detected
   and shown to survive every admissible future correction.
 - Use the full-compatible route when the target component is larger than the
   total response capacity, even if no reduced branch has been selected.
-- Use the joint route only when one functional supports the reduced defect,
+- Instantiate the joint certificate when one functional supports the reduced defect,
   near-cokernel response estimate, and complete-tail bound simultaneously.
+- Prefer the NativeData-driven bridge for the current pinned source: audit the
+  forced physical replacement, derive the common defect/repair obligation, and
+  prove both branch estimates for the same finite-jet functional.
 
-These are not maturity levels of one proof. They are distinct logical routes.
-A direct source-interface contradiction may be both simpler and stronger than
-a quantitative joint certificate for the endpoint that depends on that source
-interface.
+These routes are logically distinct even though the preferred implementation
+shares their source geometry. A non-NativeData construction remains possible,
+but it must independently reproduce the complete defect, compatible repair,
+finite-jet functional, inverse/reconstruction losses, and complete-tail control
+prescribed by companion-note §8 Phases II–VI and §15.
 
 ## Module organization
 
@@ -184,7 +233,8 @@ interface.
 
 Import `NavierStokes.CounterProof.SignedMeanInterface` for the public adapter
 layer. Import `NavierStokes.CounterProof.Adapter.NativeDataObstruction` when
-working specifically on the alternative NativeData route.
+working on the direct NativeData closure or the preferred source bridge into
+the primary joint certificate.
 
 ## Proof discipline
 
@@ -206,8 +256,9 @@ When adding a source adapter:
 1. Pin the upstream declaration and record the relevant manuscript section in
    the module documentation.
 2. Preserve the source statement exactly before deriving a simplified helper.
-3. State whether the result belongs to the NativeData, reduced, full-compatible,
-   or joint route.
+3. State whether the result closes the direct NativeData, reduced, or
+   full-compatible route, instantiates the joint certificate, or advances the
+   preferred NativeData-driven joint instantiation.
 4. Keep finite-prefix factors, inverse losses, reconstructed pressure, and
    nonlinear tail terms visible until a theorem removes them.
 5. Export only stable route-level declarations through

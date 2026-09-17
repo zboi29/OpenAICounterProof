@@ -8,9 +8,13 @@ generic source theorems cannot exist on the actual geometry used by the claimed
 proof.
 
 The obstruction is exact, geometric, and independent of numerical estimates.
-It is also logically independent of the reduced/full dual branches and their
-unified `JointCokernelCertificate`. Those routes can exchange evidence, but
-neither should be presented as a prerequisite for the other.
+It is strategically central but logically nonessential to the reduced branch,
+the full-compatible branch, and their unified `JointCokernelCertificate`.
+The Version 1.1 joint certificate is the project’s primary terminal target;
+NativeData is not a premise of its abstract theory. For this pinned source,
+however, the NativeData discovery is the preferred robust bridge to both
+branches and their common witness. Direct NativeData closure and either
+completed individual branch remain independently sufficient counter-proofs.
 
 For new readers, `NativeData` is a Lean structure containing a complete native
 assembly interface—matrices, targets, masks, oscillatory data, support and cone
@@ -29,16 +33,17 @@ The deeper audit showed that three different logical layers had been conflated:
 
 Separating these layers prevents two opposite errors. First, the absence of
 `NativeData` must not be misread as a limitation of the counter-proof code—it
-is a discovered incompatibility in the claimed proof route. Second, an eventual
-physical cross identity must not be advertised as if it reconstructed every
-field and estimate contained in the impossible package.
+is a new Lean source audit obtained by following the manuscripts’ prescribed
+instantiation program, not a contradiction asserted in either manuscript.
+Second, an eventual physical cross identity must not be advertised as if it
+reconstructed every field and estimate contained in the impossible package.
 
 The new subsystem gives each layer its own module and exposes only explicit
 bridges between them.
 
 ## Conceptual map
 
-Four terms organize the argument:
+Five terms organize the argument:
 
 - **Native package:** the full `SignedMeanGain.NativeData` value required by the
   generic native mean-gain theorems.
@@ -48,24 +53,32 @@ Four terms organize the argument:
   used by the actual correction cycle instead of `NativeData` for one specific
   cross-cancellation obligation.
 - **Certificate feedback:** promotion of a concrete defect from that physical
-  replacement into a finite-jet witness used by the reduced or joint route.
+  replacement into a finite-jet witness used by the reduced branch or primary
+  joint certificate.
+- **Preferred instantiation bridge:** use of the replacement’s common source
+  defect and repair obligation to construct both branch estimates and one
+  shared finite-jet functional for the primary joint certificate.
 
-The standalone logical chain is
+The direct NativeData closure is
 
 `Claim → NativeRouteAvailable → False`.
 
-The optional feedback chain is different:
+The preferred source-instantiation chain is different:
 
-`physical replacement defect → finite-jet witness → tail-stable dual certificate`.
+`NativeData audit → forced physical replacement → common defect/repair obligation → two branch estimates → JointCokernelCertificate`.
 
-The first chain does not depend on completing the second.
+The first chain does not depend on completing the second. Conversely, the
+joint certificate does not logically depend on NativeData: a different exact
+source argument could supply the same defect, repair, functional,
+inverse/reconstruction losses, and complete-tail control.
 
 ## Discovery through dependency tracing
 
-The companion note’s dual-branch formulation requires the reduced operator to
-be differentiated from the exact source cross tensor, then requires all
-inverse, reconstruction, and weighted estimates to be propagated through the
-complete physical response. Following that dependency chain led to the two
+The companion note’s
+[§8 Phases II–VI](../../../../docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex)
+require the exact cross response, hidden-response subtraction, differentiated
+inverse and reconstruction estimates, a finite-jet dual witness, and control
+of the complete admissible tail. Following that dependency chain led to the two
 generic mean-gain theorems:
 
 - `SignedMeanGain.native_signed_mean_gain`;
@@ -105,7 +118,7 @@ The central theorem is `native_route_unavailable`:
 
 `¬ Nonempty (SignedMeanGain.NativeData ActualInitialization.geometry)`.
 
-This supports a standalone counter-proof schema. Let `Claim` be the proposition
+This supports a direct counter-proof schema. Let `Claim` be the proposition
 expressing one pinned endpoint of the claimed construction. If the audit proves
 
 `Claim → Nonempty ActualNativeData`,
@@ -126,18 +139,23 @@ interface or estimate in that chain. This terminology prevents the local fact
 `NativeRouteAvailable → False` from being confused with an unqualified claim
 about every possible proof of the final analytic theorem.
 
-This route is separate from the companion note’s two compatibility branches:
+The logical sufficiency and project priority are distinct:
 
-| Route | Decisive input | Required terminal work |
-| --- | --- | --- |
-| NativeData dependency | `Claim → NativeRouteAvailable` | Apply package nonexistence |
-| Reduced-response branch | Detected complete-response defect | Prove survival through every admissible tail and residual exposure |
-| Full-compatible branch | Target exceeds full response capacity | Exclude every admissible realizing tail |
-| Joint route | One functional supports both branch estimates | Instantiate `JointCokernelCertificate` |
+| Route | Logically sufficient? | Requires NativeData? | Project role |
+| --- | --- | --- | --- |
+| Direct NativeData closure | Yes | Uses its nonexistence | Valid focused counter-proof |
+| Reduced branch | Yes | No | Independent terminal route |
+| Full-compatible branch | Yes | No | Independent terminal route |
+| Joint certificate | Yes | No | Primary project endpoint |
+| NativeData-driven joint instantiation | Yes | Uses the discovery as evidence | Preferred implementation strategy |
 
-Thus the NativeData route needs neither a cokernel direction nor a tail budget.
-Conversely, proving a joint certificate is not necessary to validate the
-NativeData contradiction.
+Companion-note Theorem 6.1 and Proposition 6.2 give the quantitative branch
+mechanisms, Corollary 6.3 gives their same-witness synthesis, and Theorem 7.1
+connects either decisive branch to a terminal counter-proof. The §15 interface
+checklist identifies the concrete Lean obligations. Thus direct NativeData
+closure needs neither a cokernel direction nor a tail budget, while the joint
+certificate remains available to any source argument that supplies its
+hypotheses without NativeData.
 
 ## Physical-scale replacement: exact scope
 
@@ -157,14 +175,13 @@ tail. Here a finite jet means all derivatives through one fixed finite order.
 This is the theorem inserted into `CorrectionAnalyticStep.StepData.cross_tail`.
 
 That replacement is mathematically meaningful, but its scope must be
-preserved. A
-cross-tail identity is one field-level conclusion. `NativeData` packages much
-more: matrices, targets, masks, units, frequencies, phases, angular modes,
-carrier matches, cone conditions, finite coverage, and the normalized tail
-condition used by generic assembly and gain proofs. The bypass neutralizes the
-standalone obstruction only for an endpoint if the claimed proof independently
-reconstructs every native consequence needed by that endpoint on the actual
-physical scale.
+preserved. A cross-tail identity is one field-level conclusion. `NativeData`
+packages much more: matrices, targets, masks, units, frequencies, phases,
+angular modes, carrier matches, cone conditions, finite coverage, and the
+normalized tail condition used by generic assembly and gain proofs. The bypass
+neutralizes the direct obstruction only for an endpoint if the claimed proof
+independently reconstructs every native consequence needed by that endpoint on
+the actual physical scale.
 
 `PhysicalScaleReplacement.lean` therefore records both sides of the audit:
 
@@ -174,13 +191,21 @@ physical scale.
 It neither suppresses the finite prefix nor treats tail agreement as a value of
 `NativeData`.
 
-## Certificate feedback into dual and joint routes
+## Preferred bridge into the two branches and joint certificate
 
-Although logically independent, the NativeData analysis can strengthen the
-dual-branch program. If `missingWeight ≠ 0` and the requested component is
-nonzero, then the physical finite-prefix cross defect is nonzero. A concrete
-finite-jet observation may expose this scalar as one coordinate of the full
-observed branch defect.
+The NativeData analysis is the preferred source-specific way to construct the
+two compatibility branches. The forced physical replacement produces the exact finite-prefix
+defect used to seed the reduced branch and identifies the missing compatible
+repair whose lift cost or total capacity drives the full-compatible branch. Thus one
+source incompatibility organizes both targets, reduces duplicated witness
+discovery, and gives the most natural provenance for a common finite-jet
+functional. If `missingWeight ≠ 0` and the requested component is nonzero, the
+physical finite-prefix cross defect is nonzero; a concrete observation may
+expose it as one coordinate of the full observed branch defect.
+
+This organization follows companion-note §8 Phases II–VI. The underlying
+range/lift-cost, compatibility, and tail-survival interpretation comes from the
+[general research note](../../../../docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex).
 
 The dual language is simple at this level: a bounded scalar functional reads
 one component of the observed response. It is useful when it detects the
@@ -204,18 +229,22 @@ This witness can be used in either of two ways:
 - as the reduced witness in the independent-branch pipeline; or
 - as candidate data for the reduced side of a `JointCokernelCertificate`.
 
-The second promotion requires more than nonvanishing. The same coordinate
-functional must also control the full reconstructed response, agree with the
-tail-capacity functional, and retain a positive margin after the complete
-linear and nonlinear future tail. Those are genuine Phase-VI obligations and
-are not inferred from the NativeData contradiction.
+The preferred second promotion requires more than nonvanishing. The same
+coordinate functional must also control the full reconstructed response, agree
+with the tail-capacity functional, and retain a positive margin after the
+complete linear and nonlinear future tail. Those are genuine Phase VI
+obligations and are not inferred from the NativeData contradiction. They
+implement companion-note Theorem 6.1, Proposition 6.2, and Corollary 6.3.
 
-This one-way bridge is intentional:
+The bridge is therefore:
 
-`NativeData contradiction → exact bypass audit → finite-jet witness candidate`.
+`exact bypass defect and repair → common finite-jet witness candidate → two quantitative branch estimates → joint certificate`.
 
-It preserves the standalone obstruction while allowing its concrete defect to
-participate in the stronger same-witness formulation.
+It preserves direct NativeData closure while making the same-witness
+formulation the primary implementation target. A non-NativeData construction
+could still reach that target, but it would have to reproduce independently
+the complete observed defect, compatible repair target, common functional,
+inverse/reconstruction losses, and complete-tail control.
 
 ## Module map
 
@@ -224,7 +253,7 @@ participate in the stronger same-witness formulation.
 - Names the actual native package and route-availability proposition.
 - Proves `native_route_unavailable`.
 - Exposes the pointwise `tail_bound_contradiction`.
-- Defines `ClaimRequiresNativeData` and the standalone refutation rules.
+- Defines `ClaimRequiresNativeData` and the direct refutation rules.
 
 ### `PhysicalScaleReplacement.lean`
 
@@ -256,26 +285,31 @@ New work should proceed in the following order:
 2. Trace which generic native theorem or native consequence the endpoint uses.
 3. Prove `ClaimRequiresNativeData Claim`, or isolate the exact consequence that
    the physical replacement must reproduce.
-4. Apply `native_route_unavailable` for the standalone route.
+4. Apply `native_route_unavailable` for direct NativeData closure.
 5. Separately audit any proposed physical replacement through request
    differentiation, inverse loss, full reconstruction, and complete-tail
    control.
 6. If using certificate feedback, prove the scalar-to-observation coordinate
    identity before invoking `reducedDefectWitness`.
-7. Instantiate a joint certificate only after proving that this same functional
-   satisfies both the full-response and tail-capacity estimates.
+7. Prefer a joint instantiation when this same functional satisfies both the
+   full-response and tail-capacity estimates; preserve either completed branch
+   as an independent terminal counter-proof.
 
 This discipline prevents specification drift between normalized chart data,
 physical-scale data, reduced cancellation, and full primitive compatibility.
 
 ## Source correspondence and validation
 
-The formal audit is motivated by §8 Phases II and IV–VI and the §15 interface
-checklist in
+The formal audit is motivated by §8 Phases II–VI, Theorem 6.1, Proposition 6.2,
+Corollary 6.3, Theorem 7.1, and the §15 interface checklist in
 [`Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`](../../../../docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex).
-The broader interpretation as a primitive liftability/interface obstruction is
-grounded in
+The broader range/lift-cost, compatibility, tail-survival, and residual-leakage
+framework is grounded in
 [`Primitive_Liftability_Obstructions_NSE_Research_Note.tex`](../../../../docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex).
+In particular, its Proposition 8.2 and Corollary 8.3 transport a surviving
+observed mismatch to physical residual nonflatness. The exact NativeData
+incompatibility is not claimed by either manuscript; it is the Lean source
+audit produced by applying their program to the pinned definitions.
 
 Validate focused changes with:
 

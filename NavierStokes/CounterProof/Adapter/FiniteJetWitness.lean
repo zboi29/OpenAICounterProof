@@ -29,8 +29,12 @@ dual pairing; neither theorem alone constructs the required functional.
 `NativeDataObstruction.CertificateFeedback` is another source of a
 `ReducedDefectWitness`: it promotes the exact physical finite-prefix cross
 defect only after a coordinate of the complete observed defect is proved equal
-to that scalar.  The underlying NativeData package contradiction remains a
-separate counter-proof route and does not depend on this finite-jet layer.
+to that scalar.  The underlying NativeData package contradiction remains an
+independently sufficient direct closure and does not depend on this finite-jet
+layer.  NativeData is not logically required for either branch or their primary
+same-witness synthesis; for the pinned source, its forced replacement gives the
+preferred common provenance for selecting the Phase V functional used in
+Theorem 6.1, Proposition 6.2, and Corollary 6.3.
 -/
 
 noncomputable section
@@ -111,7 +115,7 @@ end EvaluatedConstraintBlocks
 
 /-- Source lower bound for the literal leading target, retained with the same
 moving flat weight.  This imports `PrimaryTargetBounds.targetAmplitude_lower_all`
-as a Phase-V witness input; a later theorem must still connect this scalar
+as a Phase V witness input; a later theorem must still connect this scalar
 amplitude to a component of the evaluated tangential target. -/
 theorem source_target_amplitude_lower
     {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}

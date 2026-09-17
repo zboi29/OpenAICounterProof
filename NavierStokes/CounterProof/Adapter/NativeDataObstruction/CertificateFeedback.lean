@@ -2,22 +2,25 @@ import NavierStokes.CounterProof.Adapter.NativeDataObstruction.PhysicalScaleRepl
 import NavierStokes.CounterProof.Adapter.FiniteJetWitness
 
 /-!
-# NativeData obstruction feedback into dual certificates
+# NativeData bridge into dual certificates
 
-The NativeData contradiction and the dual-branch program are independent
-counter-proof routes:
+The NativeData contradiction and the dual-branch program are logically
+independent counter-proof routes:
 
-* the standalone route refutes any claimed endpoint that entails existence of
+* direct NativeData closure refutes any claimed endpoint that entails existence of
   `NativeData` on the actual geometry;
 * the dual route detects a full-response mismatch or excludes a target beyond
   complete tail capacity.
 
-They can nevertheless reinforce one another.  The physical-scale bypass for
-cross cancellation has an exact finite-prefix scalar defect.  When a concrete
+The Version 1.1 `JointCokernelCertificate` is the primary terminal target, and
+NativeData is not a premise of its abstract construction.  For the pinned
+source, however, the NativeData audit is the preferred robust instantiation
+bridge.  Its forced physical-scale replacement has an exact finite-prefix
+scalar defect and identifies the missing compatible repair.  When a concrete
 finite-jet observation exposes that scalar as one coordinate of the complete
 response defect, the constructors below turn it into a
-`ReducedDefectWitness`.  That witness can supply the reduced side of the
-independent dual branches and can feed a `JointCokernelCertificate` once the
+`ReducedDefectWitness`.  That witness can supply the reduced side of the two
+independent compatibility branches and can feed a `JointCokernelCertificate` once the
 same observation functional also satisfies the full-response near-cokernel
 and complete-tail capacity hypotheses.
 
@@ -29,9 +32,12 @@ same-witness instantiation must prove.
 ## Manuscript correspondence
 
 The bridge implements companion-note §8 Phase V (finite-jet dual witness) from
-the exact Phase-II physical cross defect.  Its remaining joint hypotheses are
-precisely §8 Phase VI and the §15 "Weighted gain", "Iteration ledger", and
-"Physical residual" checks.
+the exact Phase II physical cross defect, after the Phases III–IV full-response
+and differentiated reconstruction analysis.  Its remaining joint hypotheses
+are precisely §8 Phase VI and the §15 "Weighted gain", "Iteration ledger", and
+"Physical residual" checks.  This is the first formal projection toward the
+same-witness synthesis in Corollary 6.3; Theorem 6.1 and Proposition 6.2 supply
+the branch obligations, and Theorem 7.1 supplies the terminal interpretation.
 -/
 
 noncomputable section
@@ -70,7 +76,9 @@ theorem defect_ne_zero
 
 /-- A finite-jet coordinate identifying the complete observed defect with the
 physical cross defect yields a rigorous reduced-branch witness.  This is the
-interface through which NativeData analysis can feed the dual or joint route. -/
+first formal projection from the preferred NativeData source bridge toward the
+two branches and primary joint certificate; full-response and complete-tail capacity
+obligations remain to be proved for the same coordinate. -/
 def reducedDefectWitness
     {B N0 : ℕ} {c : CorrectionState.Context ActualPoint}
     {u : CorrectionState.State ActualPoint} {n : ℕ}

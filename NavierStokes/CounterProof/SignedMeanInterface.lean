@@ -23,42 +23,57 @@ reproving them or introducing a surrogate covariance model.
 The exports below retain direct access to upstream identities.  They include
 one concrete obstruction already established at the source interface: the
 complete normalized `NativeData` package cannot exist on the actual geometry.
-The compatibility/cokernel route remains separate and must still identify the
-active and hidden tangent spaces, construct the observation and constraint
-maps, and discharge quantitative tail or residual hypotheses.
+That exact incompatibility is a new Lean source audit derived by following the
+manuscript instantiation program; it is not asserted in either manuscript.
 
-The implementation follows §3.2--§7 and Lean-instantiation Phases I--VII of
+The implementation follows §3.2–§7 and Lean-instantiation Phases I–VII of
 `docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`.
 In particular, source-level lower bounds exported from `FiniteJetWitness` are
 inputs to—not substitutes for—the finite-jet dual certificate and actual-tail
-coverage required by Theorem 6.1 and Corollary 6.3.
+coverage required by Theorem 6.1, Proposition 6.2, and Corollary 6.3.  Either
+branch can close independently under Theorem 7.1, while Corollary 6.3's
+same-witness `JointCokernelCertificate` is the primary project endpoint.  The
+§15 interface checklist supplies the concrete Lean audit obligations.
 
-`NativeDataObstruction` is a new alternative counter-proof route, not an
-obstacle to this subsystem.  It proves that the generic normalized-tail
+`NativeDataObstruction` proves that the generic normalized-tail
 `SignedMeanGain.NativeData` package is uninhabited on the actual geometry,
 including after label-only reindexing.  Any claimed endpoint shown to require
-that package is therefore false without invoking either dual branch.  The
-actual cycle supplies only a narrower partition-factor cross response with an
-explicit finite-prefix defect and exact eventual tail.  That defect can feed
-the reduced or joint certificate route after a concrete finite-jet coordinate
-identity is proved, but the physical cross identity does not recreate the
-missing native package.
+that package is therefore false without invoking either dual branch.  This
+direct closure, the reduced branch, and the full-compatible branch are each
+independently usable counter-proofs.
 
-The `CounterProof/Adapter/` subsystem begins the source integration in this
-order:
+NativeData is not logically necessary to instantiate either branch or the
+primary joint certificate.  It is nevertheless the preferred robust
+source-instantiation strategy for the pinned source.  The actual cycle’s
+narrower partition-factor response exposes an exact finite-prefix defect and
+the compatible repair it omits, giving both branches and a candidate common
+finite-jet functional one structural provenance.  A non-NativeData source
+argument could reach the same endpoint, but it would need to supply independently
+the complete observed defect, repair target, common functional,
+inverse/reconstruction losses, and complete-tail control prescribed by §8
+Phases II–VI.  The physical cross identity alone recreates none of the missing
+native package or quantitative joint hypotheses.
 
-1. establish the standalone NativeData dependency obstruction and expose the
-   narrower physical-scale replacement used upstream;
+For a surviving reduced mismatch, physical residual exposure follows the
+range/lift-cost and residual-leakage framework of
+`docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex`, especially
+Proposition 8.2 and Corollary 8.3.
+
+The preferred `CounterProof/Adapter/` source integration is:
+
+1. establish direct NativeData closure where an endpoint entails the package,
+   and expose the forced physical-scale replacement used upstream;
 2. anchor the exact reconstructed state and covariance response;
 3. identify the native two-coordinate reduced cross response;
-4. retain the covariance and physical cross defects explicitly;
+4. use the exact missing component as a common defect/repair obligation;
 5. expose the actual fixed physical-jet loss and finite residual rates;
 6. differentiate the request-to-reconstruction path and propagate its inverse
    losses through the complete future tail;
-7. encode independent finite-jet witnesses for the two obstruction branches;
-   and
-8. expose a surviving mismatch in the physical residual while separately
-   excluding a full-compatible target beyond tail capacity.
+7. encode independently usable finite-jet witnesses for both branches and
+   prefer one common functional; and
+8. instantiate the primary `JointCokernelCertificate` when that functional
+   proves both estimates, while preserving either completed branch as a valid
+   terminal counter-proof.
 -/
 
 namespace NavierStokes.CounterProof.SignedMeanInterface
