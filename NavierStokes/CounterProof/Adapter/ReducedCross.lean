@@ -1,4 +1,5 @@
 import NavierStokes.CounterProof.Adapter.ReconstructedResponse
+import NavierStokes.CounterProof.Adapter.NativeDataObstruction.PhysicalScaleReplacement
 import NavierStokes.CrossBasedMeanComposition
 
 /-!
@@ -9,6 +10,25 @@ literal cross defect retained by the source.  The main helper below turns the
 upstream cancellation identity into an exact equivalence: reduced cancellation
 is full cancellation at a point exactly when the radial divergence of that
 defect vanishes there.
+
+## Manuscript correspondence
+
+`native_reduced_cross_realizes_request` implements Lean-instantiation Phase II
+of
+`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`
+from the source theorem
+`SignedWaveUpdate.native_physical_cross`.  The defect criteria implement the
+"Cross cancellation" row of the §15 interface checklist and keep the reduced
+operator distinct from the full operator in Proposition 5.2 (`prop:defect`).
+These cross-defect helpers do not by themselves establish the terminal
+compatibility obstruction: `ActualSignedMeanBinding.family_defects_all_exponents`
+proves that the literal defects have every weighted exponent.  The reduced
+route must therefore use the complete remainder/pressure response exposed by
+`FullCompatibility` and the complete tail.  This limitation does not weaken
+the separate `NativeDataObstruction`: the generic global native interface is
+unavailable, and any claimed endpoint requiring that package is independently
+refuted.  The physical replacement's finite-prefix defect may additionally
+feed the reduced or joint route through a proved observation-coordinate map.
 -/
 
 noncomputable section
@@ -111,15 +131,15 @@ theorem tangential_cross_cancellation_iff_defects_zero
     (cross_cancellation_iff_divergence_defect_zero
       G 1 (Or.inr rfl) hfz hsz hXz hDz n hx)
 
-/- TODO(inverse-loss propagation): Implement the request derivative and its
-weighted inverse bounds from
-`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`,
-section "Lean instantiation and formalization strategy," Phase IV, and the
-"Flat edge" checklist row.  The source chain must retain
-`SignedMeanGain.signed_tensor_bounds`,
-`SignedCovariance.increment_eq_inverse`, and
-`SmoothCovariance.contDiffOn_inverse_solution`, while discharging the explicit
-flat-annulus warning in `NavierStokes/CycleContinuationInvariant.lean` before
-constructing a source instance of `relativeResponse` in the physical jet norm. -/
+/- TODO(source inverse-loss propagation; companion note §8, Phase IV, and the
+§15 rows "Weighted gain" and "Flat edge"):
+`RequestDifferential` retains the literal `H⁻¹.mulVec` solve and
+`ConditionedResponse` provides the operator-loss ledger.  Derive the
+stage-uniform inverse, curl, `pressureChange`, averaging, and physical-jet
+bounds from `PrimaryTargetBounds.exists_actual_bounds`,
+`CycleContinuationInvariant.lean`, `SignedMeanGain.signed_tensor_bounds`, and
+the physical-scale `ActualSignedMeanBinding` cycle.  Retain the
+`partitionFactor` when working before its explicit tail threshold.  The
+output-class gap alone is not the required bound on `Red⁻¹ ∘ Hidden`. -/
 
 end NavierStokes.CounterProof.Adapter

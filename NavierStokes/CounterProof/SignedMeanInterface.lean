@@ -1,8 +1,15 @@
 import NavierStokes.CounterProof.Certificates.TerminalCertificate
 import NavierStokes.CounterProof.Adapter.ExactCovariance
 import NavierStokes.CounterProof.Adapter.ReconstructedResponse
+import NavierStokes.CounterProof.Adapter.NativeDataObstruction
 import NavierStokes.CounterProof.Adapter.ReducedCross
 import NavierStokes.CounterProof.Adapter.ResidualLedger
+import NavierStokes.CounterProof.Adapter.RequestDifferential
+import NavierStokes.CounterProof.Adapter.FullCompatibility
+import NavierStokes.CounterProof.Adapter.ConditionedResponse
+import NavierStokes.CounterProof.Adapter.FiniteJetWitness
+import NavierStokes.CounterProof.Adapter.DiagonalTail
+import NavierStokes.CounterProof.Adapter.PhysicalResidualExposure
 
 /-!
 # Signed-mean source interface
@@ -13,26 +20,75 @@ import completed proofs for the literal signed update, cross defect, iteration
 ledger, and physical residual machinery from `NavierStokes/` rather than
 reproving them or introducing a surrogate covariance model.
 
-The exports below retain direct access to upstream identities.  The concluding
-theorems derive exact consequences through the adapters, but do not assert that
-a concrete compatibility obstruction already exists.  Such an instance must
-still identify the active and hidden tangent spaces, construct the observation
-and constraint maps, and discharge quantitative tail or residual hypotheses.
+The exports below retain direct access to upstream identities.  They include
+one concrete obstruction already established at the source interface: the
+complete normalized `NativeData` package cannot exist on the actual geometry.
+The compatibility/cokernel route remains separate and must still identify the
+active and hidden tangent spaces, construct the observation and constraint
+maps, and discharge quantitative tail or residual hypotheses.
+
+The implementation follows §3.2--§7 and Lean-instantiation Phases I--VII of
+`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`.
+In particular, source-level lower bounds exported from `FiniteJetWitness` are
+inputs to—not substitutes for—the finite-jet dual certificate and actual-tail
+coverage required by Theorem 6.1 and Corollary 6.3.
+
+`NativeDataObstruction` is a new alternative counter-proof route, not an
+obstacle to this subsystem.  It proves that the generic normalized-tail
+`SignedMeanGain.NativeData` package is uninhabited on the actual geometry,
+including after label-only reindexing.  Any claimed endpoint shown to require
+that package is therefore false without invoking either dual branch.  The
+actual cycle supplies only a narrower partition-factor cross response with an
+explicit finite-prefix defect and exact eventual tail.  That defect can feed
+the reduced or joint certificate route after a concrete finite-jet coordinate
+identity is proved, but the physical cross identity does not recreate the
+missing native package.
 
 The `CounterProof/Adapter/` subsystem begins the source integration in this
 order:
 
-1. anchor the exact reconstructed state and covariance response;
-2. identify the native two-coordinate reduced cross response;
-3. retain the covariance and physical cross defects explicitly;
-4. expose the actual fixed physical-jet loss and finite residual rates;
-5. next differentiate the request-to-reconstruction path and propagate its
-   inverse losses through the complete future tail;
-6. instantiate a dual or relative-contraction certificate; and
-7. expose a surviving mismatch in the physical residual.
+1. establish the standalone NativeData dependency obstruction and expose the
+   narrower physical-scale replacement used upstream;
+2. anchor the exact reconstructed state and covariance response;
+3. identify the native two-coordinate reduced cross response;
+4. retain the covariance and physical cross defects explicitly;
+5. expose the actual fixed physical-jet loss and finite residual rates;
+6. differentiate the request-to-reconstruction path and propagate its inverse
+   losses through the complete future tail;
+7. encode independent finite-jet witnesses for the two obstruction branches;
+   and
+8. expose a surviving mismatch in the physical residual while separately
+   excluding a full-compatible target beyond tail capacity.
 -/
 
 namespace NavierStokes.CounterProof.SignedMeanInterface
+
+export Adapter
+  (remainderLinearPart remainderQuadraticPart
+    signedRemainder_eq_linear_add_quadratic signedRemainder_scaled_exact
+    hasDerivAt_signedRemainder_component_zero signedIncrementCLM
+    hasFDerivAt_signedIncrement derivative_split derivative_hidden_eq_remainder
+    TangentialObservation averagedTangentialObservation reducedTangentialTarget
+    hiddenTangentialRemainder source_averaged_response_eq_reduced_add_hidden
+    source_averaged_response_sub_reduced_eq_hidden
+    source_averaged_response_ne_reduced_of_hidden_ne_zero
+    compatibilityBlocks compatibility_hidden_exact compatibility_full_apply
+    reduced_branch_defect_eq_reconstructed ResponseLossLedger
+    EvaluatedSignedJetState ConstraintKind EvaluatedConstraintBlocks
+    source_target_amplitude_lower source_pressure_root_lower
+    ReducedDefectWitness FullCapacityWitness IndependentFiniteJetWitnesses
+    tailCapacityOfSeparateBounds complete_tail_fraction_bound
+    IndependentBranchCertificates independent_counterproof_branches)
+
+export Adapter.NativeDataObstruction
+  (ActualNativeData NativeRouteAvailable native_route_unavailable
+    tail_bound_contradiction ClaimRequiresNativeData
+    refute_claim_of_native_data_requirement
+    actualCrossComponent actualRequestedComponent actualMissingComponent actualCrossDefect
+    actual_cross_eq_partition_factor actual_cross_defect_eq_neg_missing
+    actual_cross_cancels_iff_missing_eq_zero actual_cross_ne_request_of_missing
+    actual_cross_defect_ne_zero_of_missing actual_cross_tail_exact
+    actual_cross_tail_jets FinitePrefixObstruction)
 
 /-- Upstream source revision audited by the downstream companion note.  This
 constant is documentation metadata, not a proof assumption. -/
@@ -47,14 +103,19 @@ export NavierStokes.SignedMeanGain
 export NavierStokes.CrossBasedMeanComposition
   (cross_cancels_with_defect signed_mean_gain_of_cross_defects)
 
+export NavierStokes.ActualSignedMeanBinding
+  (no_legacy_nativeData family_defects_all_exponents)
+
 open NavierStokes.SignedMeanGain
 
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 variable {s : NavierStokes.WeightedClasses.StripData D} {P : ι → ℕ → D → ℝ}
 variable {α δ β η : ℝ}
 
-/-- A nonzero retained source remainder forces the literal covariance increment
-to differ from the reduced primary–tangent cross tensor. -/
+/-- Algebraic projection of companion-note Theorem 4.1 (`thm:covsplit`): a
+nonzero retained source remainder forces the literal covariance increment to
+differ from the reduced primary–tangent cross tensor.  This is a source-audit
+helper, not a terminal obstruction without a tail-stable physical witness. -/
 theorem retained_remainder_forces_covariance_mismatch
     (f : NavierStokes.LabelSumBounds.SignedFamily s P α δ β η) (a : Assembly f)
     (hremainder : remainderTensor f a ≠ 0) :
@@ -63,8 +124,10 @@ theorem retained_remainder_forces_covariance_mismatch
   exact hremainder
     ((Adapter.incrementTensor_eq_crossTensor_iff_remainderTensor_eq_zero f a).mp heq)
 
-/-- On an assembled source stage, a nonzero retained remainder rules out
-identifying the actual recomputed covariance with a reduced cross-only update. -/
+/-- Source-state projection of companion-note Theorem 4.1: on an assembled
+stage, a nonzero retained remainder rules out identifying actual recomputed
+covariance with a cross-only update.  Proposition 4.2 and the tail estimates
+are still required to turn it into an observed counter-proof certificate. -/
 theorem retained_remainder_forces_waveStage_covariance_mismatch
     {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
     {U : Set (NavierStokes.PressureStream.Lift S)}
@@ -93,9 +156,10 @@ theorem retained_remainder_forces_waveStage_covariance_mismatch
   apply hremainder
   simpa only [add_eq_left] using hcross
 
-/-- Pressure reconstruction is an indispensable part of the axial response:
-if its axial derivative is nonzero at a source point, the actual axial change
-cannot equal the covariance-only response there. -/
+/-- Concrete consequence of companion-note Proposition 4.2
+(`prop:fullresponse`): pressure reconstruction is indispensable in the axial
+response.  If its axial derivative is nonzero at a source point, the actual
+axial change cannot equal the covariance-only response there. -/
 theorem pressure_feedback_forces_axial_response_mismatch
     {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
     {U : Set (NavierStokes.PressureStream.Lift S)}

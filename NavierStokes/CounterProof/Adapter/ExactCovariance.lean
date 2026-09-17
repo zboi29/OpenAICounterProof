@@ -7,6 +7,16 @@ This module anchors the counter-proof program to the literal covariance objects
 assembled by `SignedMeanGain`.  The imported split retains the complete signed
 remainder; the helper identities expose either summand by subtraction without
 introducing a surrogate covariance system.
+
+## Manuscript correspondence
+
+This is the literal Lean bridge for §3.3 "Exact signed covariance data" and
+Theorem 4.1 (`thm:covsplit`) of
+`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`.
+The source theorem is `SignedMeanGain.incrementTensor_split`, listed in the
+note's source-interface map.  The subtraction and zero-remainder equivalences
+below are Lean normalization helpers used by `ReconstructedResponse`; they add
+no analytic hypothesis and are not separate claims of the manuscript.
 -/
 
 noncomputable section
@@ -26,24 +36,26 @@ theorem exact_covariance_split
     incrementTensor f a = crossTensor f a + remainderTensor f a :=
   incrementTensor_split f a
 
-/-- The retained remainder can be recovered from the literal increment and
-cross tensor, so later adapters cannot silently redefine it. -/
+/-- Helper normal form for `exact_covariance_split`: the retained remainder
+can be recovered from the literal increment and cross tensor, so downstream
+adapters cannot silently redefine it. -/
 theorem remainderTensor_eq_increment_sub_cross
     (f : LabelSumBounds.SignedFamily s P α δ β η) (a : Assembly f) :
     remainderTensor f a = incrementTensor f a - crossTensor f a := by
   rw [exact_covariance_split]
   abel
 
-/-- The reduced cross tensor is likewise determined by the exact update and
-the retained remainder. -/
+/-- Companion helper to `remainderTensor_eq_increment_sub_cross`; it isolates
+the reduced summand when expanding the reconstructed response. -/
 theorem crossTensor_eq_increment_sub_remainder
     (f : LabelSumBounds.SignedFamily s P α δ β η) (a : Assembly f) :
     crossTensor f a = incrementTensor f a - remainderTensor f a := by
   rw [exact_covariance_split]
   abel
 
-/-- Exact identification of the reduced cross tensor with the full covariance
-increment is equivalent to vanishing of the source's retained remainder. -/
+/-- Algebraic helper for Theorem 4.1: exact identification of the reduced cross
+tensor with the full covariance increment is equivalent to vanishing of the
+source's retained remainder. -/
 theorem incrementTensor_eq_crossTensor_iff_remainderTensor_eq_zero
     (f : LabelSumBounds.SignedFamily s P α δ β η) (a : Assembly f) :
     incrementTensor f a = crossTensor f a ↔ remainderTensor f a = 0 := by

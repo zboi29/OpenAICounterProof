@@ -11,6 +11,19 @@ source invariant and physical realizations at every cycle, any fixed physical
 jet can be placed in any prescribed finite algebraic rate by taking a late
 enough cycle.  It deliberately keeps the selected cycle explicit; it is not a
 claim about a completed infinite tail.
+
+## Manuscript correspondence
+
+The finite-cycle theorems import the fixed-derivative-loss mechanism cited in
+§1 and §6.1 of
+`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`
+(OpenAI manuscript Lemmas 5.4 and 9.8).  They are preparatory inputs to Lean-instantiation Phase VI, not the
+complete Γ + N tail theorem.  The simultaneous finite-jet result is a Lean
+helper needed to choose one stage for all orders `m ≤ M`; it is not a separately
+numbered statement in either manuscript.  Terminal use is governed by
+Proposition 6.2 (`prop:residual`) and by Proposition 8.2
+(`prop:residualleakage`) / Corollary 8.3 (`cor:jetleakage`) of
+`docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex`.
 -/
 
 noncomputable section
@@ -95,16 +108,14 @@ theorem physicalLoss_eq_actualLedgerLoss (m : ℕ) :
       (2 * CorrectionInitialization.ActualPrimary.h) m :=
   fixedLoss_eq_ledger m
 
-/- TODO(complete-tail control): Implement the admissible linear capacity and
-nonlinear remainder from
-`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`,
-sections "Admissible stage and tail budgets" and Lean-instantiation Phases
-VI–VII.  The concrete proof must sum the actual increments produced by
-`CorrectionAnalyticStep.iterate_results` using
-the stage gain and fixed losses in `ActualIterationLedger.lean`, prove coverage
-of the realized future tail, and terminate at
-`ActualCycleResidualBounds.finite_residual_rates` /
-`PhysicalResidualJetBounds.ResidualChartData.residual_jetRate` rather than at a
-one-stage bound. -/
+/- TODO(source complete-tail control; companion note §8, Phase VI, and §15
+"Iteration ledger"; general note §10, Steps 4--6):
+`DiagonalTail` supplies the complete linear/nonlinear capacity construction
+and coverage transport, while `PhysicalResidualExposure` closes both branches
+from concrete bounds.  Instantiate the actual `iterate_results` increments,
+`ActualIterationLedger.gain`, fixed `residualLoss`, nonlinear recomputation,
+and selected schedule from `MixedDiagonalResidual.lean` /
+`JointResidualLimits.lean`.  The result must cover the one realized diagonal
+tail, not a fixed-`q` formal series. -/
 
 end NavierStokes.CounterProof.Adapter

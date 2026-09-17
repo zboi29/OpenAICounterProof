@@ -8,6 +8,19 @@ reconstructs pressure before evaluating the axial residual.  This module
 packages those imported identities as one proof object on the common slow
 domain.  In particular, pressure feedback is a field of the package rather
 than an optional later correction.
+
+## Manuscript correspondence
+
+The fields mirror §3.2 "Evaluated finite-jet constrained state" and §3.4
+"Physical tangential observation" of
+`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`.
+Their joint mathematical target is Proposition 4.2 (`prop:fullresponse`), especially
+the radial-source chain `R₀(ΔW) → pressureChange → dz pressureChange`.
+The constructor imports the exact source results `waveStage_mean`,
+`waveStage_covariance`, `waveStage_theta_change`, `waveStage_gr_change`, and
+`waveStage_axial_change`, as required by Lean-instantiation Phases I and III.
+`covariance_eq_cross_add_remainder` is a composition helper connecting those
+identities to Theorem 4.1; it is not an additional manuscript assumption.
 -/
 
 noncomputable section
@@ -107,15 +120,20 @@ theorem covariance_eq_cross_add_remainder
 
 end ReconstructedWaveStageResponse
 
-/- TODO(request differentiation): Implement
-`docs/Joseph_2026_Primitive_Compatibility_Counterproof_Signed_Mean_Update_Companion_Note_v1_1.tex`,
-section "Lean instantiation and formalization strategy," Phases I–III.  Differentiate the
-actual request-to-wave-to-reconstruction path built from
-`SignedMeanGain.incrementTensor_split`, `SignedMeanGain.waveStage_gr_change`,
-`SignedMeanGain.waveStage_axial_change`, and
-`SignedMeanGain.native_physical_cross`; then instantiate the continuous-linear
-maps `fullCompatibility`, `reducedResponse`, and
-`hiddenResponse := fullCompatibility - reducedResponse`
-without replacing the source state or pressure reconstruction. -/
+/- TODO(source request differentiation; companion note §8, Phase I, lines
+"differentiate the actual reconstruction path" and the §15 interface-checklist
+rows "Hidden reconstruction" and "Radial source / pressure"):
+`RequestDifferential` bundles the literal inverse solve and
+`FullCompatibility` supplies the exact block algebra.  Differentiate the
+complete request-to-`actualSignedBlock`-to-`waveStage`-to-`pressureChange` path
+on the physical-scale data in `ActualSignedMeanBinding.lean`, then construct
+its concrete `CompatibilityBlocks`.  Do not use either generic theorem that
+requires `SignedMeanGain.NativeData`: `NativeDataObstruction` proves that the
+required package cannot exist on `ActualInitialization.geometry`.  This is a
+standalone dependency obstruction to any claimed endpoint requiring that
+package.  For the separate compatibility route, use the precisely scoped
+partition-factor/tail replacement inserted into
+`CorrectionAnalyticStep.StepData.cross_tail`, then prove all remaining
+reconstruction and mean-gain obligations directly. -/
 
 end NavierStokes.CounterProof.Adapter
