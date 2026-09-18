@@ -64,21 +64,30 @@ structure FinitePrefixObstruction
 
 namespace FinitePrefixObstruction
 
-/-- The finite-prefix data exposes a nonzero scalar cross defect. -/
+/-- The finite-prefix data exposes a nonzero scalar cross defect with its exact
+factorized absolute margin.  This is the quantitative datum needed for tail
+comparison, not merely a proposition asserting nonvanishing. -/
 theorem defect_ne_zero
     {B N0 : ℕ} {c : CorrectionState.Context ActualPoint}
     {u : CorrectionState.State ActualPoint} {n : ℕ}
     {x : ActualPoint} {i : Fin 2}
     (W : FinitePrefixObstruction B N0 c u n x i) :
-    actualCrossDefect B N0 c u n x i ≠ 0 :=
+    actualCrossDefect B N0 c u n x i ≠ 0 ∧
+      0 < |actualCrossDefect B N0 c u n x i| ∧
+      |actualCrossDefect B N0 c u n x i| =
+        |missingWeight (choice B N0).prepared.N (physicalScale n x)| *
+          |actualRequestedComponent c u n x i| :=
   actual_cross_defect_ne_zero_of_missing B N0 c u n W.point_mem i
     W.missing_weight_ne_zero W.request_ne_zero
 
 /-- A finite-jet coordinate identifying the complete observed defect with the
-physical cross defect yields a rigorous reduced-branch witness.  This is the
-first formal projection from the preferred NativeData source bridge toward the
-two branches and primary joint certificate; full-response and complete-tail capacity
-obligations remain to be proved for the same coordinate. -/
+physical cross defect yields a rigorous reduced-branch witness.  Its magnitude
+is stored in the source-factorized form `|missingWeight| * |request|`, so later
+tail estimates can compare against the two physical inputs directly.  This is
+the first formal projection from the preferred NativeData source bridge toward
+the two branches and primary joint certificate; full-response and
+complete-tail capacity obligations remain to be proved for the same
+coordinate. -/
 def reducedDefectWitness
     {B N0 : ℕ} {c : CorrectionState.Context ActualPoint}
     {u : CorrectionState.State ActualPoint} {n : ℕ}
@@ -88,12 +97,17 @@ def reducedDefectWitness
     (hcoordinate : coordinate defect = actualCrossDefect B N0 c u n x i) :
     ReducedDefectWitness defect where
   functional := coordinate
-  magnitude := |actualCrossDefect B N0 c u n x i|
-  magnitude_pos := abs_pos.mpr W.defect_ne_zero
-  detects := by rw [hcoordinate]
+  magnitude :=
+    |missingWeight (choice B N0).prepared.N (physicalScale n x)| *
+      |actualRequestedComponent c u n x i|
+  magnitude_pos := mul_pos (abs_pos.mpr W.missing_weight_ne_zero)
+    (abs_pos.mpr W.request_ne_zero)
+  detects := by
+    rw [hcoordinate, ← W.defect_ne_zero.2.2]
 
-/-- The witness exported to the certificate layer detects the exact absolute
-finite-prefix margin, rather than merely an unspecified positive constant. -/
+/-- The witness exported to the certificate layer records all three equivalent
+views of the exact finite-prefix margin: absolute defect, factorized physical
+source, and exact functional detection. -/
 theorem reducedDefectWitness_magnitude
     {B N0 : ℕ} {c : CorrectionState.Context ActualPoint}
     {u : CorrectionState.State ActualPoint} {n : ℕ}
@@ -102,8 +116,14 @@ theorem reducedDefectWitness_magnitude
     (defect : Obs) (coordinate : Obs →L[ℝ] ℝ)
     (hcoordinate : coordinate defect = actualCrossDefect B N0 c u n x i) :
     (W.reducedDefectWitness defect coordinate hcoordinate).magnitude =
-      |actualCrossDefect B N0 c u n x i| :=
-  rfl
+        |actualCrossDefect B N0 c u n x i| ∧
+      (W.reducedDefectWitness defect coordinate hcoordinate).magnitude =
+        |missingWeight (choice B N0).prepared.N (physicalScale n x)| *
+          |actualRequestedComponent c u n x i| ∧
+      |(W.reducedDefectWitness defect coordinate hcoordinate).functional defect| =
+        (W.reducedDefectWitness defect coordinate hcoordinate).magnitude := by
+  have hmargin := W.defect_ne_zero.2.2
+  exact ⟨hmargin.symm, rfl, by simpa [reducedDefectWitness, hcoordinate] using hmargin⟩
 
 end FinitePrefixObstruction
 

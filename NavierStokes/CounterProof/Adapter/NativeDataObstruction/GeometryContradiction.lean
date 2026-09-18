@@ -52,42 +52,72 @@ abbrev ActualNativeData :=
 input package, not merely existence of one cross-cancellation identity. -/
 def NativeRouteAvailable : Prop := Nonempty ActualNativeData
 
-/-- A concrete point witnesses that the actual strip lies on the forbidden
-side of the normalized half-scale bound. -/
+/-- A concrete point witnesses the obstruction at the exact normalized scale
+one.  The strict half-scale inequality is retained alongside that exact value
+so downstream arguments need not recover either fact from an opaque
+nonemptiness witness. -/
 theorem exists_actual_strip_point_above_half :
     ∃ x : ActualSignedMeanBinding.Point,
       x ∈ ActualInitialization.geometry.strip.domain ∧
-        (1 / 2 : ℝ) < SimilarityCoordinates.coordinateQ
-          ActualInitialization.geometry.coord x.2.1 := by
-  obtain ⟨x, hx⟩ := ActualSignedMeanBinding.actual_strip_nonempty
-  exact ⟨x, hx, (ActualInitialization.geometry.strip_subset hx).2.1⟩
+        SimilarityCoordinates.coordinateQ
+            ActualInitialization.geometry.coord x.2.1 = 1 ∧
+          (1 / 2 : ℝ) < SimilarityCoordinates.coordinateQ
+            ActualInitialization.geometry.coord x.2.1 := by
+  let G := ActualInitialization.geometry
+  let x : ActualSignedMeanBinding.Point :=
+    ((G.patch.a + G.patch.b) / 2, ((1, 0), (0, 0)))
+  have hcoord : SimilarityCoordinates.coordinateQ G.coord x.2.1 = 1 := by
+    change SimilarityCoordinates.coordinateQ (2 * CorrectionInitialization.ActualPrimary.h)
+      (1, 0) = 1
+    exact ActualSignedMeanBinding.normalized_axis_scale
+  have hx : x ∈ G.strip.domain := by
+    apply (LocalSignedRequest.movingStrip_domain G.region G.patch.a G.patch.b
+      G.leftWeight G.rightWeight G.patch.a_pos G.left_pos G.right_pos
+      G.epsilon G.slow G.epsilon_pos G.epsilon_le_one G.slow_ge_one _).mpr
+    constructor
+    · change 0 < (1 : ℝ) ∧
+        SimilarityCoordinates.coordinateQ G.coord (1, 0) ∈ Set.Ioo (1 / 2 : ℝ) 2
+      rw [show SimilarityCoordinates.coordinateQ G.coord (1, 0) = 1 from hcoord]
+      norm_num
+    · change ((G.patch.a + G.patch.b) / 2) /
+        Real.sqrt (SimilarityCoordinates.coordinateQ G.coord (1, 0)) ∈
+          Set.Ioo G.patch.a G.patch.b
+      rw [show SimilarityCoordinates.coordinateQ G.coord (1, 0) = 1 from hcoord,
+        Real.sqrt_one, div_one]
+      constructor <;> linarith [G.patch.a_lt_b]
+  exact ⟨x, hx, hcoord, hcoord.symm ▸ (by norm_num)⟩
 
-/-- Every proposed actual NativeData package forces every strip point back to
-the incompatible normalized half scale. -/
+/-- Every proposed actual NativeData package forces every strip point through
+the complete incompatible scale chain: first below its selected chart scale,
+then below the normalized half scale. -/
 theorem native_tail_bound_le_half (data : ActualNativeData) (n : ℕ)
     {x : ActualSignedMeanBinding.Point}
     (hx : x ∈ ActualInitialization.geometry.strip.domain) :
     SimilarityCoordinates.coordinateQ ActualInitialization.geometry.coord x.2.1 ≤
-      (1 / 2 : ℝ) :=
-  (data.tail_bound n x hx).trans
-    (ActualSignedMeanBinding.Q_le_half (data.index_pos n))
+        ChartScales.Q (data.index n) ∧
+      ChartScales.Q (data.index n) ≤ (1 / 2 : ℝ) ∧
+      SimilarityCoordinates.coordinateQ ActualInitialization.geometry.coord x.2.1 ≤
+        (1 / 2 : ℝ) := by
+  have htail := data.tail_bound n x hx
+  have hhalf := ActualSignedMeanBinding.Q_le_half (data.index_pos n)
+  exact ⟨htail, hhalf, htail.trans hhalf⟩
 
 /-- Pointwise core of the obstruction.  The contradiction already occurs in
 `NativeData.tail_bound`; none of the later cone, assembly, or gain fields can
 repair it. -/
 theorem tail_bound_contradiction
-    (data : ActualNativeData) {x : ActualSignedMeanBinding.Point}
+    (data : ActualNativeData) (n : ℕ) {x : ActualSignedMeanBinding.Point}
     (hx : x ∈ ActualInitialization.geometry.strip.domain) : False := by
   have hlarge : (1 / 2 : ℝ) < SimilarityCoordinates.coordinateQ
       ActualInitialization.geometry.coord x.2.1 :=
     (ActualInitialization.geometry.strip_subset hx).2.1
-  exact (not_lt_of_ge (native_tail_bound_le_half data 0 hx)) hlarge
+  exact (not_lt_of_ge (native_tail_bound_le_half data n hx).2.2) hlarge
 
 /-- Direct eliminator for the impossible source package, with the actual strip
 witness and the conflicting half-scale bounds made explicit in this module. -/
 theorem actual_native_data_impossible (data : ActualNativeData) : False := by
-  obtain ⟨x, hx, hlarge⟩ := exists_actual_strip_point_above_half
-  exact (not_lt_of_ge (native_tail_bound_le_half data 0 hx)) hlarge
+  obtain ⟨x, hx, -, -⟩ := exists_actual_strip_point_above_half
+  exact tail_bound_contradiction data 0 hx
 
 /-- Type-level form of the completed obstruction: the actual NativeData package
 is empty. -/

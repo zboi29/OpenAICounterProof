@@ -97,86 +97,125 @@ theorem actual_cross_eq_partition_factor
       partitionFactor B N0 n x * actualRequestedComponent c u n x i := by
   exact ActualSignedMeanBinding.requested_cross_factor B N0 c u n hx i
 
-/-- Exact arbitrary-band defect of the physical replacement. -/
+/-- Exact arbitrary-band defect of the physical replacement, together with
+its factorized absolute size.  The second equality is the quantitative margin
+consumed by finite-jet certificates. -/
 theorem actual_cross_defect_eq_neg_missing
     (B N0 : ℕ) (c : CorrectionState.Context ActualPoint)
     (u : CorrectionState.State ActualPoint) (n : ℕ) {x : ActualPoint}
     (hx : x ∈ ActualInitialization.geometry.strip.domain) (i : Fin 2) :
     actualCrossDefect B N0 c u n x i =
+        -actualMissingComponent B N0 c u n x i ∧
+      |actualCrossDefect B N0 c u n x i| =
+        |missingWeight (choice B N0).prepared.N (physicalScale n x)| *
+          |actualRequestedComponent c u n x i| := by
+  have hexact : actualCrossDefect B N0 c u n x i =
       -actualMissingComponent B N0 c u n x i := by
-  simpa [actualCrossDefect, actualCrossComponent, actualRequestedComponent,
-    actualMissingComponent, neg_mul] using
-    (ActualSignedMeanBinding.requested_cross_defect B N0 c u n hx i)
+    simpa [actualCrossDefect, actualCrossComponent, actualRequestedComponent,
+      actualMissingComponent, neg_mul] using
+      (ActualSignedMeanBinding.requested_cross_defect B N0 c u n hx i)
+  refine ⟨hexact, ?_⟩
+  rw [hexact, abs_neg, actualMissingComponent, abs_mul]
 
-/-- Exact cancellation criterion for the physical replacement: cancellation
-at a band is equivalent to vanishing of its omitted component. -/
+/-- Exact cancellation criterion for the physical replacement.  Cancellation,
+zero scalar defect, and vanishing of the omitted component are all equivalent;
+the theorem retains both equivalences instead of discarding the defect-level
+form needed by certificate constructors. -/
 theorem actual_cross_cancels_iff_missing_eq_zero
     (B N0 : ℕ) (c : CorrectionState.Context ActualPoint)
     (u : CorrectionState.State ActualPoint) (n : ℕ) {x : ActualPoint}
     (hx : x ∈ ActualInitialization.geometry.strip.domain) (i : Fin 2) :
-    actualCrossComponent B N0 c u n x i = actualRequestedComponent c u n x i ↔
+    (actualCrossComponent B N0 c u n x i = actualRequestedComponent c u n x i ↔
+        actualMissingComponent B N0 c u n x i = 0) ∧
+      (actualCrossDefect B N0 c u n x i = 0 ↔
+        actualMissingComponent B N0 c u n x i = 0) := by
+  have hdefect := (actual_cross_defect_eq_neg_missing B N0 c u n hx i).1
+  have hdefect_zero : actualCrossDefect B N0 c u n x i = 0 ↔
       actualMissingComponent B N0 c u n x i = 0 := by
-  have hdefect := actual_cross_defect_eq_neg_missing B N0 c u n hx i
-  constructor
-  · intro hcancel
-    rw [actualCrossDefect, hcancel, sub_self] at hdefect
-    exact neg_eq_zero.mp hdefect.symm
-  · intro hmissing
-    apply sub_eq_zero.mp
-    rw [show actualCrossComponent B N0 c u n x i -
-      actualRequestedComponent c u n x i =
-        actualCrossDefect B N0 c u n x i from rfl, hdefect, hmissing, neg_zero]
+    rw [hdefect, neg_eq_zero]
+  refine ⟨?_, hdefect_zero⟩
+  rw [← sub_eq_zero, show actualCrossComponent B N0 c u n x i -
+    actualRequestedComponent c u n x i =
+      actualCrossDefect B N0 c u n x i from rfl, hdefect_zero]
 
-/-- A nonzero missing weight and nonzero request give an exact finite-prefix
-failure of physical cross cancellation. -/
+/-- A nonzero missing weight and nonzero request give simultaneous nonzero
+cross mismatch and scalar defect, with a strictly positive observed margin. -/
 theorem actual_cross_ne_request_of_missing
     (B N0 : ℕ) (c : CorrectionState.Context ActualPoint)
     (u : CorrectionState.State ActualPoint) (n : ℕ) {x : ActualPoint}
     (hx : x ∈ ActualInitialization.geometry.strip.domain) (i : Fin 2)
     (hweight : missingWeight (choice B N0).prepared.N (physicalScale n x) ≠ 0)
     (hrequest : actualRequestedComponent c u n x i ≠ 0) :
-    actualCrossComponent B N0 c u n x i ≠ actualRequestedComponent c u n x i := by
+    actualCrossComponent B N0 c u n x i ≠ actualRequestedComponent c u n x i ∧
+      actualCrossDefect B N0 c u n x i ≠ 0 ∧
+      0 < |actualCrossDefect B N0 c u n x i| := by
+  have hmissing : actualMissingComponent B N0 c u n x i ≠ 0 := by
+    exact mul_ne_zero hweight hrequest
+  have hdefect : actualCrossDefect B N0 c u n x i ≠ 0 := by
+    intro hzero
+    exact hmissing
+      ((actual_cross_cancels_iff_missing_eq_zero B N0 c u n hx i).2.mp hzero)
+  refine ⟨?_, hdefect, abs_pos.mpr hdefect⟩
   intro hcancel
-  have hzero := (actual_cross_cancels_iff_missing_eq_zero B N0 c u n hx i).mp hcancel
-  exact (mul_ne_zero hweight hrequest) hzero
+  exact hmissing
+    ((actual_cross_cancels_iff_missing_eq_zero B N0 c u n hx i).1.mp hcancel)
 
-/-- Equivalent defect-level statement used by certificate constructors. -/
+/-- Quantitative defect-level statement used by certificate constructors.  It
+retains nonvanishing, strict positivity, and the exact product margin. -/
 theorem actual_cross_defect_ne_zero_of_missing
     (B N0 : ℕ) (c : CorrectionState.Context ActualPoint)
     (u : CorrectionState.State ActualPoint) (n : ℕ) {x : ActualPoint}
     (hx : x ∈ ActualInitialization.geometry.strip.domain) (i : Fin 2)
     (hweight : missingWeight (choice B N0).prepared.N (physicalScale n x) ≠ 0)
     (hrequest : actualRequestedComponent c u n x i ≠ 0) :
-    actualCrossDefect B N0 c u n x i ≠ 0 := by
-  rw [actual_cross_defect_eq_neg_missing B N0 c u n hx i]
-  exact neg_ne_zero.mpr (mul_ne_zero hweight hrequest)
+    actualCrossDefect B N0 c u n x i ≠ 0 ∧
+      0 < |actualCrossDefect B N0 c u n x i| ∧
+      |actualCrossDefect B N0 c u n x i| =
+        |missingWeight (choice B N0).prepared.N (physicalScale n x)| *
+          |actualRequestedComponent c u n x i| := by
+  have hne := (actual_cross_ne_request_of_missing B N0 c u n hx i
+    hweight hrequest).2
+  exact ⟨hne.1, hne.2,
+    (actual_cross_defect_eq_neg_missing B N0 c u n hx i).2⟩
 
-/-- Beyond the actual partition threshold, the missing component vanishes and
-exact cross cancellation is recovered. -/
+/-- Beyond the actual partition threshold, all scalar forms of the replacement
+close simultaneously: partition factor one, zero missing component, zero
+defect, and exact cross cancellation. -/
 theorem actual_cross_tail_exact
     (B N0 : ℕ) (c : CorrectionState.Context ActualPoint)
     (u : CorrectionState.State ActualPoint) {n : ℕ}
     (hn : (choice B N0).prepared.N + 1 ≤ n) {x : ActualPoint}
     (hx : x ∈ ActualInitialization.geometry.strip.domain) (i : Fin 2) :
-    actualCrossComponent B N0 c u n x i = actualRequestedComponent c u n x i :=
-  ActualSignedMeanBinding.requested_cross_tail B N0 c u hn hx i
+    actualCrossComponent B N0 c u n x i = actualRequestedComponent c u n x i ∧
+      actualMissingComponent B N0 c u n x i = 0 ∧
+      actualCrossDefect B N0 c u n x i = 0 ∧
+      partitionFactor B N0 n x = 1 := by
+  have hcancel := ActualSignedMeanBinding.requested_cross_tail B N0 c u hn hx i
+  have hfactor := partitionFactor_eq_one B N0 n hx (physicalScale_tail B N0 hn hx)
+  have hmissing :=
+    (actual_cross_cancels_iff_missing_eq_zero B N0 c u n hx i).1.mp hcancel
+  have hdefect :=
+    (actual_cross_cancels_iff_missing_eq_zero B N0 c u n hx i).2.mpr hmissing
+  exact ⟨hcancel, hmissing, hdefect, hfactor⟩
 
-/-- Every finite physical jet of the cross and request agrees on the same
-tail.  This is the strongest direct cross-level replacement currently
-available for the unavailable native package. -/
+/-- The entire finite physical jet through order `m` of the cross and request
+agrees on the same tail.  Returning all orders `k ≤ m` makes explicit the
+finite-jet object needed by a downstream observation functional. -/
 theorem actual_cross_tail_jets
     (B N0 : ℕ) (c : CorrectionState.Context ActualPoint)
     (u : CorrectionState.State ActualPoint) {n : ℕ}
     (hn : (choice B N0).prepared.N + 1 ≤ n) {x : ActualPoint}
     (hx : x ∈ ActualInitialization.geometry.strip.domain)
     (i : Fin 2) (m : ℕ) :
-    iteratedFDeriv ℝ m
-        (StateMomentBalances.meanBar
-          (ActualSignedMeanBinding.actualCross B N0 c u 0 i.succ) n) x =
-      iteratedFDeriv ℝ m
-        (fun y => LocalSignedRequest.requestedStress
-          ActualInitialization.geometry.patch ActualInitialization.geometry.coord
-          c u n y i) x :=
-  ActualSignedMeanBinding.requested_cross_tail_jets B N0 c u hn hx i m
+    ∀ k ≤ m,
+      iteratedFDeriv ℝ k
+          (StateMomentBalances.meanBar
+            (ActualSignedMeanBinding.actualCross B N0 c u 0 i.succ) n) x =
+        iteratedFDeriv ℝ k
+          (fun y => LocalSignedRequest.requestedStress
+            ActualInitialization.geometry.patch ActualInitialization.geometry.coord
+            c u n y i) x := by
+  intro k _
+  exact ActualSignedMeanBinding.requested_cross_tail_jets B N0 c u hn hx i k
 
 end NavierStokes.CounterProof.Adapter.NativeDataObstruction

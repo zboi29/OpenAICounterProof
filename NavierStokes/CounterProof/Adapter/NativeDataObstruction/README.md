@@ -234,7 +234,10 @@ nonvanishing hypotheses. Given
 `coordinate(complete defect) = actualCrossDefect`,
 
 `FinitePrefixObstruction.reducedDefectWitness` constructs a
-`ReducedDefectWitness` with the exact magnitude `|actualCrossDefect|`.
+`ReducedDefectWitness` with the exact, source-factorized magnitude
+`|missingWeight| · |requested component|`. The bridge proves this is equal to
+`|actualCrossDefect|` and to the absolute value detected by the observation
+functional, so no quantitative information is lost at certificate promotion.
 
 This witness can be used in either of two ways:
 
@@ -263,8 +266,9 @@ functional, inverse/reconstruction losses, and complete-tail control.
 ### `GeometryContradiction.lean`
 
 - Names the actual native package and route-availability proposition.
-- Proves `native_route_unavailable` from an explicit actual-strip witness and
-  incompatible half-scale bounds.
+- Proves `native_route_unavailable` from an explicit actual-strip witness at
+  exact normalized coordinate `1` and the full incompatible chain
+  `coordinateQ ≤ Q(index n) ≤ 1/2` for every band `n`.
 - Exposes `exists_actual_strip_point_above_half`,
   `native_tail_bound_le_half`, `tail_bound_contradiction`, the direct eliminator
   `actual_native_data_impossible`, and `actual_nativeData_isEmpty`.
@@ -275,17 +279,25 @@ functional, inverse/reconstruction losses, and complete-tail control.
 
 - Defines the actual cross, requested component, missing component, and scalar
   defect.
-- Proves the partition-factor and negative-missing-component identities.
-- Characterizes exact cancellation.
-- Proves nonzero finite-prefix defect from nonzero weight and request.
-- Exports eventual cross and all-finite-jet agreement.
+- Proves the partition-factor and negative-missing-component identities while
+  retaining the exact absolute margin
+  `|defect| = |missingWeight| · |requested component|`.
+- Characterizes exact cancellation simultaneously as zero missing component
+  and zero scalar defect.
+- Proves nonzero finite-prefix mismatch, positive absolute defect, and the
+  exact factorized margin from nonzero weight and request.
+- Exports simultaneous tail closure—factor one, missing component zero, defect
+  zero, and exact cancellation—and agreement of every derivative order
+  `k ≤ m` in one finite-jet theorem.
 
 ### `CertificateFeedback.lean`
 
 - Packages nonzero finite-prefix data.
-- Proves the associated scalar defect is nonzero.
+- Proves the associated scalar defect is nonzero and has the exact positive
+  factorized magnitude.
 - Constructs a `ReducedDefectWitness` from a verified observation-coordinate
-  identity.
+  identity without replacing the physical product margin by an opaque
+  constant.
 - Stops before asserting the near-cokernel and complete-tail hypotheses needed
   for a joint certificate.
 
