@@ -301,6 +301,25 @@ functional, inverse/reconstruction losses, and complete-tail control.
 - Stops before asserting the near-cokernel and complete-tail hypotheses needed
   for a joint certificate.
 
+### `SemanticMismatch.lean`
+
+- Binds the literal claimed-proof cross field to the actual physical-scale
+  cross and promotes a finite-prefix point witness to failure of all-band
+  `MeanIncrementBounds.Agree`.
+- Defines `NativeCrossSemanticsAvailable` as the two source alternatives
+  audited here: availability of the normalized native route or exact all-band
+  agreement of its physical replacement.
+- Proves the strong reusable helper
+  `FinitePrefixObstruction.no_native_cross_semantics` and its generic claim
+  transport rule.
+- Packages the claimed proof's actual `StepResult` and next `RunInvariant` in
+  `ActualCycleNativeSemanticClosure`, then proves that the cycle advances
+  without this semantic closure and derives the closing contradiction from any
+  asserted closure object together with a `FinitePrefixObstruction` witness.
+- Keeps this source-interface contradiction separate from a physical-residual
+  contradiction: the latter still requires complete-tail survival and a
+  concrete residual-exposure certificate.
+
 Import `NavierStokes.CounterProof.Adapter.NativeDataObstruction` for the whole
 subsystem. The public `SignedMeanInterface` re-exports its principal types and
 theorems.

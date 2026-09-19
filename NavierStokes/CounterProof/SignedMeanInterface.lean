@@ -107,7 +107,22 @@ export Adapter.NativeDataObstruction
     actual_cross_eq_partition_factor actual_cross_defect_eq_neg_missing
     actual_cross_cancels_iff_missing_eq_zero actual_cross_ne_request_of_missing
     actual_cross_defect_ne_zero_of_missing actual_cross_tail_exact
-    actual_cross_tail_jets FinitePrefixObstruction)
+    actual_cross_tail_jets FinitePrefixObstruction
+    actualCrossField actualCrossField_apply actualRequestedField
+    actualRequestedField_apply actualRequestedField_zero
+    actualRequestedField_one actualCrossDefectField
+    actualCrossDefectField_apply NativeCrossSemanticsAvailable
+    familyCrossField familyCrossDefectField
+    familyCrossField_eq_actualCrossField
+    familyCrossDefectField_eq_actualCrossDefectField
+    all_exponents_with_nonzero_cross_mismatch actualCyclePostParticularState
+    ActualCycleStepData ActualCycleStepResult ActualCycleNativeSemanticClosure
+    actual_cycle_advances_across_native_semantic_mismatch
+    actual_cycle_advances_without_native_semantic_closure
+    actual_cycle_native_semantic_closure_contradiction)
+
+export Adapter.NativeDataObstruction.FinitePrefixObstruction
+  (no_native_cross_semantics refutes_claim_of_native_cross_semantics)
 
 /-- Upstream source revision audited by the downstream companion note.  This
 constant is documentation metadata, not a proof assumption. -/
