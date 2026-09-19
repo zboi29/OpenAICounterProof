@@ -78,6 +78,34 @@ theorem residual_norm_lower_bound
 
 end DynamicalMismatchData
 
+/-- Forward residual-leakage theorem for a scale-indexed family.  A physical
+residual flat to all orders produces an observed mismatch flat to all orders
+whenever the exact residual response has a fixed polynomial sensitivity loss.
+
+This is the direct Lean form of Proposition `prop:residualleakage` in §8.2 of
+`docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex`; collecting a
+finite residual jet into `Residual` gives the note's Corollary
+`cor:jetleakage`. -/
+theorem dynamical_mismatch_flat_of_residual_flat
+    (data : ℝ → DynamicalMismatchData State Obs Residual)
+    {C radius : ℝ} {M : ℕ}
+    (hC : 0 ≤ C) (hradius : 0 < radius)
+    (hsensitivity : ∀ q, 0 < q → q < radius →
+      ‖(data q).observeDeriv.comp (data q).residualInjection‖ ≤ C / q ^ M)
+    (hflat : FlatAtZero (fun q => ‖(data q).residual‖)) :
+    FlatAtZero (fun q => ‖(data q).mismatch‖) := by
+  apply flatAtZero_mismatch_of_polynomial_sensitivity (C := C) (radius := radius) (M := M)
+    (fun q => ‖(data q).residual‖) (fun q => ‖(data q).mismatch‖)
+    hC hradius _ hflat
+  intro q hq hqradius
+  calc
+    ‖(data q).mismatch‖ ≤
+        ‖(data q).observeDeriv.comp (data q).residualInjection‖ *
+          ‖(data q).residual‖ :=
+      (data q).norm_mismatch_le
+    _ ≤ (C / q ^ M) * ‖(data q).residual‖ :=
+      mul_le_mul_of_nonneg_right (hsensitivity q hq hqradius) (norm_nonneg _)
+
 /-- A family of exact mismatch identities with polynomial sensitivity and an
 algebraic mismatch lower bound forces nonflatness of the physical residual. -/
 theorem dynamical_mismatch_forces_nonflat_residual

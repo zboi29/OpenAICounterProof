@@ -12,6 +12,16 @@ that survives the complete future tail, controls the observation error, pays a
 polynomial sensitivity loss, and constructs an explicit finite-order lower
 bound for the physical residual.  That lower bound is then shown incompatible
 with `FlatAtZero`.
+
+`flatAtZero_mismatch_of_polynomial_sensitivity` formalizes the forward
+flatness implication in Proposition `prop:residualleakage`, “Primitive
+mismatch--residual leakage”, and Corollary `cor:jetleakage`, “Finite-jet
+Navier--Stokes form”, in §8.2 of
+`docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex`.  In a
+finite-jet application the finitely many residual derivatives are first
+collected into one normed residual vector; the theorem then pays the fixed
+polynomial sensitivity loss without assuming an algebraic mismatch lower
+bound.
 -/
 
 namespace NavierStokes.CounterProof
@@ -22,6 +32,35 @@ namespace NavierStokes.CounterProof
 def FlatAtZero (size : ℝ → ℝ) : Prop :=
   ∀ N : ℕ, ∃ C ε : ℝ, 0 ≤ C ∧ 0 < ε ∧
     ∀ q : ℝ, 0 < q → q < ε → size q ≤ C * q ^ N
+
+/-- Polynomial observation sensitivity preserves all-order flatness.  The
+residual estimate is requested at order `N + M`, exactly paying the fixed
+loss `M` and leaving order `N` for the observed mismatch.  This is the
+abstract forward implication used by both Proposition `prop:residualleakage`
+and its finite-jet Corollary `cor:jetleakage` in the general research note. -/
+theorem flatAtZero_mismatch_of_polynomial_sensitivity
+    (residualSize mismatchSize : ℝ → ℝ) {C radius : ℝ} {M : ℕ}
+    (hC : 0 ≤ C) (hradius : 0 < radius)
+    (hresponse : ∀ q : ℝ, 0 < q → q < radius →
+      mismatchSize q ≤ (C / q ^ M) * residualSize q)
+    (hflat : FlatAtZero residualSize) :
+    FlatAtZero mismatchSize := by
+  intro N
+  obtain ⟨Cresidual, ε, hCresidual, hε, hresidual⟩ := hflat (N + M)
+  refine ⟨C * Cresidual, min radius ε, mul_nonneg hC hCresidual,
+    lt_min hradius hε, ?_⟩
+  intro q hq hqmin
+  have hqradius : q < radius := hqmin.trans_le (min_le_left _ _)
+  have hqε : q < ε := hqmin.trans_le (min_le_right _ _)
+  have hqpow : 0 ≤ q ^ M := pow_nonneg hq.le M
+  calc
+    mismatchSize q ≤ (C / q ^ M) * residualSize q :=
+      hresponse q hq hqradius
+    _ ≤ (C / q ^ M) * (Cresidual * q ^ (N + M)) :=
+      mul_le_mul_of_nonneg_left (hresidual q hq hqε) (div_nonneg hC hqpow)
+    _ = (C * Cresidual) * q ^ N := by
+      rw [pow_add]
+      field_simp [hq.ne']
 
 /-- A uniform positive algebraic lower bound near `q = 0`. -/
 structure AlgebraicLowerBound (size : ℝ → ℝ) where
@@ -79,6 +118,18 @@ instances, not assumed globally by the counter-proof core. -/
 structure ResidualExposure (residualSize mismatchSize : ℝ → ℝ) where
   /-- Flat physical residuals force flat observed mismatches. -/
   flat_transfer : FlatAtZero residualSize → FlatAtZero mismatchSize
+
+/-- Package a proved polynomial sensitivity estimate as the reusable
+`ResidualExposure` interface. -/
+theorem ResidualExposure.ofPolynomialSensitivity
+    (residualSize mismatchSize : ℝ → ℝ) {C radius : ℝ} {M : ℕ}
+    (hC : 0 ≤ C) (hradius : 0 < radius)
+    (hresponse : ∀ q : ℝ, 0 < q → q < radius →
+      mismatchSize q ≤ (C / q ^ M) * residualSize q) :
+    ResidualExposure residualSize mismatchSize where
+  flat_transfer :=
+    flatAtZero_mismatch_of_polynomial_sensitivity residualSize mismatchSize
+      hC hradius hresponse
 
 namespace ResidualExposure
 

@@ -23,6 +23,30 @@ variable {Active Obs Tail : Type*}
   [NormedAddCommGroup Active] [NormedSpace ℝ Active]
   [NormedAddCommGroup Obs] [NormedSpace ℝ Obs]
 
+/-- Functional form of the near-cokernel reverse-triangle estimate.  It is
+the Banach-space version of the dual estimate in general-note Proposition
+`prop:cokernel` and companion-note Theorem `thm:budget`; unlike the
+Hilbert-space specialization, it accepts the bounded scalar functional that a
+finite-jet source adapter naturally constructs. -/
+theorem functional_residual_lower_bound
+    (operator : Active →L[ℝ] Obs) (functional : Obs →L[ℝ] ℝ)
+    (target : Obs) (active : Active) :
+    |functional target| - ‖functional.comp operator‖ * ‖active‖ ≤
+      |functional (target - operator active)| := by
+  calc
+    |functional target| - ‖functional.comp operator‖ * ‖active‖
+        ≤ |functional target| - |functional (operator active)| := by
+          gcongr
+          calc
+            |functional (operator active)| =
+                ‖(functional.comp operator) active‖ := by
+              rw [ContinuousLinearMap.comp_apply, Real.norm_eq_abs]
+            _ ≤ ‖functional.comp operator‖ * ‖active‖ :=
+              (functional.comp operator).le_opNorm active
+    _ ≤ |functional (target - operator active)| := by
+      rw [map_sub]
+      exact abs_sub_abs_le_abs_sub _ _
+
 /-- Quantitative near-cokernel data for one target direction. -/
 structure QuantitativeDualCertificate
     (fullCompatibility : Active →L[ℝ] Obs) (target : Obs) where

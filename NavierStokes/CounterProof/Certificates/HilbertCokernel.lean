@@ -7,6 +7,15 @@ import Mathlib.Analysis.InnerProductSpace.Adjoint
 This module connects the functional certificates used by the counter-proof
 core to the adjoint-null and near-cokernel language of the research notes.
 The main estimate is quantitative and does not require exact range failure.
+
+The canonical projection results below formalize the missing constructive
+part of Proposition `prop:cokernel`, “Cokernel certificate for primitive
+incompatibility”, in §4.2 of
+`docs/Primitive_Liftability_Obstructions_NSE_Research_Note.tex`.  They turn a
+positive Hilbert range defect into a unit adjoint-null direction whose target
+pairing is exactly that defect.  Thus a source adapter may obtain the dual
+direction from the full compatibility range instead of postulating an
+unrelated functional.
 -/
 
 noncomputable section
@@ -24,6 +33,112 @@ the compatible response range. -/
 def hilbertRangeDefect [FiniteDimensional ℝ Obs]
     (operator : Domain →L[ℝ] Obs) (target : Obs) : ℝ :=
   ‖(operator.rangeᗮ).orthogonalProjectionOnto target‖
+
+/-- The canonical cokernel component of a target: its orthogonal projection
+onto the orthogonal complement of the full compatible range.  This is the
+vector denoted `P_{ker Comp*} β` in Proposition `prop:cokernel` of the general
+research note. -/
+def hilbertRangeDefectVector [FiniteDimensional ℝ Obs]
+    (operator : Domain →L[ℝ] Obs) (target : Obs) : Obs :=
+  (operator.rangeᗮ).orthogonalProjectionOnto target
+
+omit [CompleteSpace Domain] [CompleteSpace Obs] in
+@[simp]
+theorem norm_hilbertRangeDefectVector [FiniteDimensional ℝ Obs]
+    (operator : Domain →L[ℝ] Obs) (target : Obs) :
+    ‖hilbertRangeDefectVector operator target‖ =
+      hilbertRangeDefect operator target :=
+  rfl
+
+omit [CompleteSpace Domain] [CompleteSpace Obs] in
+/-- The canonical range-defect vector is orthogonal to every compatible
+response. -/
+theorem hilbertRangeDefectVector_mem_orthogonal [FiniteDimensional ℝ Obs]
+    (operator : Domain →L[ℝ] Obs) (target : Obs) :
+    hilbertRangeDefectVector operator target ∈ operator.rangeᗮ :=
+  (operator.rangeᗮ).orthogonalProjectionOnto target |>.property
+
+/-- Orthogonality of the canonical defect vector is exactly the adjoint-null
+condition required by a cokernel certificate. -/
+theorem adjoint_hilbertRangeDefectVector_eq_zero [FiniteDimensional ℝ Obs]
+    (operator : Domain →L[ℝ] Obs) (target : Obs) :
+    operator.adjoint (hilbertRangeDefectVector operator target) = 0 := by
+  refine ext_inner_right ℝ fun x => ?_
+  rw [operator.adjoint_inner_left, inner_zero_left]
+  exact Submodule.inner_left_of_mem_orthogonal
+    (show operator x ∈ operator.range from ⟨x, rfl⟩)
+    (hilbertRangeDefectVector_mem_orthogonal operator target)
+
+omit [CompleteSpace Domain] [CompleteSpace Obs] in
+/-- The canonical defect detects the target by its squared norm.  This is the
+exact equality behind the dual range-defect formula, not merely a nonzero
+pairing. -/
+theorem inner_hilbertRangeDefectVector_target [FiniteDimensional ℝ Obs]
+    (operator : Domain →L[ℝ] Obs) (target : Obs) :
+    ⟪hilbertRangeDefectVector operator target, target⟫_ℝ =
+      hilbertRangeDefect operator target ^ 2 := by
+  let η : operator.rangeᗮ :=
+    (operator.rangeᗮ).orthogonalProjectionOnto target
+  change ⟪(η : Obs), target⟫_ℝ = ‖(η : Obs)‖ ^ 2
+  rw [← (operator.rangeᗮ).inner_orthogonalProjectionOnto_eq_of_mem_left η target]
+  change ⟪(η : Obs), (η : Obs)⟫_ℝ = ‖(η : Obs)‖ ^ 2
+  exact real_inner_self_eq_norm_sq _
+
+/-- Normalize the canonical cokernel component.  Positivity of the range
+defect is supplied separately to avoid an arbitrary choice in the compatible
+case. -/
+def normalizedRangeDefectDirection [FiniteDimensional ℝ Obs]
+    (operator : Domain →L[ℝ] Obs) (target : Obs) : Obs :=
+  (hilbertRangeDefect operator target)⁻¹ •
+    hilbertRangeDefectVector operator target
+
+/-- A positive range defect canonically produces the unit dual witness from
+Proposition `prop:cokernel`: it lies in `ker operator.adjoint` and its absolute
+target pairing is exactly the range defect. -/
+theorem normalizedRangeDefectDirection_spec [FiniteDimensional ℝ Obs]
+    (operator : Domain →L[ℝ] Obs) (target : Obs)
+    (hdefect : 0 < hilbertRangeDefect operator target) :
+    ‖normalizedRangeDefectDirection operator target‖ = 1 ∧
+      operator.adjoint (normalizedRangeDefectDirection operator target) = 0 ∧
+      |⟪normalizedRangeDefectDirection operator target, target⟫_ℝ| =
+        hilbertRangeDefect operator target := by
+  have hne : hilbertRangeDefect operator target ≠ 0 := ne_of_gt hdefect
+  constructor
+  · rw [normalizedRangeDefectDirection, norm_smul, Real.norm_eq_abs,
+      abs_inv, abs_of_pos hdefect, norm_hilbertRangeDefectVector,
+      inv_mul_cancel₀ hne]
+  constructor
+  · rw [normalizedRangeDefectDirection, map_smul,
+      adjoint_hilbertRangeDefectVector_eq_zero, smul_zero]
+  · rw [normalizedRangeDefectDirection, real_inner_smul_left,
+      inner_hilbertRangeDefectVector_target]
+    simp [abs_of_pos hdefect, hne, sq]
+
+/-- Every candidate response misses the target by at least the exact Hilbert
+range defect.  Together with `normalizedRangeDefectDirection_spec`, this is
+the constructive lower-bound clause of general-note Proposition
+`prop:cokernel`. -/
+theorem hilbertRangeDefect_le_residual [FiniteDimensional ℝ Obs]
+    (operator : Domain →L[ℝ] Obs) (target : Obs) (x : Domain) :
+    hilbertRangeDefect operator target ≤ ‖target - operator x‖ := by
+  by_cases hzero : hilbertRangeDefect operator target = 0
+  · rw [hzero]
+    exact norm_nonneg _
+  · have hnonneg : 0 ≤ hilbertRangeDefect operator target := norm_nonneg _
+    have hpos : 0 < hilbertRangeDefect operator target :=
+      lt_of_le_of_ne hnonneg (Ne.symm hzero)
+    let η := normalizedRangeDefectDirection operator target
+    have hspec := normalizedRangeDefectDirection_spec operator target hpos
+    have hresponse : ⟪η, operator x⟫_ℝ = 0 := by
+      rw [← operator.adjoint_inner_left x η, hspec.2.1, inner_zero_left]
+    have hdiff : ⟪η, target - operator x⟫_ℝ = ⟪η, target⟫_ℝ := by
+      rw [inner_sub_right, hresponse, sub_zero]
+    calc
+      hilbertRangeDefect operator target = |⟪η, target⟫_ℝ| := hspec.2.2.symm
+      _ = |⟪η, target - operator x⟫_ℝ| := congrArg abs hdiff.symm
+      _ = ‖⟪η, target - operator x⟫_ℝ‖ := (Real.norm_eq_abs _).symm
+      _ ≤ ‖η‖ * ‖target - operator x‖ := norm_inner_le_norm _ _
+      _ = ‖target - operator x‖ := by rw [hspec.1, one_mul]
 
 omit [CompleteSpace Domain] [CompleteSpace Obs] in
 /-- In finite dimensions the range defect vanishes exactly on the operator
